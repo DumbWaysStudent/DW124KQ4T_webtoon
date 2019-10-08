@@ -8,7 +8,6 @@ class BannerComponent extends React.Component {
 
     constructor(props){
         super(props);
-        console.log(this.props.items);
     }
 
     
@@ -17,7 +16,7 @@ class BannerComponent extends React.Component {
     return (
         <View>
         {this.props.items.map((item, index) => {
-            return <ListItem key={item.id}>
+            return <ListItem key={item.id.toString()}>
                 <Image style={{width: 50, height: 50}} source={{uri: item.image}} />
                 <View style={{marginLeft: 30}}>
                     <Text>{item.title}</Text>
