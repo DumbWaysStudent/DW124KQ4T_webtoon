@@ -3,7 +3,9 @@ import React from 'react';
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon, View } from 'native-base';
 
 
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+
+import {TapGestureHandler, State} from 'react-native-gesture-handler';
 
 import Carousel from 'react-native-snap-carousel';
 
@@ -19,20 +21,22 @@ class BannerComponent extends React.Component {
     constructor(props){
         super(props);
     }
-    
+
   render(){
     return (
       <Swiper style={styles.wrapper} showsButtons={true}>
         {this.props.items.map((item, index)=>(
-          <Card key={item.id}>
-            <CardItem>
-                  <Body>
-                      <Image
-                      style={{width: 200, height: 110}}
-                      source={{uri: item.image}} />
-                </Body>
-              </CardItem>
-          </Card>
+          <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
+            <Card>
+              <CardItem>
+                    <Body>
+                        <Image
+                        style={{width: 200, height: 110}}
+                        source={{uri: item.image}} />
+                  </Body>
+                </CardItem>
+            </Card>
+          </TouchableOpacity>
     ))}
       </Swiper>
     );
