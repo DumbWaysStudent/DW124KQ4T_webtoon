@@ -15,8 +15,8 @@ import {StyleSheet, View} from 'react-native';
 
 class LoginScreen extends React.Component {
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             isSecurePassword: true,
             inputEmail: "",
@@ -103,7 +103,7 @@ class LoginScreen extends React.Component {
     }
 
     handleSubmit = () => {
-
+        this.props.navigation.navigate("Main");
     }
 
   render() {
