@@ -22,6 +22,7 @@ import DetailTitleScreen from './DetailTitleScreen';
 import BannerComponent from '../components/BannerComponent';
 import FavoriteComponent from '../components/FavoriteComponent';
 import AllComponent from '../components/AllComponent';
+import DetailEpisodeScreen from './DetailEpisodeScreen';
 
 
 
@@ -94,14 +95,37 @@ const ForYouStack = createStackNavigator({
       headerTransparent: true
     }
   },
-  DetailTitle: DetailTitleScreen
+  DetailTitle: {
+    screen:DetailTitleScreen,
+    navigationOptions:{
+      gesturesEnabled: false,
+      tabBarVisible: false
+      
+    }
+  },
+  DetailEpisode:{
+    screen:DetailEpisodeScreen,
+    navigationOptions:{
+      gesturesEnabled: false,
+      tabBarVisible: false
+      
+    }
+  }
 });
 
 
 export default createAppContainer(
     createBottomTabNavigator(
       {
-        ForYou: ForYouStack,
+        ForYou: {
+          screen: ForYouStack,
+          navigationOptions:{
+            title: "For You",
+            tabBarIcon: ({ tintColor }) => (
+              <Icon type="FontAwesome" name="tablet" />
+            )
+          }
+        },
         Favorite: {
             screen: FavoriteScreen,
             navigationOptions:{
