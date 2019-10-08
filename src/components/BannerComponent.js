@@ -19,30 +19,7 @@ class BannerComponent extends React.Component {
     constructor(props){
         super(props);
     }
-
     
-
-  // render() {
-  //   return (
-  //     <Carousel
-  //         ref={(c) => { this._carousel = c; }}
-  //         data={this.props.items}
-  //         renderItem={({item, index})=>(
-  //             <Card>
-  //                 <CardItem>
-  //                     <Body>
-  //                         <Image
-  //                         style={{width: 200, height: 110}}
-  //                         source={{uri: item.image}} />
-  //                     </Body>
-  //                 </CardItem>
-  //             </Card>
-  //         )}
-  //         sliderWidth={sliderWidth}
-  //         itemWidth={itemWidth}
-  //     />
-  //   );
-  // }
   render(){
     return (
       <Swiper style={styles.wrapper} showsButtons={true}>
