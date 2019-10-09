@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon } from 'native-base';
 
 
-import {Image} from 'react-native';
+import {Image, TouchableOpacity} from 'react-native';
 
 import Carousel from 'react-native-snap-carousel';
 
@@ -25,6 +25,7 @@ class FavoriteComponent extends React.Component {
           ref={(c) => { this._carousel = c; }}
           data={this.props.items}
           renderItem={({item, index})=>(
+            <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
               <Card>
                   <CardItem>
                       <Body>
@@ -35,6 +36,7 @@ class FavoriteComponent extends React.Component {
                       </Body>
                   </CardItem>
               </Card>
+            </TouchableOpacity>
           )}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}

@@ -10,7 +10,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import LoginScreen from './src/screens/LoginScreen';
-import MainScreen from './src/screens/MainScreen';
+import ForYouScreen from './src/screens/ForYouScreen';
 
 const AppNavigator = createStackNavigator({
   Login: {
@@ -20,7 +20,7 @@ const AppNavigator = createStackNavigator({
     }
   },
   Main: {
-    screen: MainScreen,
+    screen: ForYouScreen,
     navigationOptions: {
       headerTransparent: true,
       headerLeft: null
