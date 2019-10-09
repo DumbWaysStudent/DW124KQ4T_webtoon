@@ -18,6 +18,7 @@ import DetailTitleScreen from './src/screens/DetailTitleScreen';
 import DetailEpisodeScreen from './src/screens/DetailEpisodeScreen';
 import ForYouScreen from './src/screens/ForYouScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import EditProfileScreen from './src/screens/EditProfileScreen';
 
 
 
@@ -77,6 +78,12 @@ const ProfileStack = createStackNavigator({
     screen: ProfileScreen,
     navigationOptions:{
       title: "Profile"
+    }
+  },
+  EditProfile:{
+    screen: EditProfileScreen,
+    navigationOptions:{
+      title: "Edit Profile"
     }
   },
   DetailTitle: {
@@ -148,3 +155,4 @@ export default createAppContainer(createSwitchNavigator(
     initialRouteName: 'Login',
   }
 ));
+// console.disableYellowBox = true;

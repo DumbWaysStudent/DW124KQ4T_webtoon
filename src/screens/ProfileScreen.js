@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, Right, List, ListItem, View } from 'native-base';
+import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View } from 'native-base';
 
 import { Image, TouchableOpacity } from 'react-native';
 
@@ -18,7 +18,7 @@ class ProfileScreen extends React.Component {
       return {
         headerRight: (
           <Button transparent
-            onPress={() => alert('This is a button!')}>
+            onPress={() => navigation.navigate("EditProfile") }>
                 <Icon name="pencil" type="FontAwesome" />
             </Button>
         )
