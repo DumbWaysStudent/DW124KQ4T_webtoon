@@ -50,6 +50,7 @@ class DetailEpisodeScreen extends React.Component {
                 <Content>
                     <Card>
                         <CardItem>
+                            <Body>
                             <FlatList
                                 data={this.state.items}
                                 renderItem={({ item }) => 
@@ -58,6 +59,7 @@ class DetailEpisodeScreen extends React.Component {
                                     }
                                 keyExtractor={item => item.id.toString()}
                             />
+                            </Body>
                         </CardItem>
                     </Card>
                     
