@@ -19,6 +19,7 @@ import DetailEpisodeScreen from './src/screens/DetailEpisodeScreen';
 import ForYouScreen from './src/screens/ForYouScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
+import MyCreationScreen from './src/screens/MyCreationScreen';
 
 
 
@@ -86,6 +87,12 @@ const ProfileStack = createStackNavigator({
       title: "Edit Profile"
     }
   },
+  MyCreation: {
+    screen: MyCreationScreen,
+    navigationOptions:{
+      title: "My Webtoon"
+    }
+  },
   DetailTitle: {
     screen:DetailTitleScreen,
     navigationOptions:{
@@ -128,11 +135,23 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
       },
       Profile: {
           screen: ProfileStack,
-          navigationOptions:{
-            title: 'Profile',
-            tabBarIcon: ({ tintColor }) => (
-              <Icon type="FontAwesome" name="user" />
-            )
+          navigationOptions:({navigation})=>{
+            var noBottomTabNav = [
+              "MyCreation"
+            ];
+            var obj = {
+              title: 'Profile',
+              tabBarIcon: ({ tintColor }) => (
+                <Icon type="FontAwesome" name="user" />
+              )
+            };
+            if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
+              obj.tabBarVisible = false;
+            }
+            else{
+              obj.tabBarVisible = true;
+            }
+            return obj
           }
       }
 }));

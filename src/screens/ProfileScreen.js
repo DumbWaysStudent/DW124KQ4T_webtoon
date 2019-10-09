@@ -48,7 +48,7 @@ class ProfileScreen extends React.Component {
               </CardItem>
               <List>
                 <ListItem>
-                  <TouchableOpacity style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate("MyCreation")} style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
                         <View style={{flex: 1}}><Text>My Webtoon Creation</Text></View>
                         <View><Icon name="angle-right" type="FontAwesome"/></View>
                   </TouchableOpacity>
