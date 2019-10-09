@@ -9,12 +9,6 @@
 import React from 'react';
 
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H3, Icon, View } from 'native-base';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import FavoriteScreen from './FavoriteScreen';
-import ProfileScreen from './ProfileScreen';
-import DetailTitleScreen from './DetailTitleScreen';
 
 
 
@@ -52,12 +46,6 @@ class ForYouScreen extends React.Component {
       }
   }
 
-  onDetailTitle = (id) => {
-      var item = this.state.entries.filter((item, index)=> item.id === id)[0];
-      this.props.navigation.navigate("DetailTitle", item);
-  }
-
-
 
   render() {
       return (
@@ -72,11 +60,11 @@ class ForYouScreen extends React.Component {
                                       <Icon type="FontAwesome" name="search" />
                                   </Button>
                               </Item>
-                              <BannerComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                              <BannerComponent items={this.state.entries} />
                               <H3>Favorite</H3>
-                              <FavoriteComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                              <FavoriteComponent items={this.state.entries} />
                               <H3>All</H3>
-                              <AllComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                              <AllComponent items={this.state.entries} />
                           </Body>
                       </CardItem>
                   </Card>
@@ -87,39 +75,4 @@ class ForYouScreen extends React.Component {
   }
 };
 
-const ForYouStack = createStackNavigator({
-  ForYou: {
-    screen: ForYouScreen,
-    navigationOptions:{
-      headerTransparent: true
-    }
-  },
-  DetailTitle: DetailTitleScreen
-});
-
-
-export default createAppContainer(
-    createBottomTabNavigator(
-      {
-        ForYou: ForYouStack,
-        Favorite: {
-            screen: FavoriteScreen,
-            navigationOptions:{
-              title: 'Favorite',
-              tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="star" />
-              )
-            }
-        },
-        Profile: {
-            screen: ProfileScreen,
-            navigationOptions:{
-              title: 'Profile',
-              tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="user" />
-              )
-            }
-        }
-      }
-    )
-  );
+export default ForYouScreen;

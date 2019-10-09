@@ -19,7 +19,7 @@ class BannerComponent extends React.Component {
     return (
       <Swiper style={styles.wrapper} showsButtons={true}>
         {this.props.items.map((item, index)=>(
-          <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
+          <TouchableOpacity key={item.id}>
             <Card>
               <CardItem>
                     <Body>

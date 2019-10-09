@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon } from 'native-base';
+import { Card, CardItem, Body, Text } from 'native-base';
 
 
 import {Image, TouchableOpacity} from 'react-native';
@@ -25,7 +25,7 @@ class FavoriteComponent extends React.Component {
           ref={(c) => { this._carousel = c; }}
           data={this.props.items}
           renderItem={({item, index})=>(
-            <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
+            <TouchableOpacity>
               <Card>
                   <CardItem>
                       <Body>
