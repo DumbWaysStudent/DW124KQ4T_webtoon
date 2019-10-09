@@ -21,15 +21,15 @@ class BannerComponent extends React.Component {
                     <Image style={{width: 50, height: 50}} source={{uri: item.image}} />
                 </TouchableOpacity>
                 <View style={{marginLeft: 30}}>
-                    <Body>
-                    <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
-                        <Text>{item.title}</Text>
-                    </TouchableOpacity>
-                    <Button iconLeft small>
-                        <Icon type="FontAwesome" name="plus" />
-                        <Text>Favorite</Text>
-                    </Button>
-                    </Body>
+                        <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
+                            <Item><Text>{item.title}</Text></Item>
+                        </TouchableOpacity>
+                        <Item>
+                            <Button iconLeft small>
+                                <Icon type="FontAwesome" name="plus" />
+                                <Text>Favorite</Text>
+                            </Button>
+                        </Item>
                 </View>
             </ListItem>
         })}
