@@ -42,11 +42,11 @@ class MyCreationScreen extends React.Component{
                                     keyExtractor = {item => item.id.toString()}
                                     renderItem = {({item})=>(
                                         <ListItem>
-                                            <TouchableOpacity onPress={this.onDetailTitle.bind(this, item.id)}>
+                                            <TouchableOpacity>
                                                 <Image style={{width: 50, height: 50}}
                                                     source={{uri: item.image}} />
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={this.onDetailTitle.bind(this, item.id)}>
+                                            <TouchableOpacity>
                                                 <View>
                                                     <Text>{item.title}</Text>
                                                     <Text>20 episode(s)</Text>
