@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, Right, List, ListItem } from 'native-base';
+import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, Right, List, ListItem, View } from 'native-base';
 
 import { Image, TouchableOpacity } from 'react-native';
 
@@ -43,18 +43,22 @@ class ProfileScreen extends React.Component {
               <CardItem>
                 <Body style={{ flex: 1, alignItems: 'center'}}>
                     <Image style={{width:200, height: 200, borderRadius: 200/2}} source={{uri: this.state.profile.image}} />
-                    <H1>{this.state.profile.name}</H1>
+                    <H1 style={{marginBottom: 70, marginTop: 30}}>{this.state.profile.name}</H1>
                 </Body>
               </CardItem>
               <List>
                 <ListItem>
-                  <Text>My Webtoon Creation</Text>
-                  <Right>
-                  <Icon name="angle-right" type="FontAwesome"/>
-                  </Right>
+                  <TouchableOpacity style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
+                        <View style={{flex: 1}}><Text>My Webtoon Creation</Text></View>
+                        <View><Icon name="angle-right" type="FontAwesome"/></View>
+                  </TouchableOpacity>
                 </ListItem>
                 <ListItem>
-                  <Text>Logout</Text>
+                  <TouchableOpacity style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
+                    <View style={{flex: 1}}>
+                      <Text>Logout</Text>
+                    </View>
+                  </TouchableOpacity>
                 </ListItem>
               </List>
             </Card>
