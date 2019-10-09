@@ -38,7 +38,32 @@ class EditProfileScreen extends React.Component{
         this.state = {
             profile: profile,
             inputName: profile.name,
-            avatarSource: profile.image
+            avatarSource: {uri: profile.image},
+            isChangingPhoto: false
+        }
+    }
+
+    componentDidMount(){
+        if(this.state.isChangingPhoto ){
+            
+            var profileNew = this.state.profile;;
+            profileNew.image = this.state.avatarSource.uri
+            this.setState({
+                profile: profileNew,
+                isChangingPhoto:false
+            });
+        }
+    }
+
+    componentDidUpdate (){
+        if(this.state.isChangingPhoto){
+            
+            var profileNew = this.state.profile;
+            profileNew.image = this.state.avatarSource.uri
+            this.setState({
+                profile: profileNew,
+                isChangingPhoto:false
+            });
         }
     }
 
@@ -63,9 +88,9 @@ class EditProfileScreen extends React.Component{
           
               // You can also display the image using data:
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-          
               this.setState({
                 avatarSource: source,
+                isChangingPhoto: true
               });
             }
         });
@@ -78,7 +103,7 @@ class EditProfileScreen extends React.Component{
                     <Card>
                         <CardItem>
                             <TouchableOpacity onPress={this.handleChangeAvatar} style={{ flex: 1, alignItems: 'center'}}>
-                                <Image style={{width:200, height: 200, borderRadius: 200/2, overflow: "hidden", borderWidth: 3,borderColor: "black"}} source={{uri: this.state.avatarSource}} />
+                                <Image style={{width:200, height: 200, borderRadius: 200/2, overflow: "hidden", borderWidth: 3,borderColor: "black"}} source={this.state.avatarSource} />
                                 <View style={{marginTop: -30, marginLeft: 120}}>
                                     <Icon name="camera" type="FontAwesome" />
                                 </View>
