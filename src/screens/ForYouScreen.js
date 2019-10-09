@@ -113,6 +113,31 @@ const ForYouStack = createStackNavigator({
   }
 });
 
+const FavoriteStack = createStackNavigator({
+  Favorite: {
+    screen: FavoriteScreen,
+    navigationOptions:{
+      headerTransparent: true
+    }
+  },
+  DetailTitle: {
+    screen:DetailTitleScreen,
+    navigationOptions:{
+      gesturesEnabled: false,
+      tabBarVisible: false
+      
+    }
+  },
+  DetailEpisode:{
+    screen:DetailEpisodeScreen,
+    navigationOptions:{
+      gesturesEnabled: false,
+      tabBarVisible: false
+      
+    }
+  }
+});
+
 
 export default createAppContainer(
     createBottomTabNavigator(
@@ -127,7 +152,7 @@ export default createAppContainer(
           }
         },
         Favorite: {
-            screen: FavoriteScreen,
+            screen: FavoriteStack,
             navigationOptions:{
               title: 'Favorite',
               tabBarIcon: ({ tintColor }) => (
