@@ -50,10 +50,6 @@ class DetailTitleScreen extends React.Component {
         }
     }
 
-    onOpenEpisode = (id) => {
-        this.props.navigation.navigate("DetailEpisode",this.state.items.filter((item)=>item.id===id)[0]);
-    }
-
   render(){
     return (
         <Container>
@@ -68,11 +64,11 @@ class DetailTitleScreen extends React.Component {
                                 data={this.state.items}
                                 renderItem={({ item }) => 
                                 <ListItem>
-                                    <TouchableOpacity onPress={this.onOpenEpisode.bind(this, item.id)}>
+                                    <TouchableOpacity>
                                         <Image style={{width: 50, height: 50}}
                                             source={{uri: item.image}} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={this.onOpenEpisode.bind(this, item.id)}>
+                                    <TouchableOpacity>
                                         <View>
                                             <Text>{item.title}</Text>
                                             <Text>{item.id-13} Oktober 2019</Text>
