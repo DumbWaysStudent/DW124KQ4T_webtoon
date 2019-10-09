@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon } from 'native-base';
+import { Card, CardItem, Body, Text } from 'native-base';
 
 
 import {Image, TouchableOpacity} from 'react-native';

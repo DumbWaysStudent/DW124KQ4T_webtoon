@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon } from 'native-base';
+import { Container, Content, Item, Input, Card, CardItem, Body, Button, Icon } from 'native-base';
 import MyFavoriteCompnent from '../components/MyFavoriteComponent';
 
 const banners = [{

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { View, Text, Container, Content, Card, CardItem, Body, ListItem, Button, Icon } from 'native-base';
-import {  Image, FlatList, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import {  Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 
 
