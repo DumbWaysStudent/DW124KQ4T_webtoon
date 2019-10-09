@@ -117,27 +117,55 @@ const ProfileStack = createStackNavigator({
 const MainNavigator = createAppContainer(createBottomTabNavigator({
       ForYou: {
         screen: ForYouStack,
-        navigationOptions:{
-          title: "For You",
-          tabBarIcon: ({ tintColor }) => (
-            <Icon type="FontAwesome" name="tablet" />
-          )
+        navigationOptions:({navigation})=>{
+          var noBottomTabNav = [
+            "DetailTitle",
+            "DetailEpisode"
+          ];
+          var obj = {
+            title: 'Profile',
+            tabBarIcon: ({ tintColor }) => (
+              <Icon type="FontAwesome" name="tablet" />
+            )
+          };
+          if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
+            obj.tabBarVisible = false;
+          }
+          else{
+            obj.tabBarVisible = true;
+          }
+          return obj
         }
       },
       Favorite: {
           screen: FavoriteStack,
-          navigationOptions:{
-            title: 'Favorite',
-            tabBarIcon: ({ tintColor }) => (
-              <Icon type="FontAwesome" name="star" />
-            )
+          navigationOptions:({navigation})=>{
+            var noBottomTabNav = [
+              "DetailTitle",
+              "DetailEpisode"
+            ];
+            var obj = {
+              title: 'Profile',
+              tabBarIcon: ({ tintColor }) => (
+                <Icon type="FontAwesome" name="star" />
+              )
+            };
+            if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
+              obj.tabBarVisible = false;
+            }
+            else{
+              obj.tabBarVisible = true;
+            }
+            return obj
           }
       },
       Profile: {
           screen: ProfileStack,
           navigationOptions:({navigation})=>{
             var noBottomTabNav = [
-              "MyCreation"
+              "MyCreation",
+              "DetailTitle",
+              "DetailEpisode"
             ];
             var obj = {
               title: 'Profile',
