@@ -9,12 +9,6 @@
 import React from 'react';
 
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H3, Icon, View } from 'native-base';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import FavoriteScreen from './FavoriteScreen';
-import ProfileScreen from './ProfileScreen';
-import DetailTitleScreen from './DetailTitleScreen';
 
 
 
@@ -22,7 +16,6 @@ import DetailTitleScreen from './DetailTitleScreen';
 import BannerComponent from '../components/BannerComponent';
 import FavoriteComponent from '../components/FavoriteComponent';
 import AllComponent from '../components/AllComponent';
-import DetailEpisodeScreen from './DetailEpisodeScreen';
 
 
 
@@ -88,87 +81,4 @@ class ForYouScreen extends React.Component {
   }
 };
 
-const ForYouStack = createStackNavigator({
-  ForYou: {
-    screen: ForYouScreen,
-    navigationOptions:{
-      headerTransparent: true
-    }
-  },
-  DetailTitle: {
-    screen:DetailTitleScreen,
-    navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
-      
-    }
-  },
-  DetailEpisode:{
-    screen:DetailEpisodeScreen,
-    navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
-      
-    }
-  }
-});
-
-const FavoriteStack = createStackNavigator({
-  Favorite: {
-    screen: FavoriteScreen,
-    navigationOptions:{
-      headerTransparent: true
-    }
-  },
-  DetailTitle: {
-    screen:DetailTitleScreen,
-    navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
-      
-    }
-  },
-  DetailEpisode:{
-    screen:DetailEpisodeScreen,
-    navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
-      
-    }
-  }
-});
-
-
-export default createAppContainer(
-    createBottomTabNavigator(
-      {
-        ForYou: {
-          screen: ForYouStack,
-          navigationOptions:{
-            title: "For You",
-            tabBarIcon: ({ tintColor }) => (
-              <Icon type="FontAwesome" name="tablet" />
-            )
-          }
-        },
-        Favorite: {
-            screen: FavoriteStack,
-            navigationOptions:{
-              title: 'Favorite',
-              tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="star" />
-              )
-            }
-        },
-        Profile: {
-            screen: ProfileScreen,
-            navigationOptions:{
-              title: 'Profile',
-              tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="user" />
-              )
-            }
-        }
-      }
-    )
-  );
+export default ForYouScreen;
