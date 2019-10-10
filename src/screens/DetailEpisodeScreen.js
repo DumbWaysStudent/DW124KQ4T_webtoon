@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Container, Content, Card, CardItem, Body, Button, Icon } from 'native-base';
-import {  Image, FlatList } from 'react-native';
-
+import {  Image, FlatList, Dimensions } from 'react-native';
+const {width, height} = Dimensions.get('window');
 
 
 class DetailEpisodeScreen extends React.Component {
@@ -11,7 +11,13 @@ class DetailEpisodeScreen extends React.Component {
           title: navigation.getParam('title'),
           headerRight: (
             <Button transparent
-              onPress={() => alert('This is a button!')}>
+              onPress={()=> Share.share(
+                {
+                  title: "a title",
+                  message: "some message",
+                  url: "www.example.com"
+                }
+            )}>
                   <Icon name="share-alt" type="FontAwesome" />
               </Button>
           )
@@ -54,7 +60,7 @@ class DetailEpisodeScreen extends React.Component {
                             <FlatList
                                 data={this.state.items}
                                 renderItem={({ item }) => 
-                                    <Image style={{width: 370, height: 300}}
+                                    <Image style={{width: width, height: 300}}
                                         source={{uri: item.image}} />
                                     }
                                 keyExtractor={item => item.id.toString()}
