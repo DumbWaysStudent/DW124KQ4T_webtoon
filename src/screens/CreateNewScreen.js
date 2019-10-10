@@ -14,6 +14,7 @@ class CreateNewScreen extends React.Component{
                     delete submiting.isReady;
                     delete submiting.isChanged;
                     delete submiting.errors;
+                    submiting.time = parseInt((new Date).getTime());
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
