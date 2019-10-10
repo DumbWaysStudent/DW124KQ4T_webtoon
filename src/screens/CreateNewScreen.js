@@ -108,7 +108,7 @@ class CreateNewScreen extends React.Component{
                                     keyExtractor={({item})=>item.id.toString()}
                                 />
                                 <Button block light onPress={this.onAddEpisode}>
-                                    <Text>Add</Text>
+                                    <Text>Add Episode</Text>
                                 </Button>
                             </Body>
                         </CardItem>
