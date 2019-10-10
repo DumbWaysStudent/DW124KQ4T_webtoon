@@ -69,10 +69,9 @@ class CreateNewScreen extends React.Component{
 
             this.setState({
                 image: eps[0].images[0].src,
-                episodes: eps
+                episodes: eps,
+                isChanged: true
             });
-
-            console.log(this.state.episodes);
         }
     }
 
