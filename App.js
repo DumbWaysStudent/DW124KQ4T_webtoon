@@ -20,6 +20,7 @@ import ForYouScreen from './src/screens/ForYouScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import MyCreationScreen from './src/screens/MyCreationScreen';
+import CreateNewScreen from './src/screens/CreateNewScreen';
 
 
 
@@ -93,6 +94,12 @@ const ProfileStack = createStackNavigator({
       title: "My Webtoon"
     }
   },
+  CreateNew: {
+    screen: CreateNewScreen,
+    navigationOptions: {
+      title: "Create Webtoon"
+    }
+  },
   DetailTitle: {
     screen:DetailTitleScreen,
     navigationOptions:{
@@ -164,6 +171,7 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
           navigationOptions:({navigation})=>{
             var noBottomTabNav = [
               "MyCreation",
+              "CreateNew",
               "DetailTitle",
               "DetailEpisode"
             ];

@@ -1,27 +1,33 @@
 import React from "react";
 
 import { View, Text, Container, Content, Card, CardItem, Fab, Icon, Button, Body, ListItem } from "native-base";
-import { FlatList, TouchableOpacity, Image } from "react-native";
+import { FlatList, TouchableOpacity, Image, Dimensions } from "react-native";
 
-const banners = [{
-    id: 1,
-    title: 'The Secret of Angel',
-    image: 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
-  }, {
-    id: 2,
-    title: 'Pasutri Gaje',
-    image: 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
-  }, {
-    id: 3,
-    title: 'Young Mom',
-    image: 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
-}];
+const {width, height} = Dimensions.get('screen');
+
+const banners = [];
 
 class MyCreationScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             items: banners
+        }
+
+        console.log(props.navigation.state.params);
+    }
+
+    componentDidUpdate(){
+        if(typeof this.props.navigation.state.params !== "undefined" && this.props.navigation.getParam('isNew') === true){
+            var submitted = this.props.navigation.state.params;
+            delete submitted.isNew;
+            submitted.id = 1;
+            if(this.state.items.length>0){
+                submitted.id = this.state.items.sort((a, b) => b.id - a.id)[0].id+1;
+            }
+            var items = this.state.items;
+            items.unshift(submitted);
+            this.props.navigation.setParams({isNew: false})
         }
     }
 
@@ -34,7 +40,7 @@ class MyCreationScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card>
+                    <Card style={{flex: 1}}>
                         <CardItem>
                             <Body>
                                 <FlatList
@@ -49,7 +55,7 @@ class MyCreationScreen extends React.Component{
                                             <TouchableOpacity>
                                                 <View>
                                                     <Text>{item.title}</Text>
-                                                    <Text>20 episode(s)</Text>
+                                                    <Text>{ item.episodes.length } episode(s)</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </ListItem>
@@ -59,17 +65,15 @@ class MyCreationScreen extends React.Component{
                         </CardItem>
                     </Card>
                 </Content>
-                <View style={{ flex: 1 }}>
                 <Fab
                     active={false}
                     direction="up"
-                    containerStyle={{ }}
+                    containerStyle={{ position: "absolute" }}
                     style={{ backgroundColor: '#5067FF' }}
                     position="bottomRight"
-                    onPress={() => console.log("nice")}>
+                    onPress={() => this.props.navigation.navigate("CreateNew")}>
                         <Icon name="plus" type="FontAwesome" />
                 </Fab>
-                </View>
             </Container>
         );
     }
