@@ -21,6 +21,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import MyCreationScreen from './src/screens/MyCreationScreen';
 import CreateNewScreen from './src/screens/CreateNewScreen';
+import CreateNewEpisodeScreen from './src/screens/CreateNewEpisodeScreen';
 
 
 
@@ -100,6 +101,12 @@ const ProfileStack = createStackNavigator({
       title: "Create Webtoon"
     }
   },
+  CreateNewEpisode: {
+    screen: CreateNewEpisodeScreen,
+    navigationOptions: {
+      title: "Create Episode"
+    }
+  },
   DetailTitle: {
     screen:DetailTitleScreen,
     navigationOptions:{
@@ -172,6 +179,7 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
             var noBottomTabNav = [
               "MyCreation",
               "CreateNew",
+              "CreateNewEpisode",
               "DetailTitle",
               "DetailEpisode"
             ];
@@ -210,4 +218,4 @@ export default createAppContainer(createSwitchNavigator(
     initialRouteName: 'Login',
   }
 ));
-// console.disableYellowBox = true;
+console.disableYellowBox = true;

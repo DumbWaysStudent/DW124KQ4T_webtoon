@@ -50,7 +50,7 @@ class MyCreationScreen extends React.Component{
                                         <ListItem>
                                             <TouchableOpacity>
                                                 <Image style={{width: 50, height: 50}}
-                                                    source={{uri: item.image}} />
+                                                    source={item.image} />
                                             </TouchableOpacity>
                                             <TouchableOpacity>
                                                 <View>
