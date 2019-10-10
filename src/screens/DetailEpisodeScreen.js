@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Container, Content, Card, CardItem, Body, Button, Icon } from 'native-base';
-import {  Image, FlatList, Dimensions } from 'react-native';
+import {  Image, FlatList, Dimensions, Share } from 'react-native';
 const {width, height} = Dimensions.get('window');
 
 
