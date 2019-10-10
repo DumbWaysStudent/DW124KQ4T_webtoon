@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { View, Text, Container, Content, Card, CardItem, Body, ListItem, Button, Icon } from 'native-base';
-import {  Image, FlatList, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
+import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
 
+const {width, height} = Dimensions.get('window');
 
 
 class DetailTitleScreen extends React.Component {
@@ -12,7 +13,13 @@ class DetailTitleScreen extends React.Component {
           title: navigation.getParam('title'),
           headerRight: (
             <Button transparent
-              onPress={() => alert('This is a button!')}>
+              onPress={()=> Share.share(
+                {
+                  title: "a title",
+                  message: "some message",
+                  url: "www.example.com"
+                }
+            )}>
                   <Icon name="share-alt" type="FontAwesome" />
               </Button>
           )
@@ -58,7 +65,7 @@ class DetailTitleScreen extends React.Component {
                     <CardItem>
                         <Body>
                         <Image
-                            style={{width: 210, height: 150}}
+                            style={{width: (width*(80/100)), height: 150}}
                             source={{uri: this.state.item.image}} />
                             <FlatList style={{marginTop: 30}}
                                 data={this.state.items}
