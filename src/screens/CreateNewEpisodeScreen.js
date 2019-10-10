@@ -30,6 +30,7 @@ class CreateNewEpisodeScreen extends React.Component {
                         delete submiting.errors;
                         delete submiting.countMount;
                         submiting.time = parseInt((new Date).getTime());
+                        submiting.cover = submiting.images[0].src;
                         console.log("bisa");
                         navigation.navigate("CreateNew", {newEpisode: submiting});
                     }

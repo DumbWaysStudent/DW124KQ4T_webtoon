@@ -137,7 +137,7 @@ class CreateNewScreen extends React.Component{
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.images[0].src} />
+                                            <Image style={{width: 50, height: 50}} source={item.cover} />
                                             <View style={{marginLeft: 20}}>
                                                     <Text>
                                                         {item.name}

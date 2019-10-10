@@ -52,7 +52,7 @@ class MyCreationScreen extends React.Component{
                                                 <Image style={{width: 50, height: 50}}
                                                     source={item.image} />
                                             </TouchableOpacity>
-                                            <TouchableOpacity>
+                                            <TouchableOpacity style={{marginLeft: 20}}>
                                                 <View>
                                                     <Text>{item.title}</Text>
                                                     <Text>{ item.episodes.length } episode(s)</Text>
