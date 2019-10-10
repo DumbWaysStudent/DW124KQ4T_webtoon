@@ -1,8 +1,10 @@
 import React from "react";
-import { View, Text, Card, CardItem, Container, Content, Item, Body, Input, Button, Icon, ListItem } from "native-base";
+import { View, Text, Container, Content, Card, CardItem, Body, Button, Item, Input, Icon, ListItem } from "native-base";
+
 import { FlatList, Image } from "react-native";
 
-class CreateNewScreen extends React.Component{
+class EditToonScreen extends React.Component{
+
     static navigationOptions = ({ navigation }) => {
         return {
           headerRight: (
@@ -10,11 +12,10 @@ class CreateNewScreen extends React.Component{
               onPress={() => {
                 if(navigation.getParam("isReady")){
                     var submiting = navigation.state.params;
-                    submiting.isNew = true;
+                    submiting.onEdit = submiting.time;
                     delete submiting.isReady;
                     delete submiting.isChanged;
                     delete submiting.errors;
-                    submiting.time = parseInt((new Date).getTime());
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
@@ -26,20 +27,14 @@ class CreateNewScreen extends React.Component{
     }
 
     constructor(props){
-        super(props);
-
-
-        this.state = {
-            image: "",
-            title: "",
-            episodes: [],
-            isNew: false,
-            isReady: false,
-            errors: [],
-            isChanged: true
+        super(props)
+        this.state={
+            ...props.navigation.state.params,
+            errors:[],
+            isReady: true,
+            isChanged: false
         }
     }
-
     componentDidMount(){
         if(this.state.isChanged){
 
@@ -76,6 +71,10 @@ class CreateNewScreen extends React.Component{
         }
     }
 
+    onAddEpisode = () => {
+        this.props.navigation.navigate("CreateNewEpisode", {edit:(new Date).getTime()});
+    }
+
     onChangeTitle = (text) => {
         var error = [];
         if(text === ""){
@@ -98,36 +97,32 @@ class CreateNewScreen extends React.Component{
         
     }
 
+    onDelete = () => {
+        this.props.navigation.navigate("MyCreation", {onDelete:this.state.time})
+    }
 
     checkError = (json=null) => {
+        
         var allError = this.state.errors
         if(json!==null){
             allError = json.errors;
         }
 
-        var isReady = true
+        var isReady = false
 
-        if(allError.length > 0){
-            isReady= false;
+        if(allError.length === 0 ){
+            isReady= true;
         }
 
         var state = {...json, isReady: isReady, isChanged: true}
         this.setState(state);
-
-
-    }
-
-
-
-    onAddEpisode = () => {
-        this.props.navigation.navigate("CreateNewEpisode");
     }
 
     render(){
         return (
             <Container>
                 <Content>
-                    <Card style={{flex: 1}}>
+                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
@@ -153,6 +148,9 @@ class CreateNewScreen extends React.Component{
                                 <Button block light onPress={this.onAddEpisode}>
                                     <Text>Add Episode</Text>
                                 </Button>
+                                <Button block danger onPress={this.onDelete}>
+                                    <Text>Delete</Text>
+                                </Button>
                             </Body>
                         </CardItem>
                     </Card>
@@ -162,4 +160,4 @@ class CreateNewScreen extends React.Component{
     }
 }
 
-export default CreateNewScreen;
+export default EditToonScreen;

@@ -20,7 +20,6 @@ class CreateNewEpisodeScreen extends React.Component {
           headerRight: (
             <Button transparent
               onPress={() => {
-                console.log("pencet");
                     if(navigation.getParam("isReady")){
                         var submiting = navigation.state.params;
                         submiting.name = submiting.inputName;
@@ -31,10 +30,14 @@ class CreateNewEpisodeScreen extends React.Component {
                         delete submiting.countMount;
                         submiting.time = parseInt((new Date).getTime());
                         submiting.cover = submiting.images[0].src;
-                        console.log("bisa");
-                        navigation.navigate("CreateNew", {newEpisode: submiting});
+                        if(typeof navigation.state.params.edit === "undefined"){
+                            navigation.navigate("CreateNew", {newEpisode: submiting});
+                        }
+                        else{
+                            delete submiting.edit;
+                            navigation.navigate("EditToon", {newEpisode: submiting});
+                        }
                     }
-                    // navigation.navigate("CreateNew");
               }}>
                   <Icon name="check" type="FontAwesome" />
             </Button>
@@ -83,8 +86,6 @@ class CreateNewEpisodeScreen extends React.Component {
             this.props.navigation.setParams({
                 ...this.state
             })
-
-            console.log(this.state);
             
             this.setState({
                 isChanged: false

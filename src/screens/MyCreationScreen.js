@@ -13,21 +13,41 @@ class MyCreationScreen extends React.Component{
         this.state = {
             items: banners
         }
-
-        console.log(props.navigation.state.params);
     }
 
-    componentDidUpdate(){
-        if(typeof this.props.navigation.state.params !== "undefined" && this.props.navigation.getParam('isNew') === true){
-            var submitted = this.props.navigation.state.params;
-            delete submitted.isNew;
-            submitted.id = 1;
-            if(this.state.items.length>0){
-                submitted.id = this.state.items.sort((a, b) => b.id - a.id)[0].id+1;
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.items === this.state.items) {
+            if(typeof this.props.navigation.state.params !== "undefined"){
+                if(this.props.navigation.getParam('isNew') === true){
+                    var submitted = this.props.navigation.state.params;
+                    delete submitted.isNew;
+                    submitted.id = 1;
+                    if(this.state.items.length>0){
+                        submitted.id = this.state.items.sort((a, b) => b.id - a.id)[0].id+1;
+                    }
+                    var items = this.state.items;
+                    items.unshift(submitted);
+                    this.props.navigation.setParams({isNew: false})
+                    this.setState({items:items});
+                }
+                if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
+                    var time = this.props.navigation.getParam('onDelete');
+                    this.props.navigation.setParams({onDelete: undefined});
+                    var items = this.state.items.filter((item)=> item.time !== time);
+                    this.setState({items:items});
+                }
+                if(typeof this.props.navigation.getParam('onEdit') !== "undefined"){
+                    var time = this.props.navigation.getParam('onEdit');
+                    this.props.navigation.setParams({onEdit: undefined});
+                    var items = this.state.items;
+                    var index = this.state.items.findIndex(item => item.time === time);
+                    var submitted = this.props.navigation.state.params;
+                    delete submitted.onEdit;
+                    items[index] = submitted;
+                    this.setState({items:items});
+
+                }
             }
-            var items = this.state.items;
-            items.unshift(submitted);
-            this.props.navigation.setParams({isNew: false})
         }
     }
 
@@ -48,11 +68,11 @@ class MyCreationScreen extends React.Component{
                                     keyExtractor = {item => item.id.toString()}
                                     renderItem = {({item})=>(
                                         <ListItem>
-                                            <TouchableOpacity>
+                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)}>
                                                 <Image style={{width: 50, height: 50}}
                                                     source={item.image} />
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={{marginLeft: 20}}>
+                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)} style={{marginLeft: 20}}>
                                                 <View>
                                                     <Text>{item.title}</Text>
                                                     <Text>{ item.episodes.length } episode(s)</Text>
