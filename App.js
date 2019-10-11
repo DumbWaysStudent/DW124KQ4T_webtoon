@@ -226,8 +226,8 @@ const AppNavigator = createStackNavigator({
 
 export default createAppContainer(createSwitchNavigator(
   {
-    // Login: AppNavigator,
-    Login: Coba,
+    Login: AppNavigator,
+    // Login: Coba,
     Main: MainNavigator
   },
   {
