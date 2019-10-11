@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, Container, Content, Card, CardItem, Body, Button, Item, Input, Icon, ListItem } from "native-base";
 
-import { FlatList, Image } from "react-native";
+import { FlatList, Image, TouchableOpacity } from "react-native";
+
 
 class EditToonScreen extends React.Component{
 
@@ -29,7 +30,9 @@ class EditToonScreen extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            ...props.navigation.state.params,
+            image: props.navigation.getParam("image"),
+            title: props.navigation.getParam("title"),
+            episodes: props.navigation.getParam("episodes"),
             errors:[],
             isReady: true,
             isChanged: false
@@ -48,26 +51,53 @@ class EditToonScreen extends React.Component{
         }
     }
 
-    componentDidUpdate(){
-        if(this.state.isChanged){
-
-            this.props.navigation.setParams({
-                ...this.state
-            })
-            
-            this.setState({
-                isChanged: false
-            });
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.isChanged === this.state.isChanged){
+            if(this.state.isChanged){
+                this.props.navigation.setParams({
+                    ...this.state
+                })
+                
+                this.setState({
+                    isChanged: false
+                });
+            }
         }
-        if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.episodes.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
-            var eps = this.state.episodes;
-            eps.unshift(this.props.navigation.getParam('newEpisode'));
+        if(prevState.episodes === this.state.episodes){
+            if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.episodes.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
+                var eps = this.state.episodes;
+                eps.unshift(this.props.navigation.getParam('newEpisode'));
 
-            this.setState({
-                image: eps[0].images[0].src,
-                episodes: eps,
-                isChanged: true
-            });
+                this.setState({
+                    image: eps[0].images[0].src,
+                    episodes: eps,
+                    isChanged: true
+                });
+            }
+            if(typeof this.props.navigation.getParam('editEpisode') !== "undefined"){
+
+                var eps = this.props.navigation.getParam('editEpisode');
+                this.props.navigation.setParams({editEpisode:undefined});
+                var items = this.state.episodes;
+                var index = this.state.episodes.findIndex(item => item.time === eps.time);
+                items[index] = eps;
+
+                this.setState({
+                    image: eps.images[0].src,
+                    episodes: [ ...items],
+                    isChanged: true
+                });
+            }
+            if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
+                var eps = this.state.episodes.filter((item)=>item.time!==this.props.navigation.getParam('onDelete'));
+                this.props.navigation.setParams({onDelete:undefined});
+
+
+                this.setState({image: (typeof eps[0] !== "undefined")?eps[0].images[0].src:"",
+                    episodes: eps,
+                    isChanged: true
+                });
+            }
         }
     }
 
@@ -118,6 +148,11 @@ class EditToonScreen extends React.Component{
         this.setState(state);
     }
 
+    onEditEpisode = (id) => {
+        var item = this.state.episodes.filter((item)=>item.time===id)[0];
+        this.props.navigation.navigate("EditEpisode", {edit: item});
+    }
+
     render(){
         return (
             <Container>
@@ -136,11 +171,13 @@ class EditToonScreen extends React.Component{
                                     renderItem={({item}) => (
                                         <ListItem>
                                             <Image style={{width: 50, height: 50}} source={item.cover} />
-                                            <View style={{marginLeft: 20}}>
-                                                    <Text>
-                                                        {item.name}
-                                                    </Text>
-                                            </View>
+                                            <TouchableOpacity onPress={this.onEditEpisode.bind(this, item.time)} style={{marginLeft: 20}}>
+                                                <View>
+                                                        <Text>
+                                                            {item.name}
+                                                        </Text>
+                                                </View>
+                                            </TouchableOpacity>
                                         </ListItem>
                                     )}
                                     keyExtractor={(item)=>item.time.toString()}

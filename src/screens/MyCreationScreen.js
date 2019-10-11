@@ -44,7 +44,7 @@ class MyCreationScreen extends React.Component{
                     var submitted = this.props.navigation.state.params;
                     delete submitted.onEdit;
                     items[index] = submitted;
-                    this.setState({items:items});
+                    this.setState({items:[...items]});
 
                 }
             }

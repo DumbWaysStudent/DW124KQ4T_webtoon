@@ -23,6 +23,7 @@ import MyCreationScreen from './src/screens/MyCreationScreen';
 import CreateNewScreen from './src/screens/CreateNewScreen';
 import EditToonScreen from './src/screens/EditToonScreen';
 import CreateNewEpisodeScreen from './src/screens/CreateNewEpisodeScreen';
+import EditEpisodeScreen from './src/screens/EditEpisodeScreen';
 
 
 
@@ -106,6 +107,12 @@ const ProfileStack = createStackNavigator({
     screen: EditToonScreen,
     navigationOptions: {
       title: "Edit Webtoon"
+    }
+  },
+  EditEpisode: {
+    screen:EditEpisodeScreen,
+    navigationOptions:{
+      title: "EditEpisode"
     }
   },
   CreateNewEpisode: {

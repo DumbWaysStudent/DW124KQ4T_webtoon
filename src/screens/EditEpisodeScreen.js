@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, Button, Container, Content, Card, CardItem, Body, Item, Icon, Input, ListItem } from "native-base"
-import { FlatList, Image, Dimensions } from "react-native";
+import { View, Text, Container, Content, Card, CardItem, Body, Item, Button, Icon, ListItem, Input } from "native-base";
+import { FlatList, Image, TouchableOpacity, Dimensions } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 const {width, height} = Dimensions.get('window');
-
 
 const options = {
     title: 'Select Avatar',
@@ -14,7 +13,7 @@ const options = {
     },
   };
 
-class CreateNewEpisodeScreen extends React.Component {
+class EditEpisodeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => {
         return {
           headerRight: (
@@ -28,15 +27,10 @@ class CreateNewEpisodeScreen extends React.Component {
                         delete submiting.isChanged;
                         delete submiting.errors;
                         delete submiting.countMount;
-                        submiting.time = parseInt((new Date).getTime());
                         submiting.cover = submiting.images[0].src;
-                        if(typeof navigation.state.params.edit === "undefined"){
-                            navigation.navigate("CreateNew", {newEpisode: submiting});
-                        }
-                        else{
-                            delete submiting.edit;
-                            navigation.navigate("EditToon", {newEpisode: submiting});
-                        }
+                        submiting.edit.edit = submiting.edit;
+                        delete submiting.edit;
+                        navigation.navigate("EditToon", {editEpisode: submiting, newEpisode: undefined, onDelete: undefined});
                     }
               }}>
                   <Icon name="check" type="FontAwesome" />
@@ -51,23 +45,18 @@ class CreateNewEpisodeScreen extends React.Component {
         
 
         this.state = {
-            inputName: "",
-            images: [],
+            inputName: this.props.navigation.getParam('edit').name,
+            images: this.props.navigation.getParam('edit').images,
             isChanged: false,
             isReady: false,
             errors: [],
-            countMount: 0
+            countMount: 0,
+            time: this.props.navigation.getParam('edit').time
         }
     }
     
 
     componentDidMount(){
-        if(this.state.countMount === 0){
-            this.onChangeName("");
-            this.setState({
-                countMount: this.state.countMount+1
-            });
-        }
         
         if(this.state.isChanged){
 
@@ -166,6 +155,10 @@ class CreateNewEpisodeScreen extends React.Component {
         });
     }
 
+    onDeleteEps = ()=>{
+        this.props.navigation.navigate("EditToon", {onDelete:this.state.time, editEpisode: undefined, newEpisode: undefined})
+    }
+
     render(){
         return (
             <Container>
@@ -199,6 +192,9 @@ class CreateNewEpisodeScreen extends React.Component {
                                 <Button block light onPress={this.onAddImage}>
                                     <Text>Add Image</Text>
                                 </Button>
+                                <Button block danger onPress={this.onDeleteEps}>
+                                    <Text>Delete</Text>
+                                </Button>
                             </Body>
                         </CardItem>
                     </Card>
@@ -206,7 +202,6 @@ class CreateNewEpisodeScreen extends React.Component {
             </Container>
         )
     }
-
 }
 
-export default CreateNewEpisodeScreen
+export default EditEpisodeScreen;
