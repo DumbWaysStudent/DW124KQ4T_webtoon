@@ -24,6 +24,7 @@ import CreateNewScreen from './src/screens/CreateNewScreen';
 import EditToonScreen from './src/screens/EditToonScreen';
 import CreateNewEpisodeScreen from './src/screens/CreateNewEpisodeScreen';
 import EditEpisodeScreen from './src/screens/EditEpisodeScreen';
+import Coba from './Coba';
 
 
 
@@ -225,7 +226,8 @@ const AppNavigator = createStackNavigator({
 
 export default createAppContainer(createSwitchNavigator(
   {
-    Login: AppNavigator,
+    // Login: AppNavigator,
+    Login: Coba,
     Main: MainNavigator
   },
   {
