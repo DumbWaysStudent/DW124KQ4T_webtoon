@@ -41,10 +41,8 @@ This App is a something App. We can help you by not helping you.
 
 
 ## Features
-* Choose a Service type
-* Pick Location
-* Finding the truck
-* Order History
+* Create Toon
+* Create Episode
 
 ## Why this app?
 * Out of the box app of the year!
