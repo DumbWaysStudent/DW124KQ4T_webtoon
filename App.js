@@ -195,6 +195,8 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
               "MyCreation",
               "CreateNew",
               "CreateNewEpisode",
+              "EditToon",
+              "EditEpisode",
               "DetailTitle",
               "DetailEpisode"
             ];
