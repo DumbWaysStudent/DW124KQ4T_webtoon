@@ -7,23 +7,36 @@
 This project is still on very early development stage. If you want to use for production, use it with your own risk.
 <br>More feature Coming Really Soon.
 
-## Iyat
-Iyat is a Vacum Toilet Truck Finder App. We are ready to help, when Your 💩💩💩 stuck in your water closet.  
+## This App
+This App is a something App. We can help you by not helping you.  
 
-Click to Watch Video on Youtube:
-
-[![Iyat Video](https://img.youtube.com/vi/f5fHm3I7Exk/0.jpg)](https://www.youtube.com/watch?v=f5fHm3I7Exk)
 
 ## Screenshots
 
 <p float="left">
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/55fda3a2-425f-4890-b027-660a8a80285d/00000962.png" width="200" height="350" alt="Choose a Service Type"/>
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_1.png" width="200" height="350" alt="Choose a Service Type"/>
 
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/b8e3b04e-2a6d-421c-bf62-17573332930d/00000963.png" width="200" height="350" alt="Pick Location"/>
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_2.png" width="200" height="350" alt="Pick Location"/>
 
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/5d6ff57a-4f5f-4f0b-93ba-e38fccc91223/00000964.png" width="200" height="350" alt="Finding the truck"/>
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_3.png" width="200" height="350" alt="Finding the truck"/>
 
-  <img src="https://content.screencast.com/users/Radiegtya/folders/Jing/media/e7f85fb0-3c45-4818-a362-ab1026d9ff44/00000965.png" width="200" height="350" alt="Order History"/>
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_4.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_5.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_6.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_7.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_8.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_19.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_10.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_11.png" width="200" height="350" alt="Order History"/>
+
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_12.png" width="200" height="350" alt="Order History"/>
 </p>
 
 
@@ -33,7 +46,7 @@ Click to Watch Video on Youtube:
 * Finding the truck
 * Order History
 
-## Why Iyat?
+## Why this app?
 * Out of the box app of the year!
 * It's React Native, so it support android & iOS by default!
 * Simple Code, so you can easily contribute on it.
@@ -76,8 +89,8 @@ $ meteor #run your meteor on http://localhost:3000
 * Hire Me https://www.linkedin.com/in/radiegtya
 
 ## Contact 
-* WA/TELEGRAM: +62 8564 1278 479
-* email: radiegtya@dumbways.id
+* WA/TELEGRAM: +62 345 178 910 1
+* email: hmm@mail.com
 
 ## Download App (Demo usage only)
 [![Iyat Download](https://i1.wp.com/apkmodsios.com/wp-content/uploads/2018/12/Download-Infinite-Design-3.4.10-Apk.png)](https://linktodownload.com/course-repo-example.apk)
