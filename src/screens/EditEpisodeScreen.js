@@ -47,8 +47,8 @@ class EditEpisodeScreen extends React.Component {
         this.state = {
             inputName: this.props.navigation.getParam('edit').name,
             images: this.props.navigation.getParam('edit').images,
-            isChanged: false,
-            isReady: false,
+            isChanged: true,
+            isReady: true,
             errors: [],
             countMount: 0,
             time: this.props.navigation.getParam('edit').time

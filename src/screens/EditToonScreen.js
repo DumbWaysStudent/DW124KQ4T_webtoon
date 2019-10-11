@@ -35,7 +35,7 @@ class EditToonScreen extends React.Component{
             episodes: props.navigation.getParam("episodes"),
             errors:[],
             isReady: true,
-            isChanged: false
+            isChanged: true
         }
     }
     componentDidMount(){
