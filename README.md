@@ -14,7 +14,7 @@ This App is a something App. We can help you by not helping you.
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_1.png" width="200" alt="Login/>
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_1.png" width="200" alt="Login"/>
 
   <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_2.png" width="200" alt="For You"/>
 
