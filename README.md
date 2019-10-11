@@ -1,6 +1,6 @@
 
 <h1 align="center">
-  <img src="./logo.png" width="300"/><br>
+  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/logo.png" width="300"/><br>
 </h1>
 
 ## Important
