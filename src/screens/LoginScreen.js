@@ -120,7 +120,6 @@ class LoginScreen extends React.Component {
             await auth.save(result.data.data);
             this.props.navigation.navigate('Main');
         }).catch(error=>{
-            co
             if(typeof error.response.data.msg !== "undefined"){
                 alert(error.response.data.msg);
             }
