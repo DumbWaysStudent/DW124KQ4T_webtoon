@@ -5,6 +5,7 @@ import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, List,
 import { Image, TouchableOpacity } from 'react-native';
 
 import Auth from "../services/Auth";
+import env from "../../env";
 
 const profile = {
   image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
@@ -40,9 +41,10 @@ class ProfileScreen extends React.Component {
     }
 
     getProfile = async() =>{
+      var img = (await (new Auth).fetch("image"));
       this.setState({
         profile: {
-          image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
+          image: (img) ? `${env.baseUrl}/${img}` : "",
           name: await (new Auth).fetch("name")
         }
       });

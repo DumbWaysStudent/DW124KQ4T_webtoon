@@ -7,6 +7,8 @@ import {Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 
 import Swiper from 'react-native-swiper';
 
+import env from '../../env'
+
 const {width, height} = Dimensions.get('window');
 
 class BannerComponent extends React.Component {
@@ -25,7 +27,7 @@ class BannerComponent extends React.Component {
                     <Body>
                         <Image
                         style={{width: (width*(80/100)), height: 110}}
-                        source={{uri: item.image}} />
+                        source={{uri: `${env.baseUrl}/${item.image}`}} />
                   </Body>
                 </CardItem>
             </Card>

@@ -8,6 +8,8 @@
 
 import React from 'react';
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, H3, Icon } from 'native-base';
+import axios from 'axios';
+import env from '../../env';
 
 import BannerComponent from '../components/BannerComponent';
 import FavoriteComponent from '../components/FavoriteComponent';
@@ -36,8 +38,23 @@ class ForYouScreen extends React.Component {
       super(props);
 
       this.state = {
-          entries : banners
+          entries : banners,
+          banners: []
       }
+  }
+
+  componentDidMount(){
+      this.onBanner();
+  }
+
+  onBanner = async() => {
+    await axios({
+        method: 'GET',
+        headers: { 'content-type': 'application/json' },
+        url: `${env.apiUrl}/toons/banner`
+    }).then(result=>{
+        this.setState({banners:result.data.data.data})
+    });
   }
 
   onDetailTitle = (id) => {
@@ -60,7 +77,7 @@ class ForYouScreen extends React.Component {
                                       <Icon type="FontAwesome" name="search" />
                                   </Button>
                               </Item>
-                              <BannerComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                              <BannerComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} />
                               <H3>Favorite</H3>
                               <FavoriteComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
                               <H3>All</H3>

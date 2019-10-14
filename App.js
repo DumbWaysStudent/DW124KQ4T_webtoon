@@ -26,6 +26,7 @@ import CreateNewScreen from './src/screens/CreateNewScreen';
 import EditToonScreen from './src/screens/EditToonScreen';
 import CreateNewEpisodeScreen from './src/screens/CreateNewEpisodeScreen';
 import EditEpisodeScreen from './src/screens/EditEpisodeScreen';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import Coba from './Coba';
 
 
@@ -229,16 +230,17 @@ const AppNavigator = createStackNavigator({
   }
 });
 
-const auth = new Auth;
-
 export default createAppContainer(createSwitchNavigator(
   {
+    AuthLoading: {
+      screen: AuthLoadingScreen
+    },
     Login: AppNavigator,
     // Login: Coba,
     Main: MainNavigator
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'AuthLoading',
   }
 ));
 console.disableYellowBox = true;
