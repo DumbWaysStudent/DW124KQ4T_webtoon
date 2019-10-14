@@ -4,6 +4,8 @@ import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, List,
 
 import { Image, TouchableOpacity } from 'react-native';
 
+import Auth from "../services/Auth";
+
 const profile = {
   image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
   name: "Yusuf Basori"
@@ -29,8 +31,27 @@ class ProfileScreen extends React.Component {
         super(props);
 
         this.state = {
-          profile: profile
+          profile: {}
         }
+    }
+
+    async componentDidMount(){
+      await this.getProfile();
+    }
+
+    getProfile = async() =>{
+      this.setState({
+        profile: {
+          image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
+          name: await (new Auth).fetch("name")
+        }
+      });
+    }
+
+    handleLogout = async () => {
+      await (new Auth).destroy().then(()=>{
+        this.props.navigation.navigate("Login");
+      }) 
     }
 
     
@@ -54,7 +75,7 @@ class ProfileScreen extends React.Component {
                   </TouchableOpacity>
                 </ListItem>
                 <ListItem>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate("Login")} style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
+                  <TouchableOpacity onPress={this.handleLogout} style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
                     <View style={{flex: 1}}>
                       <Text>Logout</Text>
                     </View>

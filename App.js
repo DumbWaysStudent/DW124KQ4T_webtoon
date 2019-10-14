@@ -9,6 +9,8 @@
 import React from 'react';
 import { Icon} from 'native-base';
 
+import Auth from './src/services/Auth'
+
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -25,6 +27,7 @@ import EditToonScreen from './src/screens/EditToonScreen';
 import CreateNewEpisodeScreen from './src/screens/CreateNewEpisodeScreen';
 import EditEpisodeScreen from './src/screens/EditEpisodeScreen';
 import Coba from './Coba';
+
 
 
 
@@ -225,6 +228,8 @@ const AppNavigator = createStackNavigator({
     }
   }
 });
+
+const auth = new Auth;
 
 export default createAppContainer(createSwitchNavigator(
   {

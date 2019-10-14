@@ -31,7 +31,10 @@ class LoginScreen extends React.Component {
 
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+        if(await (new Auth).exist()){
+            this.props.navigation.navigate('Main')
+        }
         if(this.state.countMount === 0){
             this.handleInputEmail("");
             this.handleInputPassword("");
