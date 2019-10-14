@@ -100,8 +100,7 @@ class ForYouScreen extends React.Component {
   }
 
   onDetailTitle = (id) => {
-      var item = this.state.entries.filter((item, index)=> item.id === id)[0];
-      this.props.navigation.navigate("DetailTitle", item);
+      this.props.navigation.navigate("DetailTitle", {id});
   }
 
   onKeyword = async (text) => {

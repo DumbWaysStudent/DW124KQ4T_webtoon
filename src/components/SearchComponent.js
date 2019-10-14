@@ -1,7 +1,6 @@
 import React from "react";
 import {View, Text, ListItem} from "native-base";
 import {FlatList, TouchableOpacity, Image} from "react-native";
-import axios from "axios";
 import env from "../../env";
 
 

@@ -2,6 +2,9 @@ import React from 'react';
 
 import { View, Text, Container, Content, Card, CardItem, Body, ListItem, Button, Icon } from 'native-base';
 import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
+import Auth from "../services/Auth";
+import axios from "axios";
+import env from "../../env";
 
 const {width, height} = Dimensions.get('window');
 
@@ -29,9 +32,9 @@ class DetailTitleScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            item: props.navigation.state.params,
+            toon: null,
             countMount: 0,
-            items: []
+            episodes: []
         }
     }
 
@@ -39,22 +42,35 @@ class DetailTitleScreen extends React.Component {
 
     
 
-    componentDidMount(){
-        if(this.state.countMount === 0){
-            var items = this.state.items;
-            for(var i=35;i>0;i-=7){
-                var item = {
-                    id: ((i+7)),
-                    title: this.state.item.title + " Ep. " + (((i+7)/7)-1),
-                    image: this.state.item.image
-                }
-                items.push(item);
-            }
+    async componentDidMount(){
+        this.setState({
+            token: await (new Auth).fetch('token')
+        });
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            url: `${env.apiUrl}/toon/${this.props.navigation.getParam("id")}`
+        }).then(result => {
             this.setState({
-                items: items,
-                countMount: this.state.countMount+1
-            });
-        }
+                toon: result.data.data.data
+            })
+            this.props.navigation.setParams({title:this.state.toon.title});
+            
+        });
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            url: `${env.apiUrl}/toon/${this.props.navigation.getParam("id")}/episodes`
+        }).then(result => {
+            this.setState({episodes: result.data.data.data});
+            
+        });
     }
 
     onOpenEpisode = (id) => {
@@ -68,21 +84,21 @@ class DetailTitleScreen extends React.Component {
                 <Card>
                     <CardItem>
                         <Body>
-                        <Image
-                            style={{width: (width*(80/100)), height: 150}}
-                            source={{uri: this.state.item.image}} />
+                        {(this.state.toon)?<Image
+                            style={{width: (width*(90/100)), height: 150}}
+                            source={{uri: `${env.baseUrl}/${this.state.toon.image}`}} />: <View />}
                             <FlatList style={{marginTop: 30}}
-                                data={this.state.items}
+                                data={this.state.episodes}
                                 renderItem={({ item }) => 
                                 <ListItem>
                                     <TouchableOpacity onPress={this.onOpenEpisode.bind(this, item.id)}>
-                                        <Image style={{width: 50, height: 50}}
-                                            source={{uri: item.image}} />
+                                        <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}}
+                                            source={{uri: `${env.baseUrl}/${item.image}`}} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={this.onOpenEpisode.bind(this, item.id)}>
+                                    <TouchableOpacity style={{marginLeft: 10}} onPress={this.onOpenEpisode.bind(this, item.id)}>
                                         <View>
                                             <Text>{item.title}</Text>
-                                            <Text>{item.id-13} Oktober 2019</Text>
+                                            <Text> Oktober 2019</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </ListItem>

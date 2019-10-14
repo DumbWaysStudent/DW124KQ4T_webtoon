@@ -1,6 +1,7 @@
 const models = require('../../../models');
 const User = models.user;
 const Toon = models.toon;
+const Episode = models.toon_episode;
 const Favorite = models.favorite;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -66,6 +67,34 @@ module.exports = {
             msg: "Success",
             data: {
                 data: toons
+            }
+        });
+    },
+    show: async (req, res) => {
+        var toons = []
+        await Toon.findOne({
+            where: {
+                id: req.params.id
+            }
+        }).then(result=>toons=result);
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: toons
+            }
+        });
+    },
+    episodes: async (req, res) => {
+        var episodes = null
+        await Episode.findAll({
+            where: {
+                toon_id: req.params.id
+            }
+        }).then(result=>episodes=result);
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: episodes
             }
         });
     }
