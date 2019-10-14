@@ -13,6 +13,7 @@ import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1
 import {StyleSheet, View} from 'react-native';
 import axios  from 'axios';
 import env  from '../../env';
+import Auth  from '../services/Auth';
 
 
 class LoginScreen extends React.Component {
@@ -27,6 +28,7 @@ class LoginScreen extends React.Component {
             isSubmitEnable: false,
             countMount: 0
         }
+
     }
 
     componentDidMount(){
@@ -105,7 +107,8 @@ class LoginScreen extends React.Component {
     }
 
     handleSubmit = async () => {
-        axios({
+        var auth = (new Auth);
+        await axios({
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             data: {
@@ -113,12 +116,15 @@ class LoginScreen extends React.Component {
                 password: this.state.inputPassword
             },          
             url: `${env.apiUrl}/auth/authenticate`
-        }).then(result=>{
-            console.log(result);
+        }).then(async result=>{
+            await auth.save(result.data.data);
+            this.props.navigation.navigate('Main');
         }).catch(error=>{
-            console.log(error);
+            co
+            if(typeof error.response.data.msg !== "undefined"){
+                alert(error.response.data.msg);
+            }
         });
-        // this.props.navigation.navigate("Main");
     }
 
   render() {

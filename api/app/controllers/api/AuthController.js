@@ -49,7 +49,7 @@ module.exports = {
                         return res.status(200).json({
                             msg: "Welcome!",
                             data: {
-                                id: authUser.id,
+                                id: authUser.id.toString(),
                                 name: authUser.name,
                                 email: authUser.email,
                                 token: token
