@@ -9,6 +9,7 @@ const ToonEpisodeController = require("../controllers/api/ToonEpisodeController"
 module.exports = (router) => {
     router.group("/auth", (auth) =>{
         auth.post("/authenticate", [bodyParser.json()], AuthController.authenticate);
+        auth.post("/register", [bodyParser.json()], AuthController.register);
     });
     router.group("/toons", (toons) =>{
         toons.get("/all", [mid.auth], ToonController.index);

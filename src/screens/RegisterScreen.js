@@ -16,12 +16,13 @@ import env  from '../../env';
 import Auth  from '../services/Auth';
 
 
-class LoginScreen extends React.Component {
+class RegisterScreen extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
             isSecurePassword: true,
+            inputName: "",
             inputEmail: "",
             inputPassword: "",
             errors: [],
@@ -48,6 +49,28 @@ class LoginScreen extends React.Component {
     }
 
    
+    handleInputName = (text) => {
+        var errors=[];
+            if(text === ""){
+                errors.push("Name is required!");
+            }
+
+
+            var allError = this.state.errors.filter((item, index)=> item.input !== "name");
+
+            if(errors.length>0){
+                allError.push({
+                    input: "name",
+                    errors: errors
+                });
+            }
+
+            this.checkError({
+                inputName: text,
+                errors: allError  
+            });
+    }
+
     
     handleInputEmail = (text) => {
         var errors=[];
@@ -112,16 +135,24 @@ class LoginScreen extends React.Component {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             data: {
+                name: this.state.inputName,
                 email: this.state.inputEmail,
                 password: this.state.inputPassword
             },          
-            url: `${env.apiUrl}/auth/authenticate`
+            url: `${env.apiUrl}/auth/register`
         }).then(async result=>{
             await auth.save(result.data.data);
             this.props.navigation.navigate('Main');
         }).catch(error=>{
-            if(typeof error.response.data.msg !== "undefined"){
-                alert(error.response.data.msg);
+            if(typeof error.response.data.errors !== "undefined"){
+                var str = "";
+                var error = error.response.data.errors;
+                for(var key in error){
+                    for(var i=0;i<error[key].length; i++){
+                        str = str + error[key][i] + "\n";
+                    }
+                }
+                alert(str);
             }
         });
     }
@@ -134,8 +165,11 @@ class LoginScreen extends React.Component {
                     <CardItem>
                         <Body>
                             <View style={styles.form}>
-                                <H1>Log In</H1>
-                                <Text>Login with your account WEBTOON</Text>
+                                <H1>Register</H1>
+                                <Text>Register with your account WEBTOON</Text>
+                                <Item>
+                                    <Input placeholder="Name" value={this.state.inputName} onChangeText={this.handleInputName} />
+                                </Item>
                                 <Item>
                                     <Input placeholder="E-mail" value={this.state.inputEmail} onChangeText={this.handleInputEmail} />
                                 </Item>
@@ -147,15 +181,15 @@ class LoginScreen extends React.Component {
                                 </Item>
                                 {((this.state.isSubmitEnable) ) ? 
                                     <Button onPress={this.handleSubmit} style={styles.buttonLogin} block>
-                                        <Text>Log In</Text>
+                                        <Text>Register</Text>
                                     </Button>
                                         : 
                                     <Button disabled style={styles.buttonLogin} block>
-                                        <Text>Log In</Text>
+                                        <Text>Register</Text>
                                     </Button>
                                 }
-                                <Button transparent style={styles.buttonLogin} block style={{marginTop: 10}} onPress={()=>this.props.navigation.navigate("Register")}>
-                                        <Text>Join Us</Text>
+                                <Button transparent style={styles.buttonLogin} block style={{marginTop: 10}} onPress={()=>this.props.navigation.navigate("Login")}>
+                                        <Text>Already Have Account</Text>
                                 </Button>
                             </View>
                         </Body>
@@ -183,4 +217,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default LoginScreen;
+export default RegisterScreen;

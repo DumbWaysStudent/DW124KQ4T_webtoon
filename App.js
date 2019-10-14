@@ -20,6 +20,7 @@ import DetailTitleScreen from './src/screens/DetailTitleScreen';
 import DetailEpisodeScreen from './src/screens/DetailEpisodeScreen';
 import ForYouScreen from './src/screens/ForYouScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
 import EditProfileScreen from './src/screens/EditProfileScreen';
 import MyCreationScreen from './src/screens/MyCreationScreen';
 import CreateNewScreen from './src/screens/CreateNewScreen';
@@ -229,12 +230,21 @@ const AppNavigator = createStackNavigator({
     }
   }
 });
+const RegNavigator = createStackNavigator({
+  Register: {
+    screen: RegisterScreen,
+    navigationOptions:{
+      headerTransparent: true
+    }
+  }
+});
 
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: {
       screen: AuthLoadingScreen
     },
+    Register: RegNavigator,
     Login: AppNavigator,
     // Login: Coba,
     Main: MainNavigator

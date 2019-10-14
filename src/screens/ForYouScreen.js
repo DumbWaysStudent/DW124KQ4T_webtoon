@@ -145,8 +145,16 @@ class ForYouScreen extends React.Component {
                                 <>
                                 {(this.state.banners.length>0) ? <BannerComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} /> : <View />}
 
-                                <H3>Favorite</H3>
-                                <FavoriteComponent items={this.state.favorites} onDetailTitle={this.onDetailTitle} />
+                                
+                                {this.state.favorites.lenght>0?
+                                    <>
+                                    <H3>Favorite</H3>
+                                    <FavoriteComponent items={this.state.favorites} onDetailTitle={this.onDetailTitle} />
+                                    </>
+                                    :
+                                    <View />
+                                }
+                                
 
                                 <H3>All</H3>
                                 <AllComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
