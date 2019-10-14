@@ -11,6 +11,8 @@ import React from 'react';
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon } from 'native-base';
 
 import {StyleSheet, View} from 'react-native';
+import axios  from 'axios';
+import env  from '../../env';
 
 
 class LoginScreen extends React.Component {
@@ -102,8 +104,21 @@ class LoginScreen extends React.Component {
         this.setState(objs);
     }
 
-    handleSubmit = () => {
-        this.props.navigation.navigate("Main");
+    handleSubmit = async () => {
+        axios({
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            data: {
+                email: this.state.inputEmail,
+                password: this.state.inputPassword
+            },          
+            url: `${env.apiUrl}/auth/authenticate`
+        }).then(result=>{
+            console.log(result);
+        }).catch(error=>{
+            console.log(error);
+        });
+        // this.props.navigation.navigate("Main");
     }
 
   render() {

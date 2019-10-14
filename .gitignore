@@ -58,6 +58,10 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-ios
-android
-__tests__
+# ios
+# android
+# __tests__
+
+api/node_modules
+api/yarn-error.log
+api/env.js
