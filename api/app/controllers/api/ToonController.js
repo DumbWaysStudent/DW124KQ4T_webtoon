@@ -3,10 +3,36 @@ const User = models.user
 const Toon = models.toon
 
 module.exports = {
-    index: (req, res)=>{
-        User.findAll({include: ['toons']}).then(rslt=>res.send(rslt))
-        // return res.status(200).json({
-        //     nice: "nice"
-        // });
+    index: async (req, res)=>{
+        var toons = []
+        await Toon.findAll().then(rslt=>toons=rslt)
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: toons
+            }
+        });
+    },
+
+    banner: async (req, res)=>{
+        var toons = []
+        await Toon.findAll().then(rslt=>toons=rslt)
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: toons
+            }
+        });
+    },
+
+    favorite: async (req, res)=>{
+        var toons = []
+        await Toon.findAll().then(rslt=>toons=rslt)
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: toons
+            }
+        });
     }
 };

@@ -44,12 +44,12 @@ module.exports = {
             else{
                 bcrypt.compare(req.body.password, authUser.password).then((result) => { 
                     if(result){
-                        let token = jwt.sign({ userId: authUser.id }, env.jwt.secret)
-
+                        let token = jwt.sign({ userId: authUser.id }, env.jwt.secret);
                         return res.status(200).json({
                             msg: "Welcome!",
                             data: {
                                 id: authUser.id.toString(),
+                                image: authUser.image,
                                 name: authUser.name,
                                 email: authUser.email,
                                 token: token
