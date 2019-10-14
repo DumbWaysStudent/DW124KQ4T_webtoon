@@ -7,13 +7,16 @@
  */
 
 import React from 'react';
-import { Container, Content, Item, Input, Card, CardItem, Body, Button, H3, Icon } from 'native-base';
+import { Container, Content, Item, Input, Card, CardItem, Body, Button, H3, Icon, View } from 'native-base';
 import axios from 'axios';
 import env from '../../env';
+
+import Auth from '../services/Auth';
 
 import BannerComponent from '../components/BannerComponent';
 import FavoriteComponent from '../components/FavoriteComponent';
 import AllComponent from '../components/AllComponent';
+import SearchComponent from '../components/SearchComponent';
 
 
 const banners = [{
@@ -38,22 +41,61 @@ class ForYouScreen extends React.Component {
       super(props);
 
       this.state = {
-          entries : banners,
-          banners: []
+          entries : [],
+          banners: [],
+          favorites: [],
+          token: "",
+          keyword: "",
+          searchResult: []
       }
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+      this.setState({
+          token: await (new Auth).fetch('token')
+      });
+      
       this.onBanner();
+      this.onFavorite();
+      this.onAll();
   }
 
   onBanner = async() => {
     await axios({
         method: 'GET',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            "authorization": `Bearer ${this.state.token}`
+        },
         url: `${env.apiUrl}/toons/banner`
     }).then(result=>{
         this.setState({banners:result.data.data.data})
+    });
+  }
+
+  onFavorite = async() => {
+    await axios({
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            "authorization": `Bearer ${this.state.token}`
+        },
+        url: `${env.apiUrl}/toons/favorite`
+    }).then(result=>{
+        this.setState({favorites:result.data.data.data})
+    });
+  }
+
+  onAll = async() => {
+    await axios({
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            "authorization": `Bearer ${this.state.token}`
+        },
+        url: `${env.apiUrl}/toons/all`
+    }).then(result=>{
+        this.setState({entries:result.data.data.data})
     });
   }
 
@@ -61,6 +103,28 @@ class ForYouScreen extends React.Component {
       var item = this.state.entries.filter((item, index)=> item.id === id)[0];
       this.props.navigation.navigate("DetailTitle", item);
   }
+
+  onKeyword = async (text) => {
+    this.setState({
+        keyword: text
+    });
+
+    await axios({
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            "authorization": `Bearer ${this.state.token}`
+        },
+        url: `${env.apiUrl}/toons/search/${text}`
+    }).then(result => {
+        // this.setState({
+        //     toons: result.data.data.data
+        // })
+        this.setState({searchResult: result.data.data.data});
+        
+    })
+  }
+
 
 
 
@@ -72,16 +136,23 @@ class ForYouScreen extends React.Component {
                       <CardItem>
                           <Body>
                               <Item>
-                                  <Input placeholder="Search" />
+                                  <Input placeholder="Search" value={this.state.keyword} onChangeText={this.onKeyword} />
                                   <Button transparent>
                                       <Icon type="FontAwesome" name="search" />
                                   </Button>
                               </Item>
-                              <BannerComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} />
-                              <H3>Favorite</H3>
-                              <FavoriteComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
-                              <H3>All</H3>
-                              <AllComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                              { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) : 
+                              
+                                <>
+                                {(this.state.banners.length>0) ? <BannerComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} /> : <View />}
+
+                                <H3>Favorite</H3>
+                                <FavoriteComponent items={this.state.favorites} onDetailTitle={this.onDetailTitle} />
+
+                                <H3>All</H3>
+                                <AllComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                                </>
+                              }
                           </Body>
                       </CardItem>
                   </Card>

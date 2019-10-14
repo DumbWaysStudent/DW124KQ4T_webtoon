@@ -7,6 +7,8 @@ import {Image, TouchableOpacity} from 'react-native';
 
 import Carousel from 'react-native-snap-carousel';
 
+import env from '../../env';
+
 const sliderWidth = 370;
 const itemWidth = 120
 
@@ -15,6 +17,7 @@ class FavoriteComponent extends React.Component {
 
     constructor(props){
         super(props);
+        console.log(props.items);
     }
 
     
@@ -25,14 +28,14 @@ class FavoriteComponent extends React.Component {
           ref={(c) => { this._carousel = c; }}
           data={this.props.items}
           renderItem={({item, index})=>(
-            <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
+            <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
               <Card>
                   <CardItem>
                       <Body>
                           <Image
                           style={{width: 90, height: 90}}
-                          source={{uri: item.image}} />
-                          <Text>{ item.title }</Text>
+                          source={{uri: `${env.baseUrl}/${item.toon.image}`}} />
+                          <Text>{ item.toon.title }</Text>
                       </Body>
                   </CardItem>
               </Card>

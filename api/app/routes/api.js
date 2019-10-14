@@ -10,9 +10,10 @@ module.exports = (router) => {
         auth.post("/authenticate", [bodyParser.json()], AuthController.authenticate);
     });
     router.group("/toons/", (toon) =>{
-        toon.get("/all", ToonController.index);
-        toon.get("/banner", ToonController.index);
-        toon.get("/favorite", [mid.auth], ToonController.index);
+        toon.get("/all", [mid.auth], ToonController.index);
+        toon.get("/banner", [mid.auth], ToonController.banner);
+        toon.get("/favorite", [mid.auth], ToonController.favorite);
+        toon.get("/search/:keyword", [mid.auth], ToonController.search);
     });
     
 }
