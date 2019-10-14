@@ -1,7 +1,10 @@
 import React from 'react';
 
-import { Container, Content, Card, CardItem, Body, Button, Icon } from 'native-base';
+import { Container, Content, Card, CardItem, Body, Button, Icon, View } from 'native-base';
 import {  Image, FlatList, Dimensions, Share } from 'react-native';
+import axios from 'axios';
+import env from '../../env';
+import Auth from '../services/Auth';
 const {width, height} = Dimensions.get('window');
 
 
@@ -28,28 +31,38 @@ class DetailEpisodeScreen extends React.Component {
         super(props);
         this.state = {
             countMount: 0,
-            items: [],
-            item: props.navigation.state.params
+            episode: null,
+            token: ""
         }
     }
 
-    componentDidMount(){
-        if(this.state.countMount === 0){
-            var items = this.state.items;
-            for(var i=35;i>0;i-=7){
-                var item = {
-                    id: ((i+7)),
-                    image: this.state.item.image
-                }
-                items.push(item);
+    async componentDidMount(){
+        this.setState({
+            token: await (new Auth).fetch('token')
+        });
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            url: `${env.apiUrl}/toon-episode/${this.props.navigation.getParam("id")}`
+        }).then(async result => {
+            var episode = result.data.data.data;
+            for(var i =0;i<episode.images.length;i++){
+                await Image.getSize(`${env.baseUrl}/${episode.images[i].url}`, (w, h) => {
+                    var wi = width*(90/100);
+                    episode.images[i].width=wi;
+                    episode.images[i].height=h*(wi/w);
+                });
             }
-
             this.setState({
-                countMount: this.state.countMount+1
-            });
-        }
+                episode: result.data.data.data
+            })
+            this.props.navigation.setParams({title:this.state.episode.title});
+            
+        });
     }
-
     render(){
         return (
             <Container>
@@ -57,14 +70,17 @@ class DetailEpisodeScreen extends React.Component {
                     <Card>
                         <CardItem>
                             <Body>
-                            <FlatList
-                                data={this.state.items}
-                                renderItem={({ item }) => 
-                                    <Image style={{width: width, height: 300}}
-                                        source={{uri: item.image}} />
-                                    }
-                                keyExtractor={item => item.id.toString()}
-                            />
+                                {this.state.episode ?
+                                    <FlatList
+                                        data={this.state.episode.images}
+                                        renderItem={({ item }) => 
+                                            <Image style={{width:item.width, height: item.height}}
+                                                source={{uri: `${env.baseUrl}/${item.url}`}} />
+                                            }
+                                        keyExtractor={item => item.id.toString()}
+                                    />
+                                : <View /> }
+                            
                             </Body>
                         </CardItem>
                     </Card>

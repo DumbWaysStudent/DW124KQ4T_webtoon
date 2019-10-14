@@ -74,7 +74,14 @@ class DetailTitleScreen extends React.Component {
     }
 
     onOpenEpisode = (id) => {
-        this.props.navigation.navigate("DetailEpisode",this.state.items.filter((item)=>item.id===id)[0]);
+        this.props.navigation.navigate("DetailEpisode",{id});
+    }
+
+    formatDate = (time) => {
+        var dt = new Date(time);
+        var mo = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var string = `${dt.getDate()} ${mo[dt.getMonth()]} ${dt.getFullYear()}`
+        return string;
     }
 
   render(){
@@ -98,7 +105,7 @@ class DetailTitleScreen extends React.Component {
                                     <TouchableOpacity style={{marginLeft: 10}} onPress={this.onOpenEpisode.bind(this, item.id)}>
                                         <View>
                                             <Text>{item.title}</Text>
-                                            <Text> Oktober 2019</Text>
+                                            <Text>{this.formatDate(item.createdAt)}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </ListItem>
