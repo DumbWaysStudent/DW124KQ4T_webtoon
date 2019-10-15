@@ -179,7 +179,7 @@ class CreateNewEpisodeScreen extends React.Component {
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <View style={{marginTop: 10, marginBottom: 10}}>
+                                <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Images</Text>
                                 </View>
                                 <FlatList

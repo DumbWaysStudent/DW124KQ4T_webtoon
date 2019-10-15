@@ -135,5 +135,24 @@ module.exports = {
                 }
             });
         });
+    },
+    deleteImage: async (req, res) => {
+        EpisodeIMG.findOne({
+            where: {id:req.params.id},
+            include:[{
+                as: 'episode',
+                model: Episode,
+                include: ['toon']
+            }]
+        }).then(async result=>{
+            if(result.episode.toon.userId == req.user.userId){
+                await EpisodeIMG.destroy({
+                    where: {id:req.params.id}
+                });
+            }
+            return res.status(200).json({
+                msg: "success"
+            });
+        });
     }
 }

@@ -128,8 +128,6 @@ class EditEpisodeScreen extends React.Component {
 
     onAddImage = () => {
         ImagePicker.showImagePicker(options, (response) => {
-
-            var images = this.state.images;
           
             if (response.didCancel) {
               console.log('User cancelled image picker');
@@ -191,10 +189,20 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteImage = (id) => {
-        var images = this.state.images.filter((item)=>item.id!==id);
-        this.setState({
-            images:images
+        axios({
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },        
+            url: `${env.apiUrl}/toon-episode/delete-image/${id}`
+        }).then(result=>{
+            var images = this.state.images.filter((item)=>item.id!==id);
+            this.setState({
+                images:images
+            });
         });
+        
     }
 
     onDeleteEps = ()=>{
@@ -211,9 +219,9 @@ class EditEpisodeScreen extends React.Component {
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <Item>
+                                <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Images</Text>
-                                </Item>
+                                </View>
                                 <FlatList
                                     data={this.state.images}
                                     renderItem={({item}) => (
