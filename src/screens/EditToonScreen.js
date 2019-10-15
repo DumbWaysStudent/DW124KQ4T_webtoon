@@ -94,16 +94,32 @@ class EditToonScreen extends React.Component{
                 
             }
             if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
-                var eps = this.state.episodes.filter((item)=>item.id!==this.props.navigation.getParam('onDelete'));
-                this.props.navigation.setParams({onDelete:undefined});
-
-
-                this.setState({image: (typeof eps[0] !== "undefined")?eps[0].images[0].src:"",
-                    episodes: eps,
-                    isChanged: true
-                });
+                
+                this.onDeleteEpisode(this.props.navigation.getParam('onDelete'));
             }
         }
+    }
+
+    onDeleteEpisode = async (id) => {
+        var eps = this.state.episodes.filter((item)=>item.id!==id);
+        
+        this.props.navigation.setParams({onDelete:undefined});
+
+        await axios({
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },   
+            url: `${env.apiUrl}/toon-episode/${id}`
+        }).then(result=>{
+            this.setState({
+                episodes: eps,
+                isChanged: true
+            });
+        });
+
+        
     }
 
     onUpdateEpisode = async (data) => {

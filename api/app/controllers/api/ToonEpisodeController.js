@@ -19,7 +19,7 @@ module.exports = {
             data: {
                 data: episode
             }
-        })
+        });
     },
     store: async (req, res) => {
         var rules = {
@@ -103,5 +103,24 @@ module.exports = {
                 msg: "Success"
             });
         }
+    },
+    delete: async (req, res) => {
+        var episode = null;
+        await Episode.findOne({
+            where: {id:req.params.id},
+            include: ['toon']
+        }).then(result=>episode=result);
+        
+        if(episode.toon.userId === req.user.userId){
+            await Episode.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+        }
+
+        return res.status(200).json({
+            msg: "Success"
+        });
     }
 }
