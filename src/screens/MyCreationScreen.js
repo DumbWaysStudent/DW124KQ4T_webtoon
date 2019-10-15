@@ -148,7 +148,7 @@ class MyCreationScreen extends React.Component{
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
                                                 <View>
-                                                    <Text>{item.title}</Text>
+                                                    <Text>{item.title} {`${(item.isDraft)?"(draft)":""}`}</Text>
                                                     <Text>{ item.totalEpisode } episode(s)</Text>
                                                 </View>
                                             </TouchableOpacity>

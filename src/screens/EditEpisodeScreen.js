@@ -2,6 +2,10 @@ import React from "react";
 import { View, Text, Container, Content, Card, CardItem, Body, Item, Button, Icon, ListItem, Input } from "native-base";
 import { FlatList, Image, TouchableOpacity, Dimensions } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import Auth from '../services/Auth';
+import env from '../../env';
+import axios from 'axios';
+
 const {width, height} = Dimensions.get('window');
 
 const options = {
@@ -27,7 +31,7 @@ class EditEpisodeScreen extends React.Component {
                         delete submiting.isChanged;
                         delete submiting.errors;
                         delete submiting.countMount;
-                        submiting.cover = submiting.images[0].src;
+                        // submiting.cover = submiting.images[0].src;
                         submiting.edit.edit = submiting.edit;
                         delete submiting.edit;
                         navigation.navigate("EditToon", {editEpisode: submiting, newEpisode: undefined, onDelete: undefined});
@@ -42,22 +46,25 @@ class EditEpisodeScreen extends React.Component {
     constructor(props){
         super(props);
 
-        
+        var edit = this.props.navigation.getParam('edit');
 
         this.state = {
-            inputName: this.props.navigation.getParam('edit').name,
-            images: this.props.navigation.getParam('edit').images,
+            inputName: (edit)?edit.title:"",
+            images: [],
             isChanged: true,
             isReady: true,
             errors: [],
             countMount: 0,
-            time: this.props.navigation.getParam('edit').time
+            id: (edit)?edit.id:null,
+            token:""
         }
     }
     
 
-    componentDidMount(){
-        
+    async componentDidMount(){
+        var token = await (new Auth).fetch('token');
+        this.setState({token});
+        this.onImages();
         if(this.state.isChanged){
 
             this.props.navigation.setParams({
@@ -80,6 +87,23 @@ class EditEpisodeScreen extends React.Component {
                 isChanged: false
             });
         }
+    }
+
+    onImages = async () => {
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            },
+            url: `${env.apiUrl}/toon-episode/${this.state.id}`
+        }).then(result => {
+            var episode = result.data.data.data;
+            this.setState({
+                images: [...episode.images]
+            });
+        }).catch(error=>{
+            console.log(error.response);
+        });
     }
 
     onChangeName = (text) => {
@@ -156,7 +180,7 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteEps = ()=>{
-        this.props.navigation.navigate("EditToon", {onDelete:this.state.time, editEpisode: undefined, newEpisode: undefined})
+        this.props.navigation.navigate("EditToon", {onDelete:this.state.id, editEpisode: undefined, newEpisode: undefined})
     }
 
     render(){
@@ -177,7 +201,7 @@ class EditEpisodeScreen extends React.Component {
                                     renderItem={({item}) => (
                                         
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.src} />
+                                            <Image style={{width: 50, height: 50}} source={{uri: `${env.baseUrl}/${item.url}`}} />
                                             <View style={{marginLeft: 20}}>
                                                 <Button onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>

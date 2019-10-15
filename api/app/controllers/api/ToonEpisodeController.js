@@ -42,9 +42,6 @@ module.exports = {
             for(var i=0; i<req.files.length; i++){
                 fs.unlinkSync(`${__dirname}/../../../storage/${req.files[i].filename}`);
             }
-            console.log({
-                errors: validate.getMessages()
-            });
             return res.status(400).json({
                 errors: validate.getMessages()
             });
@@ -75,6 +72,35 @@ module.exports = {
                 data: {
                     data: nowEps
                 }
+            });
+        }
+    },
+    update: async (req, res) => {
+        var rules = {
+            title: {
+                label: "Title",
+                rule: {
+                    required: true
+                }
+            }
+        }
+
+        let validate = await validator.make(req.body, rules);
+        if(validate.fails()){
+            return res.status(400).json({
+                errors: validate.getMessages()
+            });
+        }
+        else{
+            await Episode.update({
+                title: req.body.title
+            },{
+                where: {
+                    id: req.params.id
+                }
+            });
+            return res.status(200).json({
+                msg: "Success"
             });
         }
     }

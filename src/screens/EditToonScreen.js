@@ -4,6 +4,7 @@ import { View, Text, Container, Content, Card, CardItem, Body, Button, Item, Inp
 import { FlatList, Image, TouchableOpacity } from "react-native";
 import axios from 'axios';
 import env from '../../env';
+import Auth from '../services/Auth';
 
 
 class EditToonScreen extends React.Component{
@@ -40,10 +41,14 @@ class EditToonScreen extends React.Component{
             errors:[],
             isReady: true,
             isChanged: true,
-            isNew: false
+            isNew: false,
+            epsCheck: [],
+            token: ''
         }
     }
-    componentDidMount(){
+    async componentDidMount(){
+        var token = await (new Auth).fetch('token');
+        this.setState({token});
         this.onDetail(this.props.navigation.getParam("id"));
         if(this.state.isChanged){
 
@@ -57,7 +62,7 @@ class EditToonScreen extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
+    async componentDidUpdate(prevProps, prevState){
         if(prevState.title !== this.state.title){
             this.props.navigation.setParams({
                 title: this.state.title
@@ -79,29 +84,14 @@ class EditToonScreen extends React.Component{
             }
         }
         if(prevState.episodes === this.state.episodes){
-            if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.episodes.filter((item)=>item.id===this.props.navigation.getParam('newEpisode').id).length===0){
-                var eps = this.state.episodes;
-                eps.unshift(this.props.navigation.getParam('newEpisode'));
-
-                this.setState({
-                    image: eps[0].images[0].src,
-                    episodes: eps,
-                    isChanged: true
-                });
+            if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.epsCheck.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
+                await this.onNewEpisode(this.props.navigation.getParam('newEpisode'));
             }
             if(typeof this.props.navigation.getParam('editEpisode') !== "undefined"){
 
                 var eps = this.props.navigation.getParam('editEpisode');
-                this.props.navigation.setParams({editEpisode:undefined});
-                var items = this.state.episodes;
-                var index = this.state.episodes.findIndex(item => item.id === eps.id);
-                items[index] = eps;
-
-                this.setState({
-                    image: eps.images[0].src,
-                    episodes: [ ...items],
-                    isChanged: true
-                });
+                await this.onUpdateEpisode(eps);
+                
             }
             if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
                 var eps = this.state.episodes.filter((item)=>item.id!==this.props.navigation.getParam('onDelete'));
@@ -114,6 +104,76 @@ class EditToonScreen extends React.Component{
                 });
             }
         }
+    }
+
+    onUpdateEpisode = async (data) => {
+        this.props.navigation.setParams({editEpisode:undefined});
+
+        axios({
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: {
+                title:data.name
+            },          
+            url: `${env.apiUrl}/toon-episode/${data.id}/edit`
+        }).then(result=>{
+            var items = this.state.episodes;
+            var index = this.state.episodes.findIndex(item => item.id === data.id);
+            items[index].title = data.name;
+
+            this.setState({
+                episodes: [ ...items],
+                isChanged: true
+            });
+        });
+
+
+
+        
+    }
+
+    onNewEpisode = async (data) => {
+        this.props.navigation.setParams({...{
+            newEpisode: undefined
+        }});
+        var formdata = new FormData;
+        formdata.append("title", data.name);
+        formdata.append("toonId", this.state.id);
+        for(var i=0;i<data.images.length;i++){
+            formdata.append("images[]", data.images[i].img);
+        }
+        await axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: formdata,          
+            url: `${env.apiUrl}/toon-episode/create`
+        }).then(result=>{
+            var item = result.data.data.data;
+            var eps = this.state.episodes;
+            var epsCheck = this.state.epsCheck;
+            epsCheck.unshift(data);
+            eps.unshift(item);
+            console.log(eps);
+
+            this.setState({
+                image: eps[0].image,
+                episodes: [...eps],
+                epsCheck: [...epsCheck],
+                isChanged: true
+            });
+            
+        }).catch(error=>{
+            console.log("====error=====");
+            console.log(error);
+            console.log("====error.response=====");
+            console.log(error.response);
+        });
     }
 
     onDetail = async (id)=> {
