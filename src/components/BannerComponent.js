@@ -22,12 +22,14 @@ class BannerComponent extends React.Component {
 
     componentDidMount(){
       var items = [];
-      for(var i=0;i<5;i++){
+      var max = (this.props.items.length>=5)?5:this.props.items.length;
+      for(var i=0;i<max;i++){
         items.push(this.props.items[i]);
       }
       this.setState({
-        items: items
+        items: [...items]
       });
+      console.log(this.state.items);
     }
 
   render(){

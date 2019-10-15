@@ -31,8 +31,11 @@ class ProfileScreen extends React.Component {
     constructor(props){
         super(props);
 
+        var count = 0;
+
         this.state = {
-          profile: {}
+          profile: {},
+          countMount: count
         }
     }
 
@@ -40,13 +43,23 @@ class ProfileScreen extends React.Component {
       await this.getProfile();
     }
 
+    async componentDidUpdate(){
+      if(this.props.navigation.getParam("avatar")!==undefined){
+        this.props.navigation.setParams({
+          avatar: undefined
+        });
+        await this.getProfile();
+      }
+    }
+
     getProfile = async() =>{
       var img = (await (new Auth).fetch("image"));
+      var obj = {
+        image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
+        name: await (new Auth).fetch("name")
+      };
       this.setState({
-        profile: {
-          image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
-          name: await (new Auth).fetch("name")
-        }
+        profile: {...obj}
       });
     }
 

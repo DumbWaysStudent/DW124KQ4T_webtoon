@@ -65,3 +65,5 @@ buck-out/
 api/node_modules
 api/yarn-error.log
 api/env.js
+
+api/storage

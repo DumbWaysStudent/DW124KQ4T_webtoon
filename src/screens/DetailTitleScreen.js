@@ -63,8 +63,7 @@ class DetailTitleScreen extends React.Component {
         await axios({
             method: 'GET',
             headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
+                'content-type': 'application/json'
             },
             url: `${env.apiUrl}/toon/${this.props.navigation.getParam("id")}/episodes`
         }).then(result => {

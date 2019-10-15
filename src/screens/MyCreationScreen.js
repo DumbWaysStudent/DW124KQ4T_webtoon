@@ -35,24 +35,54 @@ class MyCreationScreen extends React.Component{
                         });
                 }
                 if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
-                    var time = this.props.navigation.getParam('onDelete');
-                    this.props.navigation.setParams({onDelete: undefined});
-                    var items = this.state.items.filter((item)=> item.time !== time);
-                    this.setState({items:items});
+                    var id = this.props.navigation.getParam('onDelete');
+                    await this.onDelete(id);
                 }
                 if(typeof this.props.navigation.getParam('onEdit') !== "undefined"){
-                    var time = this.props.navigation.getParam('onEdit');
-                    this.props.navigation.setParams({onEdit: undefined});
-                    var items = this.state.items;
-                    var index = this.state.items.findIndex(item => item.time === time);
-                    var submitted = this.props.navigation.state.params;
-                    delete submitted.onEdit;
-                    items[index] = submitted;
-                    this.setState({items:[...items]});
+                    var id = this.props.navigation.getParam('onEdit');
+                    await this.onSubmitUpdate({
+                        title: this.props.navigation.getParam('title'),
+                        image: this.props.navigation.getParam('image')
+                    }, id);
 
                 }
             }
         }
+    }
+
+    onDelete = async (id) => {
+        this.props.navigation.setParams({onDelete: undefined});
+
+        await axios({
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },   
+            url: `${env.apiUrl}/toon/${id}`
+        }).then(result=>{
+            var items = this.state.items.filter((item)=> item.id !== id);
+            this.setState({items:items});
+        });
+    }
+
+    onSubmitUpdate = async (data, id) => {
+        this.props.navigation.setParams({onEdit: undefined});
+        axios({
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: data,          
+            url: `${env.apiUrl}/toon/${id}/edit`
+        }).then(result=>{
+            var items = this.state.items;
+            var index = this.state.items.findIndex(item => item.id === id);
+            items[index] = result.data.data.data;
+            var obj = {items:[...items]};
+            this.setState({...obj});
+        });
     }
 
     onSubmitNew = async (data) => {
@@ -103,7 +133,7 @@ class MyCreationScreen extends React.Component{
                                     keyExtractor = {item => item.id.toString()}
                                     renderItem = {({item})=>(
                                         <ListItem>
-                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)}>
+                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})}>
                                                 {item.image==="" ?
                                                 <View style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}} />
                                                 : 
@@ -111,7 +141,7 @@ class MyCreationScreen extends React.Component{
                                                     source={{uri: `${env.baseUrl}/${item.image}`}} />
                                                 }
                                             </TouchableOpacity>
-                                            <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", item)} style={{marginLeft: 20}}>
+                                            <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
                                                 <View>
                                                     <Text>{item.title}</Text>
                                                     <Text>{ item.totalEpisode } episode(s)</Text>

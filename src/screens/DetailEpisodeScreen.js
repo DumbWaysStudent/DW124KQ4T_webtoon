@@ -43,8 +43,7 @@ class DetailEpisodeScreen extends React.Component {
         await axios({
             method: 'GET',
             headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
+                'content-type': 'application/json'
             },
             url: `${env.apiUrl}/toon-episode/${this.props.navigation.getParam("id")}`
         }).then(async result => {

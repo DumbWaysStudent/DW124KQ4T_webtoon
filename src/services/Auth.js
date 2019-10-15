@@ -32,6 +32,11 @@ export default class Auth {
         await AsyncStorage.removeItem(`authUser.token`);
     }
 
+    update = async (data, key) => {
+        await AsyncStorage.removeItem(`authUser.${key}`);
+        await AsyncStorage.setItem(`authUser.${key}`, data);
+    }
+
     get = async () => {
         return "data"
     }
