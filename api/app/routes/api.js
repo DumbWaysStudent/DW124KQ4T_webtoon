@@ -9,7 +9,7 @@ const ToonEpisodeController = require("../controllers/api/ToonEpisodeController"
 
 
 
-const uploadPhotoProfile = multer({
+const upload = multer({
     storage: multer.diskStorage({
         destination: `${__dirname}/../../storage/`,
         filename: function(req, file, cb){
@@ -19,14 +19,14 @@ const uploadPhotoProfile = multer({
           cb(null,filename);
         }
     })
-}).single('avatar');
+});
 
 
 module.exports = (router) => {
     router.group("/auth", (auth) =>{
         auth.post("/authenticate", [bodyParser.json()], AuthController.authenticate);
         auth.post("/register", [bodyParser.json()], AuthController.register);
-        auth.post("/change-photo", [mid.auth, uploadPhotoProfile], AuthController.changePhoto);
+        auth.post("/change-photo", [mid.auth, upload.single('avatar')], AuthController.changePhoto);
     });
     router.group("/toons", (toons) =>{
         toons.get("/all", [mid.auth], ToonController.index);
@@ -42,6 +42,7 @@ module.exports = (router) => {
         toon.delete("/:id", [mid.auth], ToonController.delete);
     });
     router.get("/toon-episode/:id", [mid.auth], ToonEpisodeController.show);
+    router.post("/toon-episode/create", [mid.auth, upload.array("images[]")], ToonEpisodeController.store);
     router.get("/my-toons", [mid.auth], ToonController.myToon);
     
     

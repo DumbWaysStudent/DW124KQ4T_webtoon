@@ -159,11 +159,16 @@ module.exports = {
             });
         }
         else{
-            var toon = null
+            var toon = null;
+            var isDraft = 0;
+            if(typeof req.body.isDraft !== "undefined"){
+                isDraft = req.body.isDraft;
+            }
             await Toon.create({
                 image: req.body.image,
                 title: req.body.title,
-                userId: req.user.userId
+                userId: req.user.userId,
+                isDraft: isDraft
             }).then(result=>toon=result.dataValues);
 
             var toon2 = JSON.parse(JSON.stringify(toon));
@@ -194,7 +199,11 @@ module.exports = {
             });
         }
         else{
-            var currentToon = null
+            var currentToon = null;
+            var isDraft = 0;
+            if(typeof req.body.isDraft !== "undefined"){
+                isDraft = req.body.isDraft;
+            }
             await Toon.findOne({
                 where: {
                     id: req.params.id,
@@ -205,7 +214,8 @@ module.exports = {
             if(currentToon){
                 Toon.update({
                     title: req.body.title,
-                    image: (req.body.image=="")?currentToon.image:req.body.image
+                    image: (req.body.image=="")?currentToon.image:req.body.image,
+                    isDraft: isDraft
                 },{
                     where: {
                         id: currentToon.id

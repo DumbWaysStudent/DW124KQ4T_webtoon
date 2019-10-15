@@ -7,7 +7,6 @@ const {width, height} = Dimensions.get('window');
 
 const options = {
     title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
     storageOptions: {
       skipBackup: true,
       path: 'images',
@@ -131,7 +130,11 @@ class CreateNewEpisodeScreen extends React.Component {
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
               var bWidth =(width*(20/100));
               var b = (width*(20/100))/response.width;
-              images.push({src:source, id:(new Date).getTime(), height: b*height, width: bWidth});
+              images.push({src:source, id:(new Date).getTime(), height: b*height, width: bWidth, img: {
+                uri: response.uri,
+                type: response.type,
+                name: response.fileName
+              }});
 
               this.setState({
                   images:images
@@ -176,9 +179,9 @@ class CreateNewEpisodeScreen extends React.Component {
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <Item>
+                                <View style={{marginTop: 10, marginBottom: 10}}>
                                     <Text>Images</Text>
-                                </Item>
+                                </View>
                                 <FlatList
                                     data={this.state.images}
                                     renderItem={({item}) => (
@@ -186,7 +189,7 @@ class CreateNewEpisodeScreen extends React.Component {
                                         <ListItem>
                                             <Image style={{width: 50, height: 50}} source={item.src} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                <Button small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>
                                                         Delete
                                                     </Text>

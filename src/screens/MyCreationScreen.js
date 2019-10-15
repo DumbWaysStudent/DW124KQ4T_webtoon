@@ -79,7 +79,12 @@ class MyCreationScreen extends React.Component{
         }).then(result=>{
             var items = this.state.items;
             var index = this.state.items.findIndex(item => item.id === id);
-            items[index] = result.data.data.data;
+            if(typeof items[index] === "undefined"){
+                items.unshift(result.data.data.data);
+            }
+            else{
+                items[index] = result.data.data.data;
+            }
             var obj = {items:[...items]};
             this.setState({...obj});
         });

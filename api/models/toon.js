@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const toon = sequelize.define('toon', {
     title: DataTypes.STRING,
     userId: DataTypes.INTEGER,
-    image: DataTypes.TEXT
+    image: DataTypes.TEXT,
+    isDraft: DataTypes.BOOLEAN,
   }, {});
   toon.associate = function(models) {
     toon.belongsTo(models.user, {
