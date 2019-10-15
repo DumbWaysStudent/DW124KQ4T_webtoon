@@ -8,14 +8,14 @@ module.exports = (sequelize, DataTypes) => {
   toon.associate = function(models) {
     toon.belongsTo(models.user, {
       as: "user",
-      foreignKey: 'userId'
+      foreignKey: 'user_id'
     });
     toon.hasMany(models.toon_episode, {
-      foreignKey: 'toonId',
+      foreignKey: 'toon_id',
       as: 'episodes'
     });
     toon.hasMany(models.favorite, {
-      foreignKey: 'toonId',
+      foreignKey: 'toon_id',
       as: 'favorites'
     });
   };

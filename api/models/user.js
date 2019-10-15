@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   user.associate = function(models) {
     user.hasMany(models.toon, {
-      foreignKey: 'userId',
+      foreignKey: 'user_id',
       as: 'toons'
     });
     user.hasMany(models.favorite, {
-      foreignKey: 'userId',
+      foreignKey: 'user_id',
       as: 'favorites'
     });
   };

@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, Container, Content, Card, CardItem, Body, Icon, Input, Item, Button } from "native-base";
 import { Image, TouchableOpacity } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import Auth from "../services/Auth";
+import env from "../../env";
 
 const profile = {
     image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
@@ -10,7 +12,6 @@ const profile = {
 
 const options = {
   title: 'Select Avatar',
-  customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
   storageOptions: {
     skipBackup: true,
     path: 'images',
@@ -43,16 +44,18 @@ class EditProfileScreen extends React.Component{
         }
     }
 
-    componentDidMount(){
-        if(this.state.isChangingPhoto ){
-            
-            var profileNew = this.state.profile;;
-            profileNew.image = this.state.avatarSource.uri
-            this.setState({
-                profile: profileNew,
-                isChangingPhoto:false
-            });
-        }
+    async componentDidMount(){
+        await this.getProfile();
+    }
+  
+    getProfile = async() =>{
+        var img = (await (new Auth).fetch("image"));
+        this.setState({
+          profile: {
+            image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
+            name: await (new Auth).fetch("name")
+          }
+        });
     }
 
     componentDidUpdate (){

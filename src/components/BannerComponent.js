@@ -15,12 +15,25 @@ class BannerComponent extends React.Component {
 
     constructor(props){
         super(props);
+        this.state = {
+          items: []
+        };
+    }
+
+    componentDidMount(){
+      var items = [];
+      for(var i=0;i<5;i++){
+        items.push(this.props.items[i]);
+      }
+      this.setState({
+        items: items
+      });
     }
 
   render(){
     return (
       <Swiper style={styles.wrapper} showsButtons={true}>
-        {this.props.items.map((item, index)=>(
+        {this.state.items.map((item, index)=>(
           <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
             <Card>
               <CardItem>
