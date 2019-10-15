@@ -46,6 +46,7 @@ module.exports = (router) => {
         toonEpisode.post("/create", [mid.auth, upload.array("images[]")], ToonEpisodeController.store);
         toonEpisode.put("/:id/edit", [mid.auth, bodyParser.json()], ToonEpisodeController.update);
         toonEpisode.delete("/:id", [mid.auth], ToonEpisodeController.delete);
+        toonEpisode.post("/:id/upload-image", [mid.auth,upload.single("image")], ToonEpisodeController.uploadImage);
     });
     
     router.get("/my-toons", [mid.auth], ToonController.myToon);

@@ -142,14 +142,32 @@ class EditEpisodeScreen extends React.Component {
           
               // You can also display the image using data:
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-              var bWidth =(width*(20/100));
-              var b = (width*(20/100))/response.width;
-              images.push({src:source, id:(new Date).getTime(), height: b*height, width: bWidth});
+              var img = {
+                uri: response.uri,
+                type: response.type,
+                name: response.fileName
+              };
+              var formdata = new FormData;
+              formdata.append("image",img);
+              axios({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        "authorization": `Bearer ${this.state.token}`
+                    },
+                    data: formdata,          
+                    url: `${env.apiUrl}/toon-episode/${this.state.id}/upload-image`
+                }).then(result=>{
+                    var images = this.state.images;
+                    images.push(result.data.data.data);
+                    this.setState({
+                        images:images
+                    });
+                    this.checkError();
+                });
 
-              this.setState({
-                  images:images
-              });
-              this.checkError();
+              
+              
             }
         });
     }
@@ -203,7 +221,7 @@ class EditEpisodeScreen extends React.Component {
                                         <ListItem>
                                             <Image style={{width: 50, height: 50}} source={{uri: `${env.baseUrl}/${item.url}`}} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                <Button small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>
                                                         Delete
                                                     </Text>

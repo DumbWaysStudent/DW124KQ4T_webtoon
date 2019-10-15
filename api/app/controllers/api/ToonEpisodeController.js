@@ -122,5 +122,18 @@ module.exports = {
         return res.status(200).json({
             msg: "Success"
         });
+    },
+    uploadImage: async (req, res)=>{
+        await EpisodeIMG.create({
+            url: `storage/${req.file.filename}`,
+            toonEpisodeId: req.params.id
+        }).then(result=>{
+            return res.status(200).json({
+                msg: "Success",
+                data: {
+                    data: result.dataValues
+                }
+            });
+        });
     }
 }
