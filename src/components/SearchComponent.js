@@ -9,10 +9,6 @@ export default class SearchComponent extends React.Component {
         super(props);
     }
 
-    
-
-    
-
     render(){
         return (
 
