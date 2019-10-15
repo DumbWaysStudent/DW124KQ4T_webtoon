@@ -5,6 +5,7 @@ const Episode = models.toon_episode;
 const Favorite = models.favorite;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const validator = require(`../../libraries/Validator.js`);
 
 module.exports = {
     index: async (req, res)=>{
@@ -15,7 +16,7 @@ module.exports = {
 
         for(var i=0;i<toons2.length; i++){
             var toon = null
-            await Favorite.findOne({where:{user_id:req.user.userId, toon_id: toons2[i].id}}).then(result=>toon=result);
+            await Favorite.findOne({where:{userId:req.user.userId, toonId: toons2[i].id}}).then(result=>toon=result);
             
             if(toon){
                 toons2[i].favorited = true;
@@ -48,7 +49,7 @@ module.exports = {
     favorite: async (req, res)=>{
         var toons = []
         await Favorite.findAll({
-            where: {user_id:req.user.userId},
+            where: {userId:req.user.userId},
             include:[{
                 as: 'toon',
                 model: Toon,
@@ -98,7 +99,7 @@ module.exports = {
         var episodes = null
         await Episode.findAll({
             where: {
-                toon_id: req.params.id
+                toonId: req.params.id
             }
         }).then(result=>episodes=result);
         return res.status(200).json({
@@ -113,7 +114,7 @@ module.exports = {
         var toons = null
         await Toon.findAll({
             where: {
-                user_id: req.user.userId
+                userId: req.user.userId
             },
             order: [
                 ['createdAt', 'DESC'],
@@ -126,7 +127,7 @@ module.exports = {
             var total = 0;
             await Episode.count({
                 where: {
-                    toon_id: toons2[i].id
+                    toonId: toons2[i].id
                 },
                 distinct: true,
                 col: 'id'
@@ -142,21 +143,110 @@ module.exports = {
     },
 
     store: async (req, res) => {
-        var toon = null
-        await Toon.create({
-            image: req.body.image,
-            title: req.body.title,
-            user_id: req.user.userId
-        }).then(result=>toon=result.dataValues);
-
-        var toon2 = JSON.parse(JSON.stringify(toon));
-        toon2.totalEpisode = 0;
-
-        return res.status(200).json({
-            msg: "Success",
-            data: {
-                data: toon2
+        var rules = {
+            title: {
+                label: "Title",
+                rule: {
+                    required: true
+                }
             }
-        })
+        }
+
+        let validate = await validator.make(req.body, rules);
+        if(validate.fails()){
+            return res.status(400).json({
+                errors: validate.getMessages()
+            });
+        }
+        else{
+            var toon = null
+            await Toon.create({
+                image: req.body.image,
+                title: req.body.title,
+                userId: req.user.userId
+            }).then(result=>toon=result.dataValues);
+
+            var toon2 = JSON.parse(JSON.stringify(toon));
+            toon2.totalEpisode = 0;
+
+            return res.status(200).json({
+                msg: "Success",
+                data: {
+                    data: toon2
+                }
+            });
+        }
+    },
+    update: async (req, res) => {
+        var rules = {
+            title: {
+                label: "Title",
+                rule: {
+                    required: true
+                }
+            }
+        }
+
+        let validate = await validator.make(req.body, rules);
+        if(validate.fails()){
+            return res.status(400).json({
+                errors: validate.getMessages()
+            });
+        }
+        else{
+            var currentToon = null
+            await Toon.findOne({
+                where: {
+                    id: req.params.id,
+                    userId: req.user.userId
+                }
+            }).then(result=>currentToon=result);
+
+            if(currentToon){
+                Toon.update({
+                    title: req.body.title,
+                    image: (req.body.image=="")?currentToon.image:req.body.image
+                },{
+                    where: {
+                        id: currentToon.id
+                    }
+                }).then(async result => {
+                    var nowToon = null;
+
+                    await Toon.findOne({
+                        where: {
+                            id: req.params.id,
+                        }
+                    }).then(result=>nowToon=result);
+
+                    var total = 0;
+                    Episode.count({
+                        where: {
+                            toonId: nowToon.id
+                        },
+                        distinct: true,
+                        col: 'id'
+                    }).then(result=>{
+                        total = result
+                        nowToon = JSON.parse(JSON.stringify(nowToon));
+                        return res.status(200).json({
+                            msg: "Success",
+                            data: {
+                                data: {...nowToon, totalEpisode: total}
+                            }
+                        });
+                    });
+                    
+                });
+            }
+            else{
+                return res.status(200).json({
+                    msg: "Success",
+                    data: {
+                        data: []
+                    }
+                });
+            }
+        }
     }
 };

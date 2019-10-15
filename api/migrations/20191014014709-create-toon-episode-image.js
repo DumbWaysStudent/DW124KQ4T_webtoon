@@ -11,7 +11,7 @@ module.exports = {
       url: {
         type: Sequelize.TEXT
       },
-      toon_episode_id: {
+      toonEpisodeId: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {

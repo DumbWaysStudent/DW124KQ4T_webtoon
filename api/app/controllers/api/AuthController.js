@@ -3,6 +3,7 @@ const bcrypt = require(`bcryptjs`);
 const models = require(`../../../models`);
 const jwt = require('jsonwebtoken');
 const env = require('../../../env');
+const fs = require("fs");
 
 
 
@@ -121,5 +122,33 @@ module.exports = {
                 }
             })
         }
+    },
+    changePhoto: async (req, res) => {
+        var usr =null;
+        await User.findOne({
+            where: {
+                id: req.user.userId
+            }
+        }).then(result=>usr=result);
+
+        var currentImage = usr.image;
+
+        User.update({
+            image: `storage/${req.file.filename}`
+        },{
+            where: {
+                id: req.user.userId
+            }
+        }).then(result=>{
+            fs.unlink(`${__dirname}/../../../${currentImage}`, ()=>{
+                return res.status(200).json({
+                    msg:"success",
+                    data: {
+                        data: req.file.filename
+                    }
+                });
+            })
+        });
+        
     }
 }
