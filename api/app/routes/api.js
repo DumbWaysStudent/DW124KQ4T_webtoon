@@ -22,6 +22,7 @@ module.exports = (router) => {
         toon.get("/:id/episodes", [mid.auth], ToonController.episodes);
     });
     router.get("/toon-episode/:id", [mid.auth], ToonEpisodeController.show);
+    router.get("/my-toons", [mid.auth], ToonController.myToon);
     
     
 }

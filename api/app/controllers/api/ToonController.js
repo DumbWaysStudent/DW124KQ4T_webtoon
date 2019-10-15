@@ -78,6 +78,7 @@ module.exports = {
             }
         });
     },
+    
     show: async (req, res) => {
         var toons = []
         await Toon.findOne({
@@ -92,6 +93,7 @@ module.exports = {
             }
         });
     },
+
     episodes: async (req, res) => {
         var episodes = null
         await Episode.findAll({
@@ -103,6 +105,35 @@ module.exports = {
             msg: "Success",
             data: {
                 data: episodes
+            }
+        });
+    },
+
+    myToon: async (req, res) => {
+        var toons = null
+        await Toon.findAll({
+            where: {
+                user_id: req.user.userId
+            }
+        }).then(result=> toons = result);
+
+        var toons2 = JSON.parse(JSON.stringify(toons));
+
+        for(var i=0; i<toons2.length; i++){
+            var total = 0;
+            await Episode.count({
+                where: {
+                    toon_id: toons2[i].id
+                },
+                distinct: true,
+                col: 'id'
+            }).then(result=>total = result);
+            toons2[i].totalEpisode = total;
+        }
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: toons2
             }
         });
     }

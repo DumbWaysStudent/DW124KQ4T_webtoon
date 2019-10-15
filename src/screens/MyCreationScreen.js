@@ -2,17 +2,26 @@ import React from "react";
 
 import { View, Text, Container, Content, Card, CardItem, Fab, Icon, Button, Body, ListItem } from "native-base";
 import { FlatList, TouchableOpacity, Image, Dimensions } from "react-native";
+import axios  from 'axios';
+import env  from '../../env';
+import Auth  from '../services/Auth';
 
 const {width, height} = Dimensions.get('screen');
-
-const banners = [];
 
 class MyCreationScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            items: banners
+            items: [],
+            token: ""
         }
+    }
+
+    async componentDidMount(){
+        this.setState({
+            token: await (new Auth).fetch('token')
+        });
+        this.onMyToon();
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -51,6 +60,21 @@ class MyCreationScreen extends React.Component{
         }
     }
 
+    onMyToon = async () => {
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            url: `${env.apiUrl}/my-toons`
+        }).then(result=>{
+            console.log("============");
+            console.log(result.data.data.data);
+            this.setState({items:result.data.data.data})
+        });
+    }
+
     onDetailTitle = (id) => {
         var item = this.state.items.filter((item, index)=> item.id === id)[0];
         this.props.navigation.navigate("DetailTitle", item);
@@ -60,7 +84,7 @@ class MyCreationScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card style={{flex: 1}}>
+                    <Card>
                         <CardItem>
                             <Body>
                                 <FlatList
@@ -69,13 +93,13 @@ class MyCreationScreen extends React.Component{
                                     renderItem = {({item})=>(
                                         <ListItem>
                                             <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)}>
-                                                <Image style={{width: 50, height: 50}}
-                                                    source={item.image} />
+                                                <Image style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}}
+                                                    source={{uri: `${env.baseUrl}/${item.image}`}} />
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)} style={{marginLeft: 20}}>
+                                            <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", item)} style={{marginLeft: 20}}>
                                                 <View>
                                                     <Text>{item.title}</Text>
-                                                    <Text>{ item.episodes.length } episode(s)</Text>
+                                                    <Text>{ item.totalEpisode } episode(s)</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </ListItem>
