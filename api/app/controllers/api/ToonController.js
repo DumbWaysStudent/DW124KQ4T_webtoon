@@ -248,5 +248,17 @@ module.exports = {
                 });
             }
         }
+    },
+    delete: (req, res) => {
+        Toon.destroy({
+            where: {
+                id: req.params.id,
+                userId: req.user.userId
+            }
+        }).then(result=>{
+            return res.status(200).json({
+                msg: "success"
+            });
+        });
     }
 };
