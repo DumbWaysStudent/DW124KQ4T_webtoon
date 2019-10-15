@@ -114,7 +114,10 @@ module.exports = {
         await Toon.findAll({
             where: {
                 user_id: req.user.userId
-            }
+            },
+            order: [
+                ['createdAt', 'DESC'],
+            ]
         }).then(result=> toons = result);
 
         var toons2 = JSON.parse(JSON.stringify(toons));
@@ -136,5 +139,24 @@ module.exports = {
                 data: toons2
             }
         });
+    },
+
+    store: async (req, res) => {
+        var toon = null
+        await Toon.create({
+            image: req.body.image,
+            title: req.body.title,
+            user_id: req.user.userId
+        }).then(result=>toon=result.dataValues);
+
+        var toon2 = JSON.parse(JSON.stringify(toon));
+        toon2.totalEpisode = 0;
+
+        return res.status(200).json({
+            msg: "Success",
+            data: {
+                data: toon2
+            }
+        })
     }
 };

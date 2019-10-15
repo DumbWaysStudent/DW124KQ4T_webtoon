@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     favorite.belongsTo(models.toon, {
       as: "toon",
-      foreignKey: 'toon_id'
+      foreignKey: 'toonId'
     });
     favorite.belongsTo(models.user, {
       as: "user",
-      foreignKey: 'user_id'
+      foreignKey: 'userId'
     });
   };
   return favorite;

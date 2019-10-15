@@ -120,7 +120,12 @@ class CreateNewScreen extends React.Component{
 
 
     onAddEpisode = () => {
-        this.props.navigation.navigate("CreateNewEpisode");
+        if(this.state.title === ""){
+            alert("Title is required");
+        }
+        else{
+            this.props.navigation.navigate("CreateNewEpisode");
+        }
     }
 
     render(){
@@ -133,9 +138,9 @@ class CreateNewScreen extends React.Component{
                                 <Item>
                                     <Input value={this.state.title} onChangeText={this.onChangeTitle} placeholder="Title" />
                                 </Item>
-                                <Item>
+                                <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Episode</Text>
-                                </Item>
+                                </View>
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (

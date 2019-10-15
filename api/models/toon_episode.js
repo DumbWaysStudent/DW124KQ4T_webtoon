@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
   toon_episode.associate = function(models) {
     toon_episode.belongsTo(models.toon, {
       as: "toon",
-      foreignKey: 'toon_id'
+      foreignKey: 'toonId'
     });
     toon_episode.hasMany(models.toon_episode_image, {
-      foreignKey: 'toon_episode_id',
+      foreignKey: 'toonEpisodeId',
       as: 'images'
     });
   };

@@ -18,6 +18,7 @@ module.exports = (router) => {
         toons.get("/search/:keyword", [mid.auth], ToonController.search);
     });
     router.group("/toon", (toon) =>{
+        toon.post("/create", [mid.auth, bodyParser.json()], ToonController.store);
         toon.get("/:id", [mid.auth], ToonController.show);
         toon.get("/:id/episodes", [mid.auth], ToonController.episodes);
     });

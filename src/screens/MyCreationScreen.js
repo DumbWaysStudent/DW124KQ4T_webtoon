@@ -13,7 +13,8 @@ class MyCreationScreen extends React.Component{
         super(props);
         this.state = {
             items: [],
-            token: ""
+            token: "",
+            sending: 0
         }
     }
 
@@ -24,20 +25,14 @@ class MyCreationScreen extends React.Component{
         this.onMyToon();
     }
 
-    componentDidUpdate(prevProps, prevState){
+    async componentDidUpdate(prevProps, prevState){
         if(prevState.items === this.state.items) {
             if(typeof this.props.navigation.state.params !== "undefined"){
                 if(this.props.navigation.getParam('isNew') === true){
-                    var submitted = this.props.navigation.state.params;
-                    delete submitted.isNew;
-                    submitted.id = 1;
-                    if(this.state.items.length>0){
-                        submitted.id = this.state.items.sort((a, b) => b.id - a.id)[0].id+1;
-                    }
-                    var items = this.state.items;
-                    items.unshift(submitted);
-                    this.props.navigation.setParams({isNew: false})
-                    this.setState({items:items});
+                        await this.onSubmitNew({
+                            image: "",
+                            title: this.props.navigation.getParam("title")
+                        });
                 }
                 if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
                     var time = this.props.navigation.getParam('onDelete');
@@ -60,6 +55,24 @@ class MyCreationScreen extends React.Component{
         }
     }
 
+    onSubmitNew = async (data) => {
+        axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: data,          
+            url: `${env.apiUrl}/toon/create`
+        }).then(result=>{
+            var items = this.state.items;
+            items.unshift(result.data.data.data);
+            this.setState({
+                items: [...items]
+            });
+        }).catch();
+    }
+
     onMyToon = async () => {
         await axios({
             method: 'GET',
@@ -69,8 +82,6 @@ class MyCreationScreen extends React.Component{
             },
             url: `${env.apiUrl}/my-toons`
         }).then(result=>{
-            console.log("============");
-            console.log(result.data.data.data);
             this.setState({items:result.data.data.data})
         });
     }
@@ -93,8 +104,12 @@ class MyCreationScreen extends React.Component{
                                     renderItem = {({item})=>(
                                         <ListItem>
                                             <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)}>
+                                                {item.image==="" ?
+                                                <View style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}} />
+                                                : 
                                                 <Image style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}}
                                                     source={{uri: `${env.baseUrl}/${item.image}`}} />
+                                                }
                                             </TouchableOpacity>
                                             <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", item)} style={{marginLeft: 20}}>
                                                 <View>
