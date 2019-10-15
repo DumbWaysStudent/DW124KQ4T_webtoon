@@ -10,7 +10,6 @@ import React from 'react';
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, H3, Icon, View } from 'native-base';
 import axios from 'axios';
 import env from '../../env';
-
 import Auth from '../services/Auth';
 
 import BannerComponent from '../components/BannerComponent';
@@ -146,13 +145,16 @@ class ForYouScreen extends React.Component {
                                 {(this.state.banners.length>0) ? <BannerComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} /> : <View />}
 
                                 
-                                {this.state.favorites.lenght>0?
+                                {this.state.favorites.length>0?
                                     <>
                                     <H3>Favorite</H3>
                                     <FavoriteComponent items={this.state.favorites} onDetailTitle={this.onDetailTitle} />
                                     </>
                                     :
-                                    <View />
+                                    <>
+                                    <H3>Favorite</H3>
+                                    <FavoriteComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} />
+                                    </>
                                 }
                                 
 

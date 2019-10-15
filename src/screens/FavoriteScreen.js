@@ -1,7 +1,12 @@
 import React from 'react';
 
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Icon } from 'native-base';
+import axios from 'axios';
+import env from '../../env';
+import Auth from '../services/Auth';
+
 import MyFavoriteCompnent from '../components/MyFavoriteComponent';
+import SearchComponent from '../components/SearchComponent';
 
 const banners = [{
   id: 1,
@@ -23,13 +28,58 @@ class FavoriteScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          entries: banners
+          favorites: [],
+          token: "",
+          keyword: "",
+          searchResult: []
         }
     }
 
+    async componentDidMount(){
+      this.setState({
+          token: await (new Auth).fetch('token')
+      });
+      this.onFavorite();
+    }
+
+    onFavorite = async() => {
+      await axios({
+          method: 'GET',
+          headers: {
+              'content-type': 'application/json',
+              "authorization": `Bearer ${this.state.token}`
+          },
+          url: `${env.apiUrl}/toons/favorite`
+      }).then(result=>{
+          this.setState({favorites:result.data.data.data})
+          console.log(this.state.favorites)
+      });
+    }
+
     onDetailTitle = (id) => {
-        var item = this.state.entries.filter((item, index)=> item.id === id)[0];
-        this.props.navigation.navigate("DetailTitle", item);
+        this.props.navigation.navigate("DetailTitle", {id});
+    }
+
+
+    onKeyword = async (text) => {
+      this.setState({
+          keyword: text
+      });
+  
+      await axios({
+          method: 'GET',
+          headers: {
+              'content-type': 'application/json',
+              "authorization": `Bearer ${this.state.token}`
+          },
+          url: `${env.apiUrl}/toons/search/${text}`
+      }).then(result => {
+          // this.setState({
+          //     toons: result.data.data.data
+          // })
+          this.setState({searchResult: result.data.data.data});
+          
+      })
     }
 
     
@@ -42,12 +92,14 @@ class FavoriteScreen extends React.Component {
               <CardItem>
                 <Body>
                   <Item>
-                      <Input placeholder="Search" />
+                      <Input placeholder="Search" value={this.state.keyword} onChangeText={this.onKeyword} />
                       <Button transparent>
                           <Icon type="FontAwesome" name="search" />
                       </Button>
                   </Item>
-                  <MyFavoriteCompnent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
+                  { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) :
+                  <MyFavoriteCompnent items={this.state.favorites} onDetailTitle={this.onDetailTitle} />
+                  }
                 </Body>
               </CardItem>
             </Card>

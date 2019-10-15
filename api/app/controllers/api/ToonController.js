@@ -47,7 +47,14 @@ module.exports = {
 
     favorite: async (req, res)=>{
         var toons = []
-        await Favorite.findAll({where:{user_id:req.user.userId}, include:['toon']}).then(result=>toons=result)
+        await Favorite.findAll({
+            where: {user_id:req.user.userId},
+            include:[{
+                as: 'toon',
+                model: Toon,
+                include: ['user']
+            }]
+        }).then(result=>toons=result)
         return res.status(200).json({
             msg: "Success",
             data: {
@@ -61,7 +68,8 @@ module.exports = {
         await Toon.findAll({
             where: {
                 title: { [Op.like]: `%${req.params.keyword}%` }
-            }
+            },
+            include: ['user']
         }).then(result=>toons=result);
         return res.status(200).json({
             msg: "Success",

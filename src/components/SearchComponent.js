@@ -22,13 +22,13 @@ export default class SearchComponent extends React.Component {
                 renderItem = {({item})=>(
                     <ListItem>
                         <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
-                            <Image style={{width: 50, height: 50}}
+                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}}
                                 source={{uri: `${env.baseUrl}/${item.image}`}} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
+                        <TouchableOpacity style={{marginLeft:10}} onPress={this.props.onDetailTitle.bind(this, item.id)}>
                             <View>
                                 <Text>{item.title}</Text>
-                                <Text>100+ favorite</Text>
+                                <Text>{item.user.name}</Text>
                             </View>
                         </TouchableOpacity>
                     </ListItem>
