@@ -226,16 +226,18 @@ class EditEpisodeScreen extends React.Component {
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
-                                        <ListItem>
-                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.url}`}} />
+                                        <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
+                                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.url}`}} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
-                                                    <Text>
-                                                        Delete
-                                                    </Text>
-                                                </Button>
+                                                <View style={{flex: 1, justifyContent: "center"}}>
+                                                    <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                        <Text>
+                                                            Delete
+                                                        </Text>
+                                                    </Button>
+                                                </View>
                                             </View>
-                                        </ListItem>
+                                        </View>
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />

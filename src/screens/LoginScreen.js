@@ -128,14 +128,14 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-        <Container style={styles.container}>
+        <Container style={{...styles.container, backgroundColor: "#bdc3c7"}}>
             <Content>
                 <Card>
                     <CardItem>
                         <Body>
                             <View style={styles.form}>
-                                <H1>Log In</H1>
-                                <Text>Login with your account WEBTOON</Text>
+                                <H1 style={{color: "#3498db"}}>Log In</H1>
+                                <Text style={{color: "#bdc3c7"}}>Login with your account WEBTOON</Text>
                                 <Item>
                                     <Input placeholder="E-mail" value={this.state.inputEmail} onChangeText={this.handleInputEmail} />
                                 </Item>

@@ -51,8 +51,7 @@ class FavoriteScreen extends React.Component {
           },
           url: `${env.apiUrl}/toons/favorite`
       }).then(result=>{
-          this.setState({favorites:result.data.data.data})
-          console.log(this.state.favorites)
+          this.setState({favorites:result.data.data.data});
       });
     }
 

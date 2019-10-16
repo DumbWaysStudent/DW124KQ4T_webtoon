@@ -88,25 +88,25 @@ class DetailTitleScreen extends React.Component {
         <Container>
             <Content>
                     {(this.state.toon)?<Image
-                        style={{width: (width*(100/100)), height: 150}}
+                        style={{width: (width*(100/100)), height: 250}}
                         source={{uri: `${env.baseUrl}/${this.state.toon.image}`}} />: <View />}
                     <CardItem>
                         <Body>
                             <FlatList style={{marginTop: 30}}
                                 data={this.state.episodes}
                                 renderItem={({ item }) => 
-                                <ListItem>
-                                    <TouchableOpacity onPress={this.onOpenEpisode.bind(this, item.id)}>
-                                        <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}}
+                                <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
+                                    <TouchableOpacity style={{marginBottom: 10}} onPress={this.onOpenEpisode.bind(this, item.id)}>
+                                        <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}}
                                             source={{uri: `${env.baseUrl}/${item.image}`}} />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{marginLeft: 10}} onPress={this.onOpenEpisode.bind(this, item.id)}>
                                         <View>
-                                            <Text>{item.title}</Text>
-                                            <Text>{this.formatDate(item.createdAt)}</Text>
+                                            <Text style={{marginBottom: 5, marginTop: 5}}>{item.title}</Text>
+                                            <Text style={{color: "#bdc3c7"}}>{this.formatDate(item.createdAt)}</Text>
                                         </View>
                                     </TouchableOpacity>
-                                </ListItem>
+                                </View>
                                  }
                                 keyExtractor={item => item.id.toString()}
                             />

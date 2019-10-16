@@ -135,14 +135,18 @@ class ForYouScreen extends React.Component {
                               <Item>
                                   <Input placeholder="Search" value={this.state.keyword} onChangeText={this.onKeyword} />
                                   <Button transparent>
-                                      <Icon style={{color:'#3498db'}} type="FontAwesome" name="search" />
+                                      <Icon type="FontAwesome" name="search" />
                                   </Button>
                               </Item>
+                            </Body>
+                        </CardItem>
                               { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) : 
                               
                                 <>
                                 {(this.state.banners.length>0) ? <BannerComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} /> : <View />}
 
+                        <CardItem>
+                          <Body>
                                 
                                 {this.state.favorites.length>0?
                                     <>
@@ -155,14 +159,17 @@ class ForYouScreen extends React.Component {
                                     <FavoriteComponent items={this.state.banners} onDetailTitle={this.onDetailTitle} />
                                     </>
                                 }
+
                                 
 
-                                <H3>All</H3>
+                                <H3 style={{marginTop: 10}}>All</H3>
                                 <AllComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
-                                </>
-                              }
+
+
                           </Body>
                       </CardItem>
+                                </>
+                              }
               </Content>
           </Container>
       );

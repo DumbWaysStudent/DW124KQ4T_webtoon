@@ -159,14 +159,13 @@ class RegisterScreen extends React.Component {
 
   render() {
     return (
-        <Container style={styles.container}>
+        <Container style={{...styles.container, backgroundColor: "#bdc3c7"}}>
             <Content>
                 <Card>
                     <CardItem>
                         <Body>
                             <View style={styles.form}>
-                                <H1>Register</H1>
-                                <Text>Register with your account WEBTOON</Text>
+                                <H1 style={{color: "#3498db"}}>Register</H1>
                                 <Item>
                                     <Input placeholder="Name" value={this.state.inputName} onChangeText={this.handleInputName} />
                                 </Item>

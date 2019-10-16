@@ -12,21 +12,22 @@ class MyFavoriteCompnent extends React.Component{
     render() {
         return (
             <FlatList
+                style={{marginTop: 15}}
                 data = {this.props.items}
                 keyExtractor = {item => item.toon.id.toString()}
                 renderItem = {({item})=>(
-                    <ListItem>
+                    <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
                         <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
-                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}}
+                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}}
                                 source={{uri: `${env.baseUrl}/${item.toon.image}`}} />
                         </TouchableOpacity>
                         <TouchableOpacity style={{marginLeft: 10}} onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
                             <View>
-                                <Text>{item.toon.title}</Text>
-                                <Text>{`Created by ${item.toon.user.name}`}</Text>
+                                <Text style={{marginBottom: 5, marginTop: 5}}>{item.toon.title}</Text>
+                                <Text style={{color: "#bdc3c7"}}>{`Created by ${item.toon.user.name}`}</Text>
                             </View>
                         </TouchableOpacity>
-                    </ListItem>
+                    </View>
                 )}
             />
         );

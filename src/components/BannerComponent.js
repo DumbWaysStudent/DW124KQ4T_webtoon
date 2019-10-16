@@ -36,15 +36,9 @@ class BannerComponent extends React.Component {
       <Swiper style={styles.wrapper} showsButtons={true}>
         {this.state.items.map((item, index)=>(
           <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
-            <Card>
-              <CardItem style={{paddingLeft:10}}>
-                    <Body>
                         <Image
-                        style={{width: (width*(86/100)), height: 110}}
+                        style={{width: (width*(100/100)), height: 250}}
                         source={{uri: `${env.baseUrl}/${item.image}`}} />
-                  </Body>
-                </CardItem>
-            </Card>
           </TouchableOpacity>
     ))}
       </Swiper>
@@ -54,7 +48,7 @@ class BannerComponent extends React.Component {
 
 const styles = StyleSheet.create({
   wrapper: {
-    height: 150
+    height: 250
   }
 })
 

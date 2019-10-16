@@ -292,16 +292,16 @@ class EditToonScreen extends React.Component{
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
-                                        <ListItem>
-                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri:`${env.baseUrl}/${item.image}`}} />
+                                        <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
+                                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}} source={{uri:`${env.baseUrl}/${item.image}`}} />
                                             <TouchableOpacity onPress={this.onEditEpisode.bind(this, item.id)} style={{marginLeft: 20}}>
-                                                <View>
+                                                <View style={{flex:1, justifyContent: "center"}}>
                                                         <Text>
                                                             {item.title}
                                                         </Text>
                                                 </View>
                                             </TouchableOpacity>
-                                        </ListItem>
+                                        </View>
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />

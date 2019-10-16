@@ -130,32 +130,32 @@ class MyCreationScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                        <CardItem>
-                            <Body>
-                                <FlatList
-                                    data = {this.state.items}
-                                    keyExtractor = {item => item.id.toString()}
-                                    renderItem = {({item})=>(
-                                        <ListItem >
-                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})}>
-                                                {item.image==="" ?
-                                                <View style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}} />
-                                                : 
-                                                <Image style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}}
-                                                    source={{uri: `${env.baseUrl}/${item.image}`}} />
-                                                }
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
-                                                <View>
-                                                    <Text>{item.title} {`${(item.isDraft)?"(draft)":""}`}</Text>
-                                                    <Text>{ item.totalEpisode } episode(s)</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </ListItem>
-                                    )}
-                                />
-                            </Body>
-                        </CardItem>
+                    <CardItem>
+                        <Body>
+                            <FlatList
+                                data = {this.state.items}
+                                keyExtractor = {item => item.id.toString()}
+                                renderItem = {({item})=>(
+                                    <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
+                                        <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})}>
+                                            {item.image==="" ?
+                                            <View style={{width: 65, height: 65, borderWidth:1, borderColor: "#000"}} />
+                                            : 
+                                            <Image style={{width: 65, height: 65, borderWidth:1, borderColor: "#000"}}
+                                                source={{uri: `${env.baseUrl}/${item.image}`}} />
+                                            }
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
+                                            <View>
+                                                <Text style={{marginBottom: 5, marginTop: 5}}>{item.title} {`${(item.isDraft)?"(draft)":""}`}</Text>
+                                                <Text style={{color: "#bdc3c7"}}>{ item.totalEpisode } episode(s)</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />
+                        </Body>
+                    </CardItem>
                 </Content>
                 <Fab
                     active={false}

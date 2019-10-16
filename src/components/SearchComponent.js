@@ -2,6 +2,7 @@ import React from "react";
 import {View, Text, ListItem} from "native-base";
 import {FlatList, TouchableOpacity, Image} from "react-native";
 import env from "../../env";
+import SafeAreaView from "react-native-safe-area-view";
 
 
 export default class SearchComponent extends React.Component {
@@ -11,7 +12,7 @@ export default class SearchComponent extends React.Component {
 
     render(){
         return (
-
+        <SafeAreaView>
             <FlatList
                 data = {this.props.items}
                 keyExtractor = {item => item.id.toString()}
@@ -30,6 +31,7 @@ export default class SearchComponent extends React.Component {
                     </ListItem>
                 )}
             />
+        </SafeAreaView>
         )
     }
 }

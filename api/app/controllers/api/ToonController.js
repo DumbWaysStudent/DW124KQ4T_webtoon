@@ -71,7 +71,11 @@ module.exports = {
             include:[{
                 as: 'toon',
                 model: Toon,
-                include: ['user']
+                include: [{
+                    as:'user',
+                    model: User,
+                    attributes: [ 'id', 'name', 'email' ]
+                }]
             }],
             order: [
                 ['createdAt', 'DESC']
@@ -91,7 +95,11 @@ module.exports = {
             where: {
                 title: { [Op.like]: `%${req.params.keyword}%` }
             },
-            include: ['user']
+            include: [{
+                as:'user',
+                model: User,
+                attributes: [ 'id', 'name', 'email' ]
+            }]
         }).then(result=>toons=result);
         return res.status(200).json({
             msg: "Success",
