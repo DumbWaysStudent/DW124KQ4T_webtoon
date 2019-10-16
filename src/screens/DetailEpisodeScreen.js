@@ -21,7 +21,7 @@ class DetailEpisodeScreen extends React.Component {
                   url: "www.example.com"
                 }
             )}>
-                  <Icon name="share-alt" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="share-alt" type="FontAwesome" />
               </Button>
           )
         };
@@ -50,7 +50,7 @@ class DetailEpisodeScreen extends React.Component {
             var episode = result.data.data.data;
             for(var i =0;i<episode.images.length;i++){
                 await Image.getSize(`${env.baseUrl}/${episode.images[i].url}`, (w, h) => {
-                    var wi = width*(90/100);
+                    var wi = width*(100/100);
                     episode.images[i].width=wi;
                     episode.images[i].height=h*(wi/w);
                 });
@@ -66,9 +66,6 @@ class DetailEpisodeScreen extends React.Component {
         return (
             <Container>
                 <Content>
-                    <Card>
-                        <CardItem>
-                            <Body>
                                 {this.state.episode ?
                                     <FlatList
                                         data={this.state.episode.images}
@@ -79,10 +76,6 @@ class DetailEpisodeScreen extends React.Component {
                                         keyExtractor={item => item.id.toString()}
                                     />
                                 : <View /> }
-                            
-                            </Body>
-                        </CardItem>
-                    </Card>
                     
                 </Content>
             </Container>

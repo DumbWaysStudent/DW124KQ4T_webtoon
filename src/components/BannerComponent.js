@@ -29,7 +29,6 @@ class BannerComponent extends React.Component {
       this.setState({
         items: [...items]
       });
-      console.log(this.state.items);
     }
 
   render(){
@@ -38,10 +37,10 @@ class BannerComponent extends React.Component {
         {this.state.items.map((item, index)=>(
           <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
             <Card>
-              <CardItem>
+              <CardItem style={{paddingLeft:10}}>
                     <Body>
                         <Image
-                        style={{width: (width*(80/100)), height: 110}}
+                        style={{width: (width*(86/100)), height: 110}}
                         source={{uri: `${env.baseUrl}/${item.image}`}} />
                   </Body>
                 </CardItem>

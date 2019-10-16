@@ -88,13 +88,12 @@ class FavoriteScreen extends React.Component {
     return (
         <Container>
           <Content>
-            <Card>
               <CardItem>
                 <Body>
                   <Item>
                       <Input placeholder="Search" value={this.state.keyword} onChangeText={this.onKeyword} />
                       <Button transparent>
-                          <Icon type="FontAwesome" name="search" />
+                          <Icon style={{color:'#3498db'}} type="FontAwesome" name="search" />
                       </Button>
                   </Item>
                   { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) :
@@ -102,7 +101,6 @@ class FavoriteScreen extends React.Component {
                   }
                 </Body>
               </CardItem>
-            </Card>
           </Content>
         </Container>
     );

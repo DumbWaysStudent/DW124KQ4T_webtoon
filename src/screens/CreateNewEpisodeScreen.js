@@ -38,7 +38,7 @@ class CreateNewEpisodeScreen extends React.Component {
                         }
                     }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -173,7 +173,6 @@ class CreateNewEpisodeScreen extends React.Component {
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
@@ -182,14 +181,15 @@ class CreateNewEpisodeScreen extends React.Component {
                                 <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Images</Text>
                                 </View>
+                                {(this.state.images.length > 0) ? 
                                 <FlatList
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.src} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={item.src} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button small onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>
                                                         Delete
                                                     </Text>
@@ -199,13 +199,13 @@ class CreateNewEpisodeScreen extends React.Component {
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddImage}>
-                                    <Text>Add Image</Text>
-                                </Button>
+                                : <View><Text>No Image Uploaded!</Text></View>   }
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button style={{backgroundColor: '#2980b9'}} full onPress={this.onAddImage}>
+                    <Text>Add Image</Text>
+                </Button>
             </Container>
         )
     }

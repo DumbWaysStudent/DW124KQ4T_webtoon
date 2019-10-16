@@ -130,14 +130,13 @@ class MyCreationScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <FlatList
                                     data = {this.state.items}
                                     keyExtractor = {item => item.id.toString()}
                                     renderItem = {({item})=>(
-                                        <ListItem>
+                                        <ListItem >
                                             <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})}>
                                                 {item.image==="" ?
                                                 <View style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}} />
@@ -157,13 +156,12 @@ class MyCreationScreen extends React.Component{
                                 />
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
                 <Fab
                     active={false}
                     direction="up"
                     containerStyle={{ position: "absolute" }}
-                    style={{ backgroundColor: '#5067FF' }}
+                    style={{ backgroundColor: '#3498db' }}
                     position="bottomRight"
                     onPress={() => this.props.navigation.navigate("CreateNew")}>
                         <Icon name="plus" type="FontAwesome" />

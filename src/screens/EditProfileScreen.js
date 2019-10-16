@@ -30,7 +30,7 @@ class EditProfileScreen extends React.Component{
               onPress={() => {
                   navigation.navigate("Profile", navigation.state.params)
                   }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -136,12 +136,11 @@ class EditProfileScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <TouchableOpacity onPress={this.handleChangeAvatar} style={{ flex: 1, alignItems: 'center'}}>
-                                <Image style={{width:200, height: 200, borderRadius: 200/2, overflow: "hidden", borderWidth: 3,borderColor: "black"}} source={this.state.avatarSource} />
-                                <View style={{marginTop: -50, marginLeft: 120, width:50, height:50, borderRadius: 25, backgroundColor: "#fff",alignItems:"center", justifyContent:"center"}}>
-                                    <Icon name="camera" type="FontAwesome" />
+                                <Image style={{width:200, height: 200, borderRadius: 200/2, overflow: "hidden", borderWidth: 3,borderColor: "#3498db",}} source={this.state.avatarSource} />
+                                <View style={{marginTop: -50, marginLeft: 120, width:50, height:50, borderRadius: 25, backgroundColor: "#3498db",alignItems:"center", justifyContent:"center"}}>
+                                    <Icon style={{color:"#fff"}} name="camera" type="FontAwesome" />
                                 </View>
                             </TouchableOpacity>
                         </CardItem>
@@ -150,7 +149,6 @@ class EditProfileScreen extends React.Component{
                                 <Input style={{fontSize: 30, color: "black", textAlign: "center" }} placeholder="Your Name" value={this.state.inputName} onChangeText={this.handleInputName} />
                             </Item>
                         </CardItem>
-                    </Card> 
                 </Content>
             </Container>
         );

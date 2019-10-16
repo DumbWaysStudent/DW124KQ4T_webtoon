@@ -176,15 +176,15 @@ class RegisterScreen extends React.Component {
                                 <Item last>
                                     <Input placeholder="Password" value={this.state.inputPassword} secureTextEntry={this.state.isSecurePassword} onChangeText={this.handleInputPassword} />
                                     <Button onPress={this.handleShowHidePassword} transparent>
-                                        <Icon type="FontAwesome" name={this.state.isSecurePassword ? "eye-slash":"eye"} />
+                                        <Icon style={{color:'#3498db'}} type="FontAwesome" name={this.state.isSecurePassword ? "eye-slash":"eye"} />
                                     </Button>
                                 </Item>
                                 {((this.state.isSubmitEnable) ) ? 
-                                    <Button onPress={this.handleSubmit} style={styles.buttonLogin} block>
+                                    <Button rounded onPress={this.handleSubmit} style={{...styles.buttonLogin, backgroundColor: '#3498db'}} block>
                                         <Text>Register</Text>
                                     </Button>
                                         : 
-                                    <Button disabled style={styles.buttonLogin} block>
+                                    <Button rounded disabled style={styles.buttonLogin} block>
                                         <Text>Register</Text>
                                     </Button>
                                 }

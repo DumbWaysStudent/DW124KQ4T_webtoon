@@ -22,7 +22,7 @@ class ProfileScreen extends React.Component {
         headerRight: (
           <Button transparent
             onPress={() => navigation.navigate("EditProfile") }>
-                <Icon name="pencil" type="FontAwesome" />
+                <Icon name="pencil" type="FontAwesome" style={{color:'#3498db'}} />
             </Button>
         )
       };
@@ -79,14 +79,13 @@ class ProfileScreen extends React.Component {
     return (
         <Container>
           <Content>
-            <Card>
               <CardItem>
                 <Body style={{ flex: 1, alignItems: 'center'}}>
                     <Image style={{width:200, height: 200, borderRadius: 200/2}} source={{uri: this.state.profile.image}} />
                     <H1 style={{marginBottom: 70, marginTop: 30}}>{this.state.profile.name}</H1>
                 </Body>
               </CardItem>
-              <List>
+              <List style={{marginRight: 15}}>
                 <ListItem>
                   <TouchableOpacity onPress={()=>this.props.navigation.navigate("MyCreation")} style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
                         <View style={{flex: 1}}><Text>My Webtoon Creation</Text></View>
@@ -101,7 +100,7 @@ class ProfileScreen extends React.Component {
                   </TouchableOpacity>
                 </ListItem>
               </List>
-            </Card>
+            
           </Content>
         </Container>
     );

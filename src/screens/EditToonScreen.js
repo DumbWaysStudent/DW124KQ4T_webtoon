@@ -17,14 +17,13 @@ class EditToonScreen extends React.Component{
                 if(navigation.getParam("isReady")){
                     var submiting = navigation.state.params;
                     submiting.onEdit = submiting.id;
-                    console.log(submiting);
                     delete submiting.isReady;
                     delete submiting.isChanged;
                     delete submiting.errors;
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
 
@@ -281,7 +280,6 @@ class EditToonScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
@@ -290,11 +288,12 @@ class EditToonScreen extends React.Component{
                                 <View  style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Episode</Text>
                                 </View>
+                                { (this.state.episodes.length>0) ?
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={{uri:`${env.baseUrl}/${item.image}`}} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri:`${env.baseUrl}/${item.image}`}} />
                                             <TouchableOpacity onPress={this.onEditEpisode.bind(this, item.id)} style={{marginLeft: 20}}>
                                                 <View>
                                                         <Text>
@@ -306,16 +305,16 @@ class EditToonScreen extends React.Component{
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddEpisode}>
-                                    <Text>Add Episode</Text>
-                                </Button>
-                                <Button block danger onPress={this.onDelete}>
-                                    <Text>Delete</Text>
-                                </Button>
+                                : <View><Text>No Episode Uploaded!</Text></View>}
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddEpisode}>
+                    <Text>Add Episode</Text>
+                </Button>
+                <Button full danger onPress={this.onDelete}>
+                    <Text>Delete</Text>
+                </Button>
             </Container>
         );
     }

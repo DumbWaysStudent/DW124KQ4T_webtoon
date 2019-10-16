@@ -14,6 +14,8 @@ import Auth from './src/services/Auth'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+
 import FavoriteScreen from './src/screens/FavoriteScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import DetailTitleScreen from './src/screens/DetailTitleScreen';
@@ -148,7 +150,7 @@ const ProfileStack = createStackNavigator({
 
 
 
-const MainNavigator = createAppContainer(createBottomTabNavigator({
+const MainNavigator = createAppContainer(createMaterialBottomTabNavigator({
       ForYou: {
         screen: ForYouStack,
         navigationOptions:({navigation})=>{
@@ -157,9 +159,8 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
             "DetailEpisode"
           ];
           var obj = {
-            title: 'Profile',
             tabBarIcon: ({ tintColor }) => (
-              <Icon type="FontAwesome" name="tablet" />
+              <Icon type="FontAwesome" name="tablet" style={{color: tintColor}} />
             )
           };
           if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
@@ -179,9 +180,8 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
               "DetailEpisode"
             ];
             var obj = {
-              title: 'Profile',
               tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="star" />
+                <Icon type="FontAwesome" name="star" style={{color: tintColor}} />
               )
             };
             if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
@@ -206,9 +206,8 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
               "DetailEpisode"
             ];
             var obj = {
-              title: 'Profile',
               tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="user" />
+                <Icon type="FontAwesome" name="user" style={{color: tintColor}} />
               )
             };
             if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
@@ -220,6 +219,22 @@ const MainNavigator = createAppContainer(createBottomTabNavigator({
             return obj
           }
       }
+},{
+  // tabBarOptions: {
+  //   showLabel: false,
+  //   activeTintColor: '#ecf0f1',
+  //   inactiveTintColor: '#bdc3c7',
+  //   labelStyle: {
+  //     fontSize: 12,
+  //   },
+  //   style: {
+  //     backgroundColor: '#2980b9',
+  //   },
+  // }
+  labeled: false,
+  activeColor: '#ecf0f1',
+  inactiveColor: '#bdc3c7',
+  barStyle: { backgroundColor: '#2980b9' },
 }));
 
 const AppNavigator = createStackNavigator({

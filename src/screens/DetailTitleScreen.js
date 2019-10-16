@@ -23,7 +23,7 @@ class DetailTitleScreen extends React.Component {
                   url: "www.example.com"
                 }
             )}>
-                  <Icon name="share-alt" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="share-alt" type="FontAwesome" />
               </Button>
           )
         };
@@ -87,12 +87,11 @@ class DetailTitleScreen extends React.Component {
     return (
         <Container>
             <Content>
-                <Card>
+                    {(this.state.toon)?<Image
+                        style={{width: (width*(100/100)), height: 150}}
+                        source={{uri: `${env.baseUrl}/${this.state.toon.image}`}} />: <View />}
                     <CardItem>
                         <Body>
-                        {(this.state.toon)?<Image
-                            style={{width: (width*(90/100)), height: 150}}
-                            source={{uri: `${env.baseUrl}/${this.state.toon.image}`}} />: <View />}
                             <FlatList style={{marginTop: 30}}
                                 data={this.state.episodes}
                                 renderItem={({ item }) => 
@@ -113,7 +112,6 @@ class DetailTitleScreen extends React.Component {
                             />
                         </Body>
                     </CardItem>
-                </Card>
             </Content>
         </Container>
     );

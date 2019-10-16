@@ -28,7 +28,7 @@ class CreateNewScreen extends React.Component{
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
 
@@ -204,7 +204,6 @@ class CreateNewScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card style={{flex: 1}}>
                         <CardItem>
                             <Body>
                                 <Item>
@@ -213,11 +212,12 @@ class CreateNewScreen extends React.Component{
                                 <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Episode</Text>
                                 </View>
+                                {(this.state.episodes.length > 0) ? 
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={{uri: `${env.baseUrl}/${item.image}`}} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.image}`}} />
                                             <View style={{marginLeft: 20}}>
                                                     <Text>
                                                         {item.title}
@@ -227,13 +227,13 @@ class CreateNewScreen extends React.Component{
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddEpisode}>
-                                    <Text>Add Episode</Text>
-                                </Button>
+                                : <View><Text>No Episode Uploaded!</Text></View>}
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddEpisode}>
+                    <Text>Add Episode</Text>
+                </Button>
             </Container>
         );
     }

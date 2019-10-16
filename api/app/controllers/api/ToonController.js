@@ -10,7 +10,16 @@ const validator = require(`../../libraries/Validator.js`);
 module.exports = {
     index: async (req, res)=>{
         var toons = []
-        await Toon.findAll().then(result=>toons=result)
+        await Toon.findAll({
+            where: {
+                isDraft: {
+                    [Op.ne]: 1
+                }
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(result=>toons=result)
 
         var toons2= JSON.parse(JSON.stringify(toons));
 
@@ -37,7 +46,16 @@ module.exports = {
 
     banner: async (req, res)=>{
         var toons = []
-        await Toon.findAll().then(result=>toons=result)
+        await Toon.findAll({
+            where: {
+                isDraft: {
+                    [Op.ne]: 1
+                }
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }).then(result=>toons=result)
         return res.status(200).json({
             msg: "Success",
             data: {
@@ -54,7 +72,10 @@ module.exports = {
                 as: 'toon',
                 model: Toon,
                 include: ['user']
-            }]
+            }],
+            order: [
+                ['createdAt', 'DESC']
+            ]
         }).then(result=>toons=result)
         return res.status(200).json({
             msg: "Success",

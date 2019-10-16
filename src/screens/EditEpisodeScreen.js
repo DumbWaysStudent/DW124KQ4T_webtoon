@@ -37,7 +37,7 @@ class EditEpisodeScreen extends React.Component {
                         navigation.navigate("EditToon", {editEpisode: submiting, newEpisode: undefined, onDelete: undefined});
                     }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -213,7 +213,6 @@ class EditEpisodeScreen extends React.Component {
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
@@ -222,14 +221,15 @@ class EditEpisodeScreen extends React.Component {
                                 <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Images</Text>
                                 </View>
+                                {(this.state.images.length > 0) ? 
                                 <FlatList
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={{uri: `${env.baseUrl}/${item.url}`}} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.url}`}} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button small onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>
                                                         Delete
                                                     </Text>
@@ -239,16 +239,16 @@ class EditEpisodeScreen extends React.Component {
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddImage}>
-                                    <Text>Add Image</Text>
-                                </Button>
-                                <Button block danger onPress={this.onDeleteEps}>
-                                    <Text>Delete</Text>
-                                </Button>
+                                : <View><Text>No Image Uploaded!</Text></View>   }
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddImage}>
+                    <Text>Add Image</Text>
+                </Button>
+                <Button full danger onPress={this.onDeleteEps}>
+                    <Text>Delete</Text>
+                </Button>
             </Container>
         )
     }
