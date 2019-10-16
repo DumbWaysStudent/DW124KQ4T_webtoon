@@ -7,7 +7,6 @@ const {width, height} = Dimensions.get('window');
 
 const options = {
     title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
     storageOptions: {
       skipBackup: true,
       path: 'images',
@@ -39,7 +38,7 @@ class CreateNewEpisodeScreen extends React.Component {
                         }
                     }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -131,7 +130,11 @@ class CreateNewEpisodeScreen extends React.Component {
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
               var bWidth =(width*(20/100));
               var b = (width*(20/100))/response.width;
-              images.push({src:source, id:(new Date).getTime(), height: b*height, width: bWidth});
+              images.push({src:source, id:(new Date).getTime(), height: b*height, width: bWidth, img: {
+                uri: response.uri,
+                type: response.type,
+                name: response.fileName
+              }});
 
               this.setState({
                   images:images
@@ -170,23 +173,23 @@ class CreateNewEpisodeScreen extends React.Component {
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <Item>
+                                <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Images</Text>
-                                </Item>
+                                </View>
+                                {(this.state.images.length > 0) ? 
                                 <FlatList
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.src} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={item.src} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>
                                                         Delete
                                                     </Text>
@@ -196,13 +199,13 @@ class CreateNewEpisodeScreen extends React.Component {
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddImage}>
-                                    <Text>Add Image</Text>
-                                </Button>
+                                : <View><Text>No Image Uploaded!</Text></View>   }
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button style={{backgroundColor: '#2980b9'}} full onPress={this.onAddImage}>
+                    <Text>Add Image</Text>
+                </Button>
             </Container>
         )
     }

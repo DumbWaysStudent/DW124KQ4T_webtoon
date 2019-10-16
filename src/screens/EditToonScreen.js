@@ -2,6 +2,9 @@ import React from "react";
 import { View, Text, Container, Content, Card, CardItem, Body, Button, Item, Input, Icon, ListItem } from "native-base";
 
 import { FlatList, Image, TouchableOpacity } from "react-native";
+import axios from 'axios';
+import env from '../../env';
+import Auth from '../services/Auth';
 
 
 class EditToonScreen extends React.Component{
@@ -13,14 +16,14 @@ class EditToonScreen extends React.Component{
               onPress={() => {
                 if(navigation.getParam("isReady")){
                     var submiting = navigation.state.params;
-                    submiting.onEdit = submiting.time;
+                    submiting.onEdit = submiting.id;
                     delete submiting.isReady;
                     delete submiting.isChanged;
                     delete submiting.errors;
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
 
@@ -30,20 +33,27 @@ class EditToonScreen extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            image: props.navigation.getParam("image"),
-            title: props.navigation.getParam("title"),
-            episodes: props.navigation.getParam("episodes"),
+            id: null,
+            image: null,
+            title: null,
+            episodes: [],
             errors:[],
             isReady: true,
-            isChanged: true
+            isChanged: true,
+            isNew: false,
+            epsCheck: [],
+            token: ''
         }
     }
-    componentDidMount(){
+    async componentDidMount(){
+        var token = await (new Auth).fetch('token');
+        this.setState({token});
+        this.onDetail(this.props.navigation.getParam("id"));
         if(this.state.isChanged){
 
             this.props.navigation.setParams({
                 ...this.state
-            })
+            });
             
             this.setState({
                 isChanged: false
@@ -51,7 +61,16 @@ class EditToonScreen extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
+    async componentDidUpdate(prevProps, prevState){
+        if(prevState.title !== this.state.title){
+            this.props.navigation.setParams({
+                title: this.state.title
+            });
+            
+            this.setState({
+                title: this.state.title
+            });
+        }
         if(prevState.isChanged === this.state.isChanged){
             if(this.state.isChanged){
                 this.props.navigation.setParams({
@@ -64,45 +83,149 @@ class EditToonScreen extends React.Component{
             }
         }
         if(prevState.episodes === this.state.episodes){
-            if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.episodes.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
-                var eps = this.state.episodes;
-                eps.unshift(this.props.navigation.getParam('newEpisode'));
-
-                this.setState({
-                    image: eps[0].images[0].src,
-                    episodes: eps,
-                    isChanged: true
-                });
+            if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.epsCheck.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
+                await this.onNewEpisode(this.props.navigation.getParam('newEpisode'));
             }
             if(typeof this.props.navigation.getParam('editEpisode') !== "undefined"){
 
                 var eps = this.props.navigation.getParam('editEpisode');
-                this.props.navigation.setParams({editEpisode:undefined});
-                var items = this.state.episodes;
-                var index = this.state.episodes.findIndex(item => item.time === eps.time);
-                items[index] = eps;
-
-                this.setState({
-                    image: eps.images[0].src,
-                    episodes: [ ...items],
-                    isChanged: true
-                });
+                await this.onUpdateEpisode(eps);
+                
             }
             if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
-                var eps = this.state.episodes.filter((item)=>item.time!==this.props.navigation.getParam('onDelete'));
-                this.props.navigation.setParams({onDelete:undefined});
-
-
-                this.setState({image: (typeof eps[0] !== "undefined")?eps[0].images[0].src:"",
-                    episodes: eps,
-                    isChanged: true
-                });
+                
+                this.onDeleteEpisode(this.props.navigation.getParam('onDelete'));
             }
         }
     }
 
+    onDeleteEpisode = async (id) => {
+        var eps = this.state.episodes.filter((item)=>item.id!==id);
+        
+        this.props.navigation.setParams({onDelete:undefined});
+
+        await axios({
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },   
+            url: `${env.apiUrl}/toon-episode/${id}`
+        }).then(result=>{
+            this.setState({
+                episodes: eps,
+                isChanged: true
+            });
+        });
+
+        
+    }
+
+    onUpdateEpisode = async (data) => {
+        this.props.navigation.setParams({editEpisode:undefined});
+
+        axios({
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: {
+                title:data.name
+            },          
+            url: `${env.apiUrl}/toon-episode/${data.id}/edit`
+        }).then(result=>{
+            var items = this.state.episodes;
+            var index = this.state.episodes.findIndex(item => item.id === data.id);
+            items[index].title = data.name;
+
+            this.setState({
+                episodes: [ ...items],
+                isChanged: true
+            });
+        });
+
+
+
+        
+    }
+
+    onNewEpisode = async (data) => {
+        this.props.navigation.setParams({...{
+            newEpisode: undefined
+        }});
+        var formdata = new FormData;
+        formdata.append("title", data.name);
+        formdata.append("toonId", this.state.id);
+        for(var i=0;i<data.images.length;i++){
+            formdata.append("images[]", data.images[i].img);
+        }
+        await axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: formdata,          
+            url: `${env.apiUrl}/toon-episode/create`
+        }).then(result=>{
+            var item = result.data.data.data;
+            var eps = this.state.episodes;
+            var epsCheck = this.state.epsCheck;
+            epsCheck.unshift(data);
+            eps.unshift(item);
+            console.log(eps);
+
+            this.setState({
+                image: eps[0].image,
+                episodes: [...eps],
+                epsCheck: [...epsCheck],
+                isChanged: true
+            });
+            
+        }).catch(error=>{
+            console.log("====error=====");
+            console.log(error);
+            console.log("====error.response=====");
+            console.log(error.response);
+        });
+    }
+
+    onDetail = async (id)=> {
+        var obj1=null;
+        var obj2 = null;
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            },
+            url: `${env.apiUrl}/toon/${id}`
+        }).then(result => {
+            var item = result.data.data.data
+            obj1 = {
+                image: item.image,
+                title: item.title,
+                id: item.id
+            };
+            
+        });
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            },
+            url: `${env.apiUrl}/toon/${id}/episodes`
+        }).then(result => {
+            var item = result.data.data.data
+            obj2 = {
+                episodes: item,
+            }
+        });
+        this.setState({...obj1,...obj2,isChanged: true});
+    }
+
     onAddEpisode = () => {
-        this.props.navigation.navigate("CreateNewEpisode", {edit:(new Date).getTime()});
+        this.props.navigation.navigate("CreateNewEpisode", {edit:this.state.id});
     }
 
     onChangeTitle = (text) => {
@@ -128,7 +251,7 @@ class EditToonScreen extends React.Component{
     }
 
     onDelete = () => {
-        this.props.navigation.navigate("MyCreation", {onDelete:this.state.time})
+        this.props.navigation.navigate("MyCreation", {onDelete:this.state.id})
     }
 
     checkError = (json=null) => {
@@ -149,7 +272,7 @@ class EditToonScreen extends React.Component{
     }
 
     onEditEpisode = (id) => {
-        var item = this.state.episodes.filter((item)=>item.time===id)[0];
+        var item = this.state.episodes.filter((item)=>item.id===id)[0];
         this.props.navigation.navigate("EditEpisode", {edit: item});
     }
 
@@ -157,41 +280,41 @@ class EditToonScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
                                     <Input value={this.state.title} onChangeText={this.onChangeTitle} placeholder="Title" />
                                 </Item>
-                                <Item>
+                                <View  style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Episode</Text>
-                                </Item>
+                                </View>
+                                { (this.state.episodes.length>0) ?
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.cover} />
-                                            <TouchableOpacity onPress={this.onEditEpisode.bind(this, item.time)} style={{marginLeft: 20}}>
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri:`${env.baseUrl}/${item.image}`}} />
+                                            <TouchableOpacity onPress={this.onEditEpisode.bind(this, item.id)} style={{marginLeft: 20}}>
                                                 <View>
                                                         <Text>
-                                                            {item.name}
+                                                            {item.title}
                                                         </Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </ListItem>
                                     )}
-                                    keyExtractor={(item)=>item.time.toString()}
+                                    keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddEpisode}>
-                                    <Text>Add Episode</Text>
-                                </Button>
-                                <Button block danger onPress={this.onDelete}>
-                                    <Text>Delete</Text>
-                                </Button>
+                                : <View><Text>No Episode Uploaded!</Text></View>}
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddEpisode}>
+                    <Text>Add Episode</Text>
+                </Button>
+                <Button full danger onPress={this.onDelete}>
+                    <Text>Delete</Text>
+                </Button>
             </Container>
         );
     }

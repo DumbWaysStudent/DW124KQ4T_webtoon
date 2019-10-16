@@ -1,21 +1,28 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('toon_episode_images', {
+    return queryInterface.createTable('favorites', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      url: {
-        type: Sequelize.TEXT
-      },
-      toonEpisodeId: {
+      userId: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {
-              model: 'toon_episodes',
+              model: 'users',
+              key: 'id'
+          },
+          onUpdate: 'cascade',
+          onDelete: 'cascade'
+      },
+      toonId: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+              model: 'toons',
               key: 'id'
           },
           onUpdate: 'cascade',
@@ -32,6 +39,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('toon_episode_images');
+    return queryInterface.dropTable('favorites');
   }
 };

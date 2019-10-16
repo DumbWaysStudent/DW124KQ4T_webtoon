@@ -2,6 +2,7 @@ import { AsyncStorage } from "react-native";
 
 export default class Auth {
     save = async (data) => {
+        console.log("data");
         for(key in data){
                 
             await AsyncStorage.setItem(`authUser.${key}`, data[key] );
@@ -21,6 +22,23 @@ export default class Auth {
         else{
             return false;
         }
+    }
+
+    destroy = async () => {
+        await AsyncStorage.removeItem(`authUser.id`);
+        await AsyncStorage.removeItem(`authUser.image`);
+        await AsyncStorage.removeItem(`authUser.name`);
+        await AsyncStorage.removeItem(`authUser.email`);
+        await AsyncStorage.removeItem(`authUser.token`);
+    }
+
+    update = async (data, key) => {
+        await AsyncStorage.removeItem(`authUser.${key}`);
+        await AsyncStorage.setItem(`authUser.${key}`, data);
+    }
+
+    get = async () => {
+        return "data"
     }
 
 }

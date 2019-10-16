@@ -3,10 +3,12 @@ const models = require(`../../models`);
 
 const uniqueness = async function(model, column, value, ignoreId=null, ignoreIdColumn=null){
     var modelnya = models[model];
-    var query = {}
-    query[column] = value;
+    var query = {
+        where: {}
+    }
+    query.where[column] = value;
 
-    return modelnya.findOne(query);
+    return modelnya.findAll(query);
     // var algo = ""
     // if(ignoreId!=null){
     //     algo = algo + ' AND ' + ignoreIdColumn + ' != "' + ignoreId + '"';
@@ -58,7 +60,7 @@ module.exports={
                             ignoreIdColumn = uniqueRule[3];
                         }
                         await uniqueness(table, column, body[key], ignoreId, ignoreIdColumn).then(function(res){
-                            if(res){
+                            if(res[0]){
                                 if(noRule == 0){
                                     err_msg[key] = [];
                                 }

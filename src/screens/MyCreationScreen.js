@@ -2,53 +2,123 @@ import React from "react";
 
 import { View, Text, Container, Content, Card, CardItem, Fab, Icon, Button, Body, ListItem } from "native-base";
 import { FlatList, TouchableOpacity, Image, Dimensions } from "react-native";
+import axios  from 'axios';
+import env  from '../../env';
+import Auth  from '../services/Auth';
 
 const {width, height} = Dimensions.get('screen');
-
-const banners = [];
 
 class MyCreationScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            items: banners
+            items: [],
+            token: "",
+            sending: 0
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
+    async componentDidMount(){
+        this.setState({
+            token: await (new Auth).fetch('token')
+        });
+        this.onMyToon();
+    }
+
+    async componentDidUpdate(prevProps, prevState){
         if(prevState.items === this.state.items) {
             if(typeof this.props.navigation.state.params !== "undefined"){
                 if(this.props.navigation.getParam('isNew') === true){
-                    var submitted = this.props.navigation.state.params;
-                    delete submitted.isNew;
-                    submitted.id = 1;
-                    if(this.state.items.length>0){
-                        submitted.id = this.state.items.sort((a, b) => b.id - a.id)[0].id+1;
-                    }
-                    var items = this.state.items;
-                    items.unshift(submitted);
-                    this.props.navigation.setParams({isNew: false})
-                    this.setState({items:items});
+                        await this.onSubmitNew({
+                            image: "",
+                            title: this.props.navigation.getParam("title")
+                        });
                 }
                 if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
-                    var time = this.props.navigation.getParam('onDelete');
-                    this.props.navigation.setParams({onDelete: undefined});
-                    var items = this.state.items.filter((item)=> item.time !== time);
-                    this.setState({items:items});
+                    var id = this.props.navigation.getParam('onDelete');
+                    await this.onDelete(id);
                 }
                 if(typeof this.props.navigation.getParam('onEdit') !== "undefined"){
-                    var time = this.props.navigation.getParam('onEdit');
-                    this.props.navigation.setParams({onEdit: undefined});
-                    var items = this.state.items;
-                    var index = this.state.items.findIndex(item => item.time === time);
-                    var submitted = this.props.navigation.state.params;
-                    delete submitted.onEdit;
-                    items[index] = submitted;
-                    this.setState({items:[...items]});
+                    var id = this.props.navigation.getParam('onEdit');
+                    await this.onSubmitUpdate({
+                        title: this.props.navigation.getParam('title'),
+                        image: this.props.navigation.getParam('image')
+                    }, id);
 
                 }
             }
         }
+    }
+
+    onDelete = async (id) => {
+        this.props.navigation.setParams({onDelete: undefined});
+
+        await axios({
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },   
+            url: `${env.apiUrl}/toon/${id}`
+        }).then(result=>{
+            var items = this.state.items.filter((item)=> item.id !== id);
+            this.setState({items:items});
+        });
+    }
+
+    onSubmitUpdate = async (data, id) => {
+        this.props.navigation.setParams({onEdit: undefined});
+        axios({
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: data,          
+            url: `${env.apiUrl}/toon/${id}/edit`
+        }).then(result=>{
+            var items = this.state.items;
+            var index = this.state.items.findIndex(item => item.id === id);
+            if(typeof items[index] === "undefined"){
+                items.unshift(result.data.data.data);
+            }
+            else{
+                items[index] = result.data.data.data;
+            }
+            var obj = {items:[...items]};
+            this.setState({...obj});
+        });
+    }
+
+    onSubmitNew = async (data) => {
+        axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: data,          
+            url: `${env.apiUrl}/toon/create`
+        }).then(result=>{
+            var items = this.state.items;
+            items.unshift(result.data.data.data);
+            this.setState({
+                items: [...items]
+            });
+        }).catch();
+    }
+
+    onMyToon = async () => {
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            url: `${env.apiUrl}/my-toons`
+        }).then(result=>{
+            this.setState({items:result.data.data.data})
+        });
     }
 
     onDetailTitle = (id) => {
@@ -60,22 +130,25 @@ class MyCreationScreen extends React.Component{
         return (
             <Container>
                 <Content>
-                    <Card style={{flex: 1}}>
                         <CardItem>
                             <Body>
                                 <FlatList
                                     data = {this.state.items}
                                     keyExtractor = {item => item.id.toString()}
                                     renderItem = {({item})=>(
-                                        <ListItem>
-                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)}>
-                                                <Image style={{width: 50, height: 50}}
-                                                    source={item.image} />
+                                        <ListItem >
+                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})}>
+                                                {item.image==="" ?
+                                                <View style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}} />
+                                                : 
+                                                <Image style={{width: 50, height: 50, borderWidth:1, borderColor: "#000"}}
+                                                    source={{uri: `${env.baseUrl}/${item.image}`}} />
+                                                }
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", item)} style={{marginLeft: 20}}>
+                                            <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
                                                 <View>
-                                                    <Text>{item.title}</Text>
-                                                    <Text>{ item.episodes.length } episode(s)</Text>
+                                                    <Text>{item.title} {`${(item.isDraft)?"(draft)":""}`}</Text>
+                                                    <Text>{ item.totalEpisode } episode(s)</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </ListItem>
@@ -83,13 +156,12 @@ class MyCreationScreen extends React.Component{
                                 />
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
                 <Fab
                     active={false}
                     direction="up"
                     containerStyle={{ position: "absolute" }}
-                    style={{ backgroundColor: '#5067FF' }}
+                    style={{ backgroundColor: '#3498db' }}
                     position="bottomRight"
                     onPress={() => this.props.navigation.navigate("CreateNew")}>
                         <Icon name="plus" type="FontAwesome" />

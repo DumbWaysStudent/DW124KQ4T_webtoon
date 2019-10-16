@@ -2,15 +2,16 @@
 module.exports = (sequelize, DataTypes) => {
   const toon_episode = sequelize.define('toon_episode', {
     title: DataTypes.STRING,
-    toon_id: DataTypes.INTEGER
+    toonId: DataTypes.INTEGER,
+    image: DataTypes.TEXT
   }, {});
   toon_episode.associate = function(models) {
     toon_episode.belongsTo(models.toon, {
       as: "toon",
-      foreignKey: 'toon_id'
+      foreignKey: 'toonId'
     });
     toon_episode.hasMany(models.toon_episode_image, {
-      foreignKey: 'toon_episode_id',
+      foreignKey: 'toonEpisodeId',
       as: 'images'
     });
   };

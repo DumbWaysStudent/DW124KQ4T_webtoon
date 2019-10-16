@@ -2,6 +2,10 @@ import React from "react";
 import { View, Text, Container, Content, Card, CardItem, Body, Item, Button, Icon, ListItem, Input } from "native-base";
 import { FlatList, Image, TouchableOpacity, Dimensions } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import Auth from '../services/Auth';
+import env from '../../env';
+import axios from 'axios';
+
 const {width, height} = Dimensions.get('window');
 
 const options = {
@@ -27,13 +31,13 @@ class EditEpisodeScreen extends React.Component {
                         delete submiting.isChanged;
                         delete submiting.errors;
                         delete submiting.countMount;
-                        submiting.cover = submiting.images[0].src;
+                        // submiting.cover = submiting.images[0].src;
                         submiting.edit.edit = submiting.edit;
                         delete submiting.edit;
                         navigation.navigate("EditToon", {editEpisode: submiting, newEpisode: undefined, onDelete: undefined});
                     }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -42,22 +46,25 @@ class EditEpisodeScreen extends React.Component {
     constructor(props){
         super(props);
 
-        
+        var edit = this.props.navigation.getParam('edit');
 
         this.state = {
-            inputName: this.props.navigation.getParam('edit').name,
-            images: this.props.navigation.getParam('edit').images,
+            inputName: (edit)?edit.title:"",
+            images: [],
             isChanged: true,
             isReady: true,
             errors: [],
             countMount: 0,
-            time: this.props.navigation.getParam('edit').time
+            id: (edit)?edit.id:null,
+            token:""
         }
     }
     
 
-    componentDidMount(){
-        
+    async componentDidMount(){
+        var token = await (new Auth).fetch('token');
+        this.setState({token});
+        this.onImages();
         if(this.state.isChanged){
 
             this.props.navigation.setParams({
@@ -82,6 +89,23 @@ class EditEpisodeScreen extends React.Component {
         }
     }
 
+    onImages = async () => {
+        await axios({
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            },
+            url: `${env.apiUrl}/toon-episode/${this.state.id}`
+        }).then(result => {
+            var episode = result.data.data.data;
+            this.setState({
+                images: [...episode.images]
+            });
+        }).catch(error=>{
+            console.log(error.response);
+        });
+    }
+
     onChangeName = (text) => {
         var error = [];
         if(text === ""){
@@ -104,8 +128,6 @@ class EditEpisodeScreen extends React.Component {
 
     onAddImage = () => {
         ImagePicker.showImagePicker(options, (response) => {
-
-            var images = this.state.images;
           
             if (response.didCancel) {
               console.log('User cancelled image picker');
@@ -118,14 +140,32 @@ class EditEpisodeScreen extends React.Component {
           
               // You can also display the image using data:
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-              var bWidth =(width*(20/100));
-              var b = (width*(20/100))/response.width;
-              images.push({src:source, id:(new Date).getTime(), height: b*height, width: bWidth});
+              var img = {
+                uri: response.uri,
+                type: response.type,
+                name: response.fileName
+              };
+              var formdata = new FormData;
+              formdata.append("image",img);
+              axios({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        "authorization": `Bearer ${this.state.token}`
+                    },
+                    data: formdata,          
+                    url: `${env.apiUrl}/toon-episode/${this.state.id}/upload-image`
+                }).then(result=>{
+                    var images = this.state.images;
+                    images.push(result.data.data.data);
+                    this.setState({
+                        images:images
+                    });
+                    this.checkError();
+                });
 
-              this.setState({
-                  images:images
-              });
-              this.checkError();
+              
+              
             }
         });
     }
@@ -149,37 +189,47 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteImage = (id) => {
-        var images = this.state.images.filter((item)=>item.id!==id);
-        this.setState({
-            images:images
+        axios({
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },        
+            url: `${env.apiUrl}/toon-episode/delete-image/${id}`
+        }).then(result=>{
+            var images = this.state.images.filter((item)=>item.id!==id);
+            this.setState({
+                images:images
+            });
         });
+        
     }
 
     onDeleteEps = ()=>{
-        this.props.navigation.navigate("EditToon", {onDelete:this.state.time, editEpisode: undefined, newEpisode: undefined})
+        this.props.navigation.navigate("EditToon", {onDelete:this.state.id, editEpisode: undefined, newEpisode: undefined})
     }
 
     render(){
         return (
             <Container>
                 <Content>
-                    <Card>
                         <CardItem>
                             <Body>
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <Item>
+                                <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Images</Text>
-                                </Item>
+                                </View>
+                                {(this.state.images.length > 0) ? 
                                 <FlatList
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.src} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.url}`}} />
                                             <View style={{marginLeft: 20}}>
-                                                <Button onPress={this.onDeleteImage.bind(this, item.id)} danger>
+                                                <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                     <Text>
                                                         Delete
                                                     </Text>
@@ -189,16 +239,16 @@ class EditEpisodeScreen extends React.Component {
                                     )}
                                     keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddImage}>
-                                    <Text>Add Image</Text>
-                                </Button>
-                                <Button block danger onPress={this.onDeleteEps}>
-                                    <Text>Delete</Text>
-                                </Button>
+                                : <View><Text>No Image Uploaded!</Text></View>   }
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddImage}>
+                    <Text>Add Image</Text>
+                </Button>
+                <Button full danger onPress={this.onDeleteEps}>
+                    <Text>Delete</Text>
+                </Button>
             </Container>
         )
     }

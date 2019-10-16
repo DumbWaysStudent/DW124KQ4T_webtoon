@@ -1,31 +1,29 @@
 import React from 'react';
 import { View, Text, ListItem } from 'native-base';
 import { FlatList, Image, TouchableOpacity } from 'react-native';
+import env from '../../env';
 
 class MyFavoriteCompnent extends React.Component{
 
     constructor(props){
         super(props);
-        this.state = {
-            items: props.items
-        }
     }
 
     render() {
         return (
             <FlatList
-                data = {this.state.items}
-                keyExtractor = {item => item.id.toString()}
+                data = {this.props.items}
+                keyExtractor = {item => item.toon.id.toString()}
                 renderItem = {({item})=>(
                     <ListItem>
-                        <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
-                            <Image style={{width: 50, height: 50}}
-                                source={{uri: item.image}} />
+                        <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
+                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}}
+                                source={{uri: `${env.baseUrl}/${item.toon.image}`}} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
+                        <TouchableOpacity style={{marginLeft: 10}} onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
                             <View>
-                                <Text>{item.title}</Text>
-                                <Text>100+ favorite</Text>
+                                <Text>{item.toon.title}</Text>
+                                <Text>{`Created by ${item.toon.user.name}`}</Text>
                             </View>
                         </TouchableOpacity>
                     </ListItem>

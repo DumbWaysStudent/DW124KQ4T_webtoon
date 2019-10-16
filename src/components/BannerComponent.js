@@ -7,25 +7,41 @@ import {Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 
 import Swiper from 'react-native-swiper';
 
+import env from '../../env'
+
 const {width, height} = Dimensions.get('window');
 
 class BannerComponent extends React.Component {
 
     constructor(props){
         super(props);
+        this.state = {
+          items: []
+        };
+    }
+
+    componentDidMount(){
+      var items = [];
+      var max = (this.props.items.length>=5)?5:this.props.items.length;
+      for(var i=0;i<max;i++){
+        items.push(this.props.items[i]);
+      }
+      this.setState({
+        items: [...items]
+      });
     }
 
   render(){
     return (
       <Swiper style={styles.wrapper} showsButtons={true}>
-        {this.props.items.map((item, index)=>(
+        {this.state.items.map((item, index)=>(
           <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
             <Card>
-              <CardItem>
+              <CardItem style={{paddingLeft:10}}>
                     <Body>
                         <Image
-                        style={{width: (width*(80/100)), height: 110}}
-                        source={{uri: item.image}} />
+                        style={{width: (width*(86/100)), height: 110}}
+                        source={{uri: `${env.baseUrl}/${item.image}`}} />
                   </Body>
                 </CardItem>
             </Card>

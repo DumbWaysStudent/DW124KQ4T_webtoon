@@ -1,6 +1,9 @@
 import React from "react";
 import { View, Text, Card, CardItem, Container, Content, Item, Body, Input, Button, Icon, ListItem } from "native-base";
 import { FlatList, Image } from "react-native";
+import axios from "axios";
+import env from "../../env";
+import Auth from "../services/Auth";
 
 class CreateNewScreen extends React.Component{
     static navigationOptions = ({ navigation }) => {
@@ -10,7 +13,14 @@ class CreateNewScreen extends React.Component{
               onPress={() => {
                 if(navigation.getParam("isReady")){
                     var submiting = navigation.state.params;
-                    submiting.isNew = true;
+                    if(submiting.id != null){
+                        submiting.isNew = false;
+                        submiting.onEdit = submiting.id ;
+                        submiting.isDraft = 0 ;
+                    }
+                    else{
+                        submiting.isNew = true;
+                    }
                     delete submiting.isReady;
                     delete submiting.isChanged;
                     delete submiting.errors;
@@ -18,7 +28,7 @@ class CreateNewScreen extends React.Component{
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
-                  <Icon name="check" type="FontAwesome" />
+                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
             </Button>
           )
 
@@ -30,17 +40,25 @@ class CreateNewScreen extends React.Component{
 
 
         this.state = {
+            id: null,
             image: "",
             title: "",
             episodes: [],
             isNew: false,
             isReady: false,
             errors: [],
-            isChanged: true
+            isChanged: true,
+            token: "",
+            epsCheck:[]
         }
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+
+        var token = await (new Auth).fetch('token');
+        this.setState({
+            token: token
+        })
         if(this.state.isChanged){
 
             this.props.navigation.setParams({
@@ -53,7 +71,7 @@ class CreateNewScreen extends React.Component{
         }
     }
 
-    componentDidUpdate(){
+    async componentDidUpdate(prevProps, prevState){
         if(this.state.isChanged){
 
             this.props.navigation.setParams({
@@ -64,16 +82,48 @@ class CreateNewScreen extends React.Component{
                 isChanged: false
             });
         }
-        if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.episodes.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
+        if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.epsCheck.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
+            if(this.state.episodes === prevState.episodes){
+                await this.onNewEpisode(this.props.navigation.getParam('newEpisode'));
+            }   
+            
+        }
+    }
+
+    onNewEpisode = async (data) => {
+        this.props.navigation.setParams({...{
+            newEpisode: undefined
+        }});
+        var formdata = new FormData;
+        formdata.append("title", data.name);
+        formdata.append("toonId", this.state.id);
+        for(var i=0;i<data.images.length;i++){
+            formdata.append("images[]", data.images[i].img);
+        }
+        await axios({
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                "authorization": `Bearer ${this.state.token}`
+            },
+            data: formdata,          
+            url: `${env.apiUrl}/toon-episode/create`
+        }).then(result=>{
+            var item = result.data.data.data;
             var eps = this.state.episodes;
-            eps.unshift(this.props.navigation.getParam('newEpisode'));
+            var epsCheck = this.state.epsCheck;
+            epsCheck.unshift(data);
+            eps.unshift(item);
+            console.log(eps);
 
             this.setState({
-                image: eps[0].images[0].src,
-                episodes: eps,
+                image: eps[0].image,
+                episodes: [...eps],
+                epsCheck: [...epsCheck],
                 isChanged: true
             });
-        }
+            
+        }).catch();
     }
 
     onChangeTitle = (text) => {
@@ -119,44 +169,71 @@ class CreateNewScreen extends React.Component{
 
 
 
-    onAddEpisode = () => {
-        this.props.navigation.navigate("CreateNewEpisode");
+    onAddEpisode = async () => {
+        if(this.state.title === ""){
+            alert("Title is required");
+        }
+        else{
+            if(this.state.id===null){
+                await axios({
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        "authorization": `Bearer ${this.state.token}`
+                    },
+                    data: {
+                        title: this.state.title,
+                        image: "",
+                        isDraft: 1
+                    },          
+                    url: `${env.apiUrl}/toon/create`
+                }).then(result=>{
+                    this.setState({
+                        id: result.data.data.data.id
+                    });
+                    this.props.navigation.setParams({
+                        id: result.data.data.data.id
+                    });
+                }).catch();
+            }
+            this.props.navigation.navigate("CreateNewEpisode");
+        }
     }
 
     render(){
         return (
             <Container>
                 <Content>
-                    <Card style={{flex: 1}}>
                         <CardItem>
                             <Body>
                                 <Item>
                                     <Input value={this.state.title} onChangeText={this.onChangeTitle} placeholder="Title" />
                                 </Item>
-                                <Item>
+                                <View style={{marginTop: 20, marginBottom: 20}}>
                                     <Text>Episode</Text>
-                                </Item>
+                                </View>
+                                {(this.state.episodes.length > 0) ? 
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
                                         <ListItem>
-                                            <Image style={{width: 50, height: 50}} source={item.cover} />
+                                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.image}`}} />
                                             <View style={{marginLeft: 20}}>
                                                     <Text>
-                                                        {item.name}
+                                                        {item.title}
                                                     </Text>
                                             </View>
                                         </ListItem>
                                     )}
-                                    keyExtractor={(item)=>item.time.toString()}
+                                    keyExtractor={(item)=>item.id.toString()}
                                 />
-                                <Button block light onPress={this.onAddEpisode}>
-                                    <Text>Add Episode</Text>
-                                </Button>
+                                : <View><Text>No Episode Uploaded!</Text></View>}
                             </Body>
                         </CardItem>
-                    </Card>
                 </Content>
+                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddEpisode}>
+                    <Text>Add Episode</Text>
+                </Button>
             </Container>
         );
     }
