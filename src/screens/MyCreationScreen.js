@@ -1,7 +1,7 @@
 import React from "react";
 
 import { View, Text, Container, Content, Card, CardItem, Fab, Icon, Button, Body, ListItem } from "native-base";
-import { FlatList, TouchableOpacity, Image, Dimensions } from "react-native";
+import { FlatList, TouchableOpacity, Image, Dimensions, StyleSheet } from "react-native";
 import axios  from 'axios';
 import env  from '../../env';
 import Auth  from '../services/Auth';
@@ -136,19 +136,19 @@ class MyCreationScreen extends React.Component{
                                 data = {this.state.items}
                                 keyExtractor = {item => item.id.toString()}
                                 renderItem = {({item})=>(
-                                    <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
+                                    <View style={styles.itemWrap}>
                                         <TouchableOpacity onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})}>
                                             {item.image==="" ?
-                                            <View style={{width: 65, height: 65, borderWidth:1, borderColor: "#000"}} />
+                                            <View style={styles.itemImage} />
                                             : 
-                                            <Image style={{width: 65, height: 65, borderWidth:1, borderColor: "#000"}}
+                                            <Image style={styles.itemImage}
                                                 source={{uri: `${env.baseUrl}/${item.image}`}} />
                                             }
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{marginLeft:10}} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
+                                        <TouchableOpacity style={styles.itemTextWrap} onPress={()=>this.props.navigation.navigate("EditToon", {id:item.id})} style={{marginLeft: 20}}>
                                             <View>
-                                                <Text style={{marginBottom: 5, marginTop: 5}}>{item.title} {`${(item.isDraft)?"(draft)":""}`}</Text>
-                                                <Text style={{color: "#bdc3c7"}}>{ item.totalEpisode } episode(s)</Text>
+                                                <Text style={styles.labelTitle}>{item.title} {`${(item.isDraft)?"(draft)":""}`}</Text>
+                                                <Text style={styles.labelTotalEpisode}>{ item.totalEpisode } episode(s)</Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -170,5 +170,13 @@ class MyCreationScreen extends React.Component{
         );
     }
 }
+
+const styles = StyleSheet.create({
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    labelTitle: {marginBottom: 5, marginTop: 5},
+    labelTotalEpisode: {color: "#bdc3c7"},
+    itemWrap: {flex: 1, flexDirection:'row', marginBottom: 15}
+});
 
 export default MyCreationScreen

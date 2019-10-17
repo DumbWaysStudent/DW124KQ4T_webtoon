@@ -1,15 +1,10 @@
 import React from "react";
-import { View, Text, Container, Content, Card, CardItem, Body, Icon, Input, Item, Button } from "native-base";
-import { Image, TouchableOpacity } from "react-native";
+import { View, Container, Content, CardItem, Icon, Input, Item, Button } from "native-base";
+import { Image, TouchableOpacity, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 import Auth from "../services/Auth";
 import env from "../../env";
 import axios from "axios";
-
-const profile = {
-    image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
-    name: "Yusuf Basori"
-  }
 
 const options = {
   title: 'Select Avatar',
@@ -30,7 +25,7 @@ class EditProfileScreen extends React.Component{
               onPress={() => {
                   navigation.navigate("Profile", navigation.state.params)
                   }}>
-                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
+                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -137,16 +132,16 @@ class EditProfileScreen extends React.Component{
             <Container>
                 <Content>
                         <CardItem>
-                            <TouchableOpacity onPress={this.handleChangeAvatar} style={{ flex: 1, alignItems: 'center'}}>
-                                <Image style={{width:200, height: 200, borderRadius: 200/2, overflow: "hidden", borderWidth: 3,borderColor: "#3498db",}} source={this.state.avatarSource} />
-                                <View style={{marginTop: -50, marginLeft: 120, width:50, height:50, borderRadius: 25, backgroundColor: "#3498db",alignItems:"center", justifyContent:"center"}}>
-                                    <Icon style={{color:"#fff"}} name="camera" type="FontAwesome" />
+                            <TouchableOpacity onPress={this.handleChangeAvatar} style={styles.button}>
+                                <Image style={styles.imagePhoto} source={this.state.avatarSource} />
+                                <View style={styles.iconWrap}>
+                                    <Icon style={styles.buttonIcon} name="camera" type="FontAwesome" />
                                 </View>
                             </TouchableOpacity>
                         </CardItem>
                         <CardItem>
                             <Item>
-                                <Input style={{fontSize: 30, color: "black", textAlign: "center" }} placeholder="Your Name" value={this.state.inputName} onChangeText={this.handleInputName} />
+                                <Input style={styles.inputName} placeholder="Your Name" value={this.state.inputName} onChangeText={this.handleInputName} />
                             </Item>
                         </CardItem>
                 </Content>
@@ -154,5 +149,14 @@ class EditProfileScreen extends React.Component{
         );
     }
 }
+
+const styles = StyleSheet.create({
+  imagePhoto: {width:200, height: 200, borderRadius: 200/2, overflow: "hidden", borderWidth: 3,borderColor: "#3498db"},
+  iconWrap: {marginTop: -50, marginLeft: 120, width:50, height:50, borderRadius: 25, backgroundColor: "#3498db",alignItems:"center", justifyContent:"center"},
+  buttonIcon: {color:"#fff"},
+  button: { flex: 1, alignItems: 'center'},
+  inputName: {fontSize: 30, color: "black", textAlign: "center" },
+  headerRightButtonIcon: {color:'#3498db'}
+});
 
 export default EditProfileScreen;

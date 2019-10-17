@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, ListItem } from 'native-base';
-import { FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text } from 'native-base';
+import { FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import env from '../../env';
 
 class MyFavoriteCompnent extends React.Component{
@@ -12,19 +12,19 @@ class MyFavoriteCompnent extends React.Component{
     render() {
         return (
             <FlatList
-                style={{marginTop: 15}}
+                style={styles.flatList}
                 data = {this.props.items}
                 keyExtractor = {item => item.toon.id.toString()}
                 renderItem = {({item})=>(
-                    <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
+                    <View style={styles.itemWrap}>
                         <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
-                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}}
+                            <Image style={styles.itemImage}
                                 source={{uri: `${env.baseUrl}/${item.toon.image}`}} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={{marginLeft: 10}} onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
+                        <TouchableOpacity style={styles.itemTextWrap} onPress={this.props.onDetailTitle.bind(this, item.toon.id)}>
                             <View>
-                                <Text style={{marginBottom: 5, marginTop: 5}}>{item.toon.title}</Text>
-                                <Text style={{color: "#bdc3c7"}}>{`Created by ${item.toon.user.name}`}</Text>
+                                <Text style={styles.labelTitle}>{item.toon.title}</Text>
+                                <Text style={styles.muted}>{`Created by ${item.toon.user.name}`}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -34,5 +34,14 @@ class MyFavoriteCompnent extends React.Component{
     }
 
 }
+
+const styles = StyleSheet.create({
+    flatList: {marginTop: 15},
+    itemWrap: {flex: 1, flexDirection:'row', marginBottom: 15},
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    labelTitle: {marginBottom: 5, marginTop: 5},
+    muted: {color: "#bdc3c7"}
+});
 
 export default MyFavoriteCompnent;

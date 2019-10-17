@@ -1,16 +1,13 @@
 import React from "react";
-import { View, Text, Container, Content, Card, CardItem, Body, Item, Button, Icon, ListItem, Input } from "native-base";
-import { FlatList, Image, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, Container, Content, CardItem, Body, Item, Button, Icon, Input } from "native-base";
+import { FlatList, Image, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 import Auth from '../services/Auth';
 import env from '../../env';
 import axios from 'axios';
 
-const {width, height} = Dimensions.get('window');
-
 const options = {
     title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
     storageOptions: {
       skipBackup: true,
       path: 'images',
@@ -37,7 +34,7 @@ class EditEpisodeScreen extends React.Component {
                         navigation.navigate("EditToon", {editEpisode: submiting, newEpisode: undefined, onDelete: undefined});
                     }
               }}>
-                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
+                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -218,7 +215,7 @@ class EditEpisodeScreen extends React.Component {
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <View style={{marginTop: 20, marginBottom: 20}}>
+                                <View style={styles.imageLabel}>
                                     <Text>Images</Text>
                                 </View>
                                 {(this.state.images.length > 0) ? 
@@ -226,10 +223,10 @@ class EditEpisodeScreen extends React.Component {
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
-                                        <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
-                                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.url}`}} />
-                                            <View style={{marginLeft: 20}}>
-                                                <View style={{flex: 1, justifyContent: "center"}}>
+                                        <View style={styles.itemWrap}>
+                                            <Image style={styles.itemImage} source={{uri: `${env.baseUrl}/${item.url}`}} />
+                                            <View style={styles.itemTextWrap}>
+                                                <View style={styles.itemTextContent}>
                                                     <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                         <Text>
                                                             Delete
@@ -245,7 +242,7 @@ class EditEpisodeScreen extends React.Component {
                             </Body>
                         </CardItem>
                 </Content>
-                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddImage}>
+                <Button full style={styles.buttonAddImage} onPress={this.onAddImage}>
                     <Text>Add Image</Text>
                 </Button>
                 <Button full danger onPress={this.onDeleteEps}>
@@ -255,5 +252,15 @@ class EditEpisodeScreen extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    imageLabel: {marginTop: 20, marginBottom: 20},
+    itemWrap: {flex: 1, flexDirection:'row', marginBottom: 15},
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    itemTextContent: {flex: 1, justifyContent: "center"},
+    buttonAddImage: {backgroundColor: '#2980b9'},
+    headerRightButtonIcon: {color:'#3498db'}
+});
 
 export default EditEpisodeScreen;

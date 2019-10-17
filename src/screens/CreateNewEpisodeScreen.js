@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, Button, Container, Content, Card, CardItem, Body, Item, Icon, Input, ListItem } from "native-base"
-import { FlatList, Image, Dimensions } from "react-native";
+import { View, Text, Button, Container, Content, CardItem, Body, Item, Icon, Input } from "native-base"
+import { FlatList, Image, Dimensions, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 const {width, height} = Dimensions.get('window');
 
@@ -38,7 +38,7 @@ class CreateNewEpisodeScreen extends React.Component {
                         }
                     }
               }}>
-                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
+                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
             </Button>
           )
         };
@@ -178,7 +178,7 @@ class CreateNewEpisodeScreen extends React.Component {
                                 <Item>
                                     <Input value={this.state.inputName} onChangeText={this.onChangeName} placeholder="Name" />
                                 </Item>
-                                <View style={{marginTop: 20, marginBottom: 20}}>
+                                <View style={styles.imageLabel}>
                                     <Text>Images</Text>
                                 </View>
                                 {(this.state.images.length > 0) ? 
@@ -186,10 +186,10 @@ class CreateNewEpisodeScreen extends React.Component {
                                     data={this.state.images}
                                     renderItem={({item}) => (
                                         
-                                        <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
-                                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}} source={item.src} />
-                                            <View style={{marginLeft: 20}}>
-                                                <View style={{flex:1, justifyContent:"center"}}>
+                                        <View style={styles.itemWrap}>
+                                            <Image style={styles.itemImage} source={item.src} />
+                                            <View style={styles.itemTextWrap}>
+                                                <View style={styles.itemTextContent}>
                                                     <Button rounded small onPress={this.onDeleteImage.bind(this, item.id)} danger>
                                                         <Text>
                                                             Delete
@@ -205,7 +205,7 @@ class CreateNewEpisodeScreen extends React.Component {
                             </Body>
                         </CardItem>
                 </Content>
-                <Button style={{backgroundColor: '#2980b9'}} full onPress={this.onAddImage}>
+                <Button style={styles.buttonAddImage} full onPress={this.onAddImage}>
                     <Text>Add Image</Text>
                 </Button>
             </Container>
@@ -213,5 +213,16 @@ class CreateNewEpisodeScreen extends React.Component {
     }
 
 }
+
+const styles = StyleSheet.create({
+    imageLabel: {marginTop: 20, marginBottom: 20},
+    itemWrap: {flex: 1, flexDirection:'row', marginBottom: 15},
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    itemTextContent: {flex: 1, justifyContent: "center"},
+    buttonAddImage: {backgroundColor: '#2980b9'},
+    headerRightButtonIcon: {color:'#3498db'}
+    
+});
 
 export default CreateNewEpisodeScreen

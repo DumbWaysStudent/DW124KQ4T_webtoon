@@ -159,13 +159,13 @@ class RegisterScreen extends React.Component {
 
   render() {
     return (
-        <Container style={{...styles.container, backgroundColor: "#bdc3c7"}}>
+        <Container style={styles.container}>
             <Content>
                 <Card>
                     <CardItem>
                         <Body>
                             <View style={styles.form}>
-                                <H1 style={{color: "#3498db"}}>Register</H1>
+                                <H1 style={styles.title}>Register</H1>
                                 <Item>
                                     <Input placeholder="Name" value={this.state.inputName} onChangeText={this.handleInputName} />
                                 </Item>
@@ -212,7 +212,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: "#bdc3c7"
+    },
+    title: {
+        color: "#3498db"
     }
   });
 

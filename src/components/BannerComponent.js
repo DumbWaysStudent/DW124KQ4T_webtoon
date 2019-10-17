@@ -1,8 +1,5 @@
 import React from 'react';
 
-import { Card, CardItem, Body } from 'native-base';
-
-
 import {Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 
 import Swiper from 'react-native-swiper';
@@ -36,9 +33,9 @@ class BannerComponent extends React.Component {
       <Swiper style={styles.wrapper} showsButtons={true}>
         {this.state.items.map((item, index)=>(
           <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
-                        <Image
-                        style={{width: (width*(100/100)), height: 250}}
-                        source={{uri: `${env.baseUrl}/${item.image}`}} />
+            <Image
+            style={styles.imageBanner}
+            source={{uri: `${env.baseUrl}/${item.image}`}} />
           </TouchableOpacity>
     ))}
       </Swiper>
@@ -49,7 +46,8 @@ class BannerComponent extends React.Component {
 const styles = StyleSheet.create({
   wrapper: {
     height: 250
-  }
+  },
+  imageBanner: {width: (width*(100/100)), height: 250}
 })
 
 

@@ -1,8 +1,7 @@
 import React from "react";
 import {View, Text, ListItem} from "native-base";
-import {FlatList, TouchableOpacity, Image} from "react-native";
+import {FlatList, TouchableOpacity, Image, StyleSheet} from "react-native";
 import env from "../../env";
-import SafeAreaView from "react-native-safe-area-view";
 
 
 export default class SearchComponent extends React.Component {
@@ -12,26 +11,31 @@ export default class SearchComponent extends React.Component {
 
     render(){
         return (
-        <SafeAreaView>
             <FlatList
                 data = {this.props.items}
                 keyExtractor = {item => item.id.toString()}
                 renderItem = {({item})=>(
                     <ListItem>
                         <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)}>
-                            <Image style={{width: 50, height: 50, borderWidth: 1, borderColor: "#000"}}
+                            <Image style={styles.itemImage}
                                 source={{uri: `${env.baseUrl}/${item.image}`}} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={{marginLeft:10}} onPress={this.props.onDetailTitle.bind(this, item.id)}>
+                        <TouchableOpacity style={styles.itemTextWrap} onPress={this.props.onDetailTitle.bind(this, item.id)}>
                             <View>
-                                <Text>{item.title}</Text>
-                                <Text>{item.user.name}</Text>
+                                <Text style={styles.labelTitle}>{item.title}</Text>
+                                <Text style={styles.muted}>{item.user.name}</Text>
                             </View>
                         </TouchableOpacity>
                     </ListItem>
                 )}
             />
-        </SafeAreaView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    labelTitle: {marginBottom: 5, marginTop: 5},
+    muted: {color: "#bdc3c7"}
+});

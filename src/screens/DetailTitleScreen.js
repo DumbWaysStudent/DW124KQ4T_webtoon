@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, Container, Content, Card, CardItem, Body, ListItem, Button, Icon } from 'native-base';
+import { View, Text, Container, Content, CardItem, Body, Button, Icon } from 'native-base';
 import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
 import Auth from "../services/Auth";
 import axios from "axios";
@@ -23,7 +23,7 @@ class DetailTitleScreen extends React.Component {
                   url: "www.example.com"
                 }
             )}>
-                  <Icon style={{color: '#3498db'}} name="share-alt" type="FontAwesome" />
+                  <Icon style={styles.headerRightButtonIcon} name="share-alt" type="FontAwesome" />
               </Button>
           )
         };
@@ -88,22 +88,21 @@ class DetailTitleScreen extends React.Component {
         <Container>
             <Content>
                     {(this.state.toon)?<Image
-                        style={{width: (width*(100/100)), height: 250}}
+                        style={styles.coverImage}
                         source={{uri: `${env.baseUrl}/${this.state.toon.image}`}} />: <View />}
                     <CardItem>
                         <Body>
                             <FlatList style={{marginTop: 30}}
                                 data={this.state.episodes}
                                 renderItem={({ item }) => 
-                                <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
-                                    <TouchableOpacity style={{marginBottom: 10}} onPress={this.onOpenEpisode.bind(this, item.id)}>
-                                        <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}}
-                                            source={{uri: `${env.baseUrl}/${item.image}`}} />
+                                <View style={styles.listItem}>
+                                    <TouchableOpacity style={styles.buttonImage} onPress={this.onOpenEpisode.bind(this, item.id)}>
+                                        <Image style={styles.itemImage} source={{uri: `${env.baseUrl}/${item.image}`}} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{marginLeft: 10}} onPress={this.onOpenEpisode.bind(this, item.id)}>
+                                    <TouchableOpacity style={styles.itemTextWrap} onPress={this.onOpenEpisode.bind(this, item.id)}>
                                         <View>
-                                            <Text style={{marginBottom: 5, marginTop: 5}}>{item.title}</Text>
-                                            <Text style={{color: "#bdc3c7"}}>{this.formatDate(item.createdAt)}</Text>
+                                            <Text style={styles.labelTitle}>{item.title}</Text>
+                                            <Text style={styles.labelDate}>{this.formatDate(item.createdAt)}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
@@ -119,18 +118,14 @@ class DetailTitleScreen extends React.Component {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    item: {
-      backgroundColor: '#f9c2ff',
-      padding: 20,
-      marginVertical: 8,
-      marginHorizontal: 16,
-    },
-    title: {
-      fontSize: 32,
-    },
+    coverImage: {width: (width*(100/100)), height: 250},
+    listItem: {flex: 1, flexDirection:'row', marginBottom: 15},
+    buttonImage: {marginBottom: 10},
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    labelTitle: {marginBottom: 5, marginTop: 5},
+    labelDate: {color: "#bdc3c7"},
+    headerRightButtonIcon: {color: '#3498db'}
   });
 
 export default DetailTitleScreen;

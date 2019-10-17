@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Container, Content, Card, CardItem, Body, Button, Icon, View } from 'native-base';
-import {  Image, FlatList, Dimensions, Share } from 'react-native';
+import { Container, Content, Button, Icon, View } from 'native-base';
+import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
 import axios from 'axios';
 import env from '../../env';
 import Auth from '../services/Auth';
@@ -21,7 +21,7 @@ class DetailEpisodeScreen extends React.Component {
                   url: "www.example.com"
                 }
             )}>
-                  <Icon style={{color: '#3498db'}} name="share-alt" type="FontAwesome" />
+                  <Icon style={styles.headerRightButtonIcon} name="share-alt" type="FontAwesome" />
               </Button>
           )
         };
@@ -82,5 +82,9 @@ class DetailEpisodeScreen extends React.Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    headerRightButtonIcon: {color:'#3498db'}
+});
 
 export default DetailEpisodeScreen;

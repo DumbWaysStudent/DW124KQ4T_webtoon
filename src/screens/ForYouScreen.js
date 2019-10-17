@@ -7,7 +7,8 @@
  */
 
 import React from 'react';
-import { Container, Content, Item, Input, Card, CardItem, Body, Button, H3, Icon, View } from 'native-base';
+import { Container, Content, Item, Input, CardItem, Body, Button, H3, Icon, View } from 'native-base';
+import { StyleSheet } from 'react-native';
 import axios from 'axios';
 import env from '../../env';
 import Auth from '../services/Auth';
@@ -18,19 +19,6 @@ import AllComponent from '../components/AllComponent';
 import SearchComponent from '../components/SearchComponent';
 
 
-const banners = [{
-    id: 1,
-    title: 'The Secret of Angel',
-    image: 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
-  }, {
-    id: 2,
-    title: 'Pasutri Gaje',
-    image: 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
-  }, {
-    id: 3,
-    title: 'Young Mom',
-    image: 'https://akcdn.detik.net.id/community/media/visual/2019/04/03/dac43146-7dd4-49f4-89ca-d81f57b070fc.jpeg?w=770&q=90'
-}];
 
 
 
@@ -135,7 +123,7 @@ class ForYouScreen extends React.Component {
                               <Item>
                                   <Input placeholder="Search" value={this.state.keyword} onChangeText={this.onKeyword} />
                                   <Button transparent>
-                                      <Icon type="FontAwesome" name="search" />
+                                      <Icon style={styles.iconSearch} type="FontAwesome" name="search" />
                                   </Button>
                               </Item>
                             </Body>
@@ -162,7 +150,7 @@ class ForYouScreen extends React.Component {
 
                                 
 
-                                <H3 style={{marginTop: 10}}>All</H3>
+                                <H3 style={styles.allTitle}>All</H3>
                                 <AllComponent items={this.state.entries} onDetailTitle={this.onDetailTitle} />
 
 
@@ -176,5 +164,10 @@ class ForYouScreen extends React.Component {
   
   }
 };
+
+const styles = StyleSheet.create({
+    allTitle: {marginTop: 10},
+    iconSearch: {color:'#3498db'}
+});
 
 export default ForYouScreen;

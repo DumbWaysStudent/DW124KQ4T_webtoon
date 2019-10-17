@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, Card, CardItem, Container, Content, Item, Body, Input, Button, Icon, ListItem } from "native-base";
-import { FlatList, Image } from "react-native";
+import { View, Text, CardItem, Container, Content, Item, Body, Input, Button, Icon } from "native-base";
+import { FlatList, Image, StyleSheet } from "react-native";
 import axios from "axios";
 import env from "../../env";
 import Auth from "../services/Auth";
@@ -28,7 +28,7 @@ class CreateNewScreen extends React.Component{
                     navigation.navigate("MyCreation", submiting);
                 }
               }}>
-                  <Icon style={{color: '#3498db'}} name="check" type="FontAwesome" />
+                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
             </Button>
           )
 
@@ -114,7 +114,6 @@ class CreateNewScreen extends React.Component{
             var epsCheck = this.state.epsCheck;
             epsCheck.unshift(data);
             eps.unshift(item);
-            console.log(eps);
 
             this.setState({
                 image: eps[0].image,
@@ -209,17 +208,17 @@ class CreateNewScreen extends React.Component{
                                 <Item>
                                     <Input value={this.state.title} onChangeText={this.onChangeTitle} placeholder="Title" />
                                 </Item>
-                                <View style={{marginTop: 20, marginBottom: 20}}>
+                                <View style={styles.labelEpisode}>
                                     <Text>Episode</Text>
                                 </View>
                                 {(this.state.episodes.length > 0) ? 
                                 <FlatList
                                     data={this.state.episodes}
                                     renderItem={({item}) => (
-                                        <View style={{flex: 1, flexDirection:'row', marginBottom: 15}}>
-                                            <Image style={{width: 65, height: 65, borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.image}`}} />
-                                            <View style={{marginLeft: 20}}>
-                                                <View style={{flex:1, justifyContent:"center"}}>
+                                        <View style={styles.itemWrap}>
+                                            <Image style={styles.itemImage} source={{uri: `${env.baseUrl}/${item.image}`}} />
+                                            <View style={styles.itemTextWrap}>
+                                                <View style={styles.itemTextContent}>
                                                     <Text>
                                                         {item.title}
                                                     </Text>
@@ -233,12 +232,21 @@ class CreateNewScreen extends React.Component{
                             </Body>
                         </CardItem>
                 </Content>
-                <Button full style={{backgroundColor: '#2980b9'}} onPress={this.onAddEpisode}>
+                <Button full style={styles.buttonAddImage} onPress={this.onAddEpisode}>
                     <Text>Add Episode</Text>
                 </Button>
             </Container>
         );
     }
 }
+const styles = StyleSheet.create({
+    labelEpisode: {marginTop: 20, marginBottom: 20},
+    itemWrap: {flex: 1, flexDirection:'row', marginBottom: 15},
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    itemTextContent: {flex:1, justifyContent:"center"},
+    buttonAddImage: {backgroundColor: '#2980b9'},
+    headerRightButtonIcon: {color:'#3498db'}
+});
 
 export default CreateNewScreen;

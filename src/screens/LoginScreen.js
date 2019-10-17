@@ -128,21 +128,21 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-        <Container style={{...styles.container, backgroundColor: "#bdc3c7"}}>
+        <Container style={styles.container}>
             <Content>
                 <Card>
                     <CardItem>
                         <Body>
                             <View style={styles.form}>
-                                <H1 style={{color: "#3498db"}}>Log In</H1>
-                                <Text style={{color: "#bdc3c7"}}>Login with your account WEBTOON</Text>
+                                <H1 style={styles.title}>Log In</H1>
+                                <Text style={styles.subTitle}>Login with your account WEBTOON</Text>
                                 <Item>
                                     <Input placeholder="E-mail" value={this.state.inputEmail} onChangeText={this.handleInputEmail} />
                                 </Item>
                                 <Item last>
                                     <Input placeholder="Password" value={this.state.inputPassword} secureTextEntry={this.state.isSecurePassword} onChangeText={this.handleInputPassword} />
                                     <Button onPress={this.handleShowHidePassword} transparent>
-                                        <Icon style={{color:'#3498db'}} type="FontAwesome" name={this.state.isSecurePassword ? "eye-slash":"eye"} />
+                                        <Icon style={styles.buttonEyeIcon} type="FontAwesome" name={this.state.isSecurePassword ? "eye-slash":"eye"} />
                                     </Button>
                                 </Item>
                                 {((this.state.isSubmitEnable) ) ? 
@@ -154,7 +154,7 @@ class LoginScreen extends React.Component {
                                         <Text>Log In</Text>
                                     </Button>
                                 }
-                                <Button transparent style={styles.buttonLogin} block style={{marginTop: 10}} onPress={()=>this.props.navigation.navigate("Register")}>
+                                <Button transparent style={styles.buttonLogin} block onPress={()=>this.props.navigation.navigate("Register")}>
                                         <Text>Join Us</Text>
                                 </Button>
                             </View>
@@ -179,8 +179,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row'
-    }
+        flexDirection: 'row',
+        backgroundColor: "#bdc3c7"
+    },
+    title: {color: "#3498db"},
+    subTitle: {color: "#bdc3c7"},
+    buttonEyeIcon: {color:'#3498db'}
   });
 
 export default LoginScreen;

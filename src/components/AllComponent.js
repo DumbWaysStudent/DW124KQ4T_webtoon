@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { Item, Button, Text, Icon, ListItem, View } from 'native-base';
-import {Image, TouchableOpacity} from "react-native"
+import { Button, Text, Icon, View } from 'native-base';
+import {Image, TouchableOpacity, FlatList, StyleSheet} from "react-native"
 import env from "../../env"
-import { FlatList } from 'react-native-gesture-handler';
-import SafeAreaView from 'react-native-safe-area-view';
+
 
 
 class BannerComponent extends React.Component {
@@ -22,12 +21,12 @@ class BannerComponent extends React.Component {
             data = {this.props.items}
             keyExtractor = {item => item.id.toString()}
             renderItem = {({item})=>(
-            <View style={{flex: 1, flexDirection:'row', marginBottom: 15}} key={item.id.toString()}>
+            <View style={styles.itemWrap} key={item.id.toString()}>
                 <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
-                    <Image style={{width: 65, height: 65,borderWidth: 1, borderColor: "#000"}} source={{uri: `${env.baseUrl}/${item.image}`}} />
+                    <Image style={styles.itemImage} source={{uri: `${env.baseUrl}/${item.image}`}} />
                 </TouchableOpacity>
-                <View style={{marginLeft: 30}}>
-                        <TouchableOpacity style={{marginBottom: 10}} onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
+                <View style={styles.itemTextWrap}>
+                        <TouchableOpacity style={styles.itemTextLink} onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
                             <View><Text>{item.title}</Text></View>
                         </TouchableOpacity>
                         <View>
@@ -37,7 +36,7 @@ class BannerComponent extends React.Component {
                                     <Text>Favorite</Text>
                                 </Button>    
                                 :
-                                <Button rounded style={{backgroundColor:"#3498db"}} iconLeft small>
+                                <Button rounded style={styles.buttonFavorite} iconLeft small>
                                     <Icon type="FontAwesome" name="plus" />
                                     <Text>Favorite</Text>
                                 </Button>
@@ -52,6 +51,15 @@ class BannerComponent extends React.Component {
     );
   }
 };
+
+const styles = StyleSheet.create({
+    itemWrap: {flex: 1, flexDirection:'row', marginBottom: 15},
+    itemImage: {width: 65, height: 65, borderWidth: 1, borderColor: "#000"},
+    itemTextWrap: {marginLeft: 20},
+    itemTextLink: {marginBottom: 10},
+    buttonFavorite: {backgroundColor:"#3498db"}
+
+});
 
 
 export default BannerComponent;

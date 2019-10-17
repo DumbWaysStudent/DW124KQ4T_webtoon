@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Icon } from 'native-base';
+import { StyleSheet } from 'react-native';
 import axios from 'axios';
 import env from '../../env';
 import Auth from '../services/Auth';
@@ -92,7 +93,7 @@ class FavoriteScreen extends React.Component {
                   <Item>
                       <Input placeholder="Search" value={this.state.keyword} onChangeText={this.onKeyword} />
                       <Button transparent>
-                          <Icon style={{color:'#3498db'}} type="FontAwesome" name="search" />
+                          <Icon style={styles.iconSearch} type="FontAwesome" name="search" />
                       </Button>
                   </Item>
                   { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) :
@@ -105,6 +106,10 @@ class FavoriteScreen extends React.Component {
     );
   }
 };
+
+const styles = StyleSheet.create({
+  iconSearch: {color:'#3498db'}
+});
 
 
 export default FavoriteScreen;

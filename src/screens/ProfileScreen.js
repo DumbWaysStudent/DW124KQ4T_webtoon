@@ -1,17 +1,11 @@
 import React from 'react';
 
-import { Container, Content, Card, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View } from 'native-base';
+import { Container, Content, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View } from 'native-base';
 
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Auth from "../services/Auth";
 import env from "../../env";
-
-const profile = {
-  image: "https://avatars3.githubusercontent.com/u/18370818?s=460&v=4",
-  name: "Yusuf Basori"
-}
-
 
 
 
@@ -22,7 +16,7 @@ class ProfileScreen extends React.Component {
         headerRight: (
           <Button transparent
             onPress={() => navigation.navigate("EditProfile") }>
-                <Icon name="pencil" type="FontAwesome" style={{color:'#3498db'}} />
+                <Icon name="pencil" type="FontAwesome" style={styles.headerRightButtonIcon} />
             </Button>
         )
       };
@@ -80,21 +74,21 @@ class ProfileScreen extends React.Component {
         <Container>
           <Content>
               <CardItem>
-                <Body style={{ flex: 1, alignItems: 'center'}}>
-                    <Image style={{width:200, height: 200, borderRadius: 200/2}} source={{uri: this.state.profile.image}} />
-                    <H1 style={{marginBottom: 70, marginTop: 30}}>{this.state.profile.name}</H1>
+                <Body style={styles.imageWrap}>
+                    <Image style={styles.imagePhoto} source={{uri: this.state.profile.image}} />
+                    <H1 style={styles.profileName}>{this.state.profile.name}</H1>
                 </Body>
               </CardItem>
               <List style={{marginRight: 15}}>
                 <ListItem>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate("MyCreation")} style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
-                        <View style={{flex: 1}}><Text>My Webtoon Creation</Text></View>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate("MyCreation")} style={styles.menuItem}>
+                        <View style={styles.menuLabel}><Text>My Webtoon Creation</Text></View>
                         <View><Icon name="angle-right" type="FontAwesome"/></View>
                   </TouchableOpacity>
                 </ListItem>
                 <ListItem>
-                  <TouchableOpacity onPress={this.handleLogout} style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
-                    <View style={{flex: 1}}>
+                  <TouchableOpacity onPress={this.handleLogout} style={styles.menuItem}>
+                    <View style={styles.menuLabel}>
                       <Text>Logout</Text>
                     </View>
                   </TouchableOpacity>
@@ -107,5 +101,14 @@ class ProfileScreen extends React.Component {
   }
 };
 
+const styles = StyleSheet.create({
+  imageWrap: { flex: 1, alignItems: 'center'},
+  imagePhoto: {width:200, height: 200, borderRadius: 200/2},
+  profileName: {marginBottom: 70, marginTop: 30},
+  menuItem: {flex: 1,flexDirection:'row', alignItems: 'center'},
+  menuLabel: {flex: 1},
+  headerRightButtonIcon: {color:'#3498db'}
+
+});
 
 export default ProfileScreen;
