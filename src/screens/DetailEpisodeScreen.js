@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Content, Button, Icon, View } from 'native-base';
 import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
-import axios from 'axios';
 
 
-import env from '../../env';
+import axios from "../utils/Api";
+import env from '../utils/Env';
 import Auth from '../services/Auth';
 
 
@@ -48,7 +48,7 @@ class DetailEpisodeScreen extends React.Component {
             headers: {
                 'content-type': 'application/json'
             },
-            url: `${env.apiUrl}/toon-episode/${this.props.navigation.getParam("id")}`
+            url: `/toon-episode/${this.props.navigation.getParam("id")}`
         }).then(async result => {
             var episode = result.data.data.data;
             for(var i =0;i<episode.images.length;i++){

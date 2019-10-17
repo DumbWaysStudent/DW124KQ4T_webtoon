@@ -3,7 +3,7 @@ import { View, Text } from 'native-base';
 import { FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 
-import env from '../../env';
+import env from '../utils/Env';
 
 
 class MyFavoriteCompnent extends React.Component{

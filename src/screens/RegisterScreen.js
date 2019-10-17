@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Content, Item, Input, Card, CardItem, Body, Button, Text, H1, Icon } from 'native-base';
 import { StyleSheet, View } from 'react-native';
-import axios  from 'axios';
 
 
-import env  from '../../env';
+import axios from "../utils/Api";
+import env from '../utils/Env';
 import Auth  from '../services/Auth';
 
 
@@ -131,7 +131,7 @@ class RegisterScreen extends React.Component {
                 email: this.state.inputEmail,
                 password: this.state.inputPassword
             },          
-            url: `${env.apiUrl}/auth/register`
+            url: `/auth/register`
         }).then(async result=>{
             await auth.save(result.data.data);
             this.props.navigation.navigate('Main');

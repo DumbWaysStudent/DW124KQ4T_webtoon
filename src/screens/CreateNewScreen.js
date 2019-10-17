@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, CardItem, Container, Content, Item, Body, Input, Button, Icon } from "native-base";
 import { FlatList, Image, StyleSheet } from "react-native";
-import axios from "axios";
 
 
-import env from "../../env";
+import axios from "../utils/Api";
+import env from '../utils/Env';
 import Auth from "../services/Auth";
 
 
@@ -110,7 +110,7 @@ class CreateNewScreen extends React.Component{
                 "authorization": `Bearer ${this.state.token}`
             },
             data: formdata,          
-            url: `${env.apiUrl}/toon-episode/create`
+            url: `/toon-episode/create`
         }).then(result=>{
             var item = result.data.data.data;
             var eps = this.state.episodes;
@@ -188,7 +188,7 @@ class CreateNewScreen extends React.Component{
                         image: "",
                         isDraft: 1
                     },          
-                    url: `${env.apiUrl}/toon/create`
+                    url: `/toon/create`
                 }).then(result=>{
                     this.setState({
                         id: result.data.data.data.id

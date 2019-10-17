@@ -3,7 +3,7 @@ import { View, Text, ListItem } from "native-base";
 import { FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 
-import env from "../../env";
+import env from '../utils/Env';
 
 
 export default class SearchComponent extends React.Component {

@@ -2,11 +2,11 @@ import React from "react";
 import { View, Text, Container, Content, CardItem, Body, Item, Button, Icon, Input } from "native-base";
 import { FlatList, Image, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
-import axios from 'axios';
 
 
+import axios from "../utils/Api";
 import Auth from '../services/Auth';
-import env from '../../env';
+import env from '../utils/Env';
 
 
 const options = {
@@ -96,7 +96,7 @@ class EditEpisodeScreen extends React.Component {
             headers: {
                 'content-type': 'application/json'
             },
-            url: `${env.apiUrl}/toon-episode/${this.state.id}`
+            url: `/toon-episode/${this.state.id}`
         }).then(result => {
             var episode = result.data.data.data;
             this.setState({
@@ -155,7 +155,7 @@ class EditEpisodeScreen extends React.Component {
                         "authorization": `Bearer ${this.state.token}`
                     },
                     data: formdata,          
-                    url: `${env.apiUrl}/toon-episode/${this.state.id}/upload-image`
+                    url: `/toon-episode/${this.state.id}/upload-image`
                 }).then(result=>{
                     var images = this.state.images;
                     images.push(result.data.data.data);
@@ -196,7 +196,7 @@ class EditEpisodeScreen extends React.Component {
                 'content-type': 'application/json',
                 "authorization": `Bearer ${this.state.token}`
             },        
-            url: `${env.apiUrl}/toon-episode/delete-image/${id}`
+            url: `/toon-episode/delete-image/${id}`
         }).then(result=>{
             var images = this.state.images.filter((item)=>item.id!==id);
             this.setState({

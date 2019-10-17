@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, Container, Content, CardItem, Body, Button, Icon } from 'native-base';
 import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
-import axios from "axios";
 
 
+import axios from "../utils/Api";
 import Auth from "../services/Auth";
-import env from "../../env";
+import env from '../utils/Env';
 
 
 const {width, height} = Dimensions.get('window');
@@ -54,7 +54,7 @@ class DetailTitleScreen extends React.Component {
                 'content-type': 'application/json',
                 "authorization": `Bearer ${this.state.token}`
             },
-            url: `${env.apiUrl}/toon/${this.props.navigation.getParam("id")}`
+            url: `/toon/${this.props.navigation.getParam("id")}`
         }).then(result => {
             this.setState({
                 toon: result.data.data.data
@@ -67,7 +67,7 @@ class DetailTitleScreen extends React.Component {
             headers: {
                 'content-type': 'application/json'
             },
-            url: `${env.apiUrl}/toon/${this.props.navigation.getParam("id")}/episodes`
+            url: `/toon/${this.props.navigation.getParam("id")}/episodes`
         }).then(result => {
             this.setState({episodes: result.data.data.data});
             

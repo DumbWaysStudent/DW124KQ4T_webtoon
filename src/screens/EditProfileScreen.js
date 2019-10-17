@@ -2,11 +2,11 @@ import React from "react";
 import { View, Container, Content, CardItem, Icon, Input, Item, Button } from "native-base";
 import { Image, TouchableOpacity, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
-import axios from "axios";
 
 
+import axios from "../utils/Api";
 import Auth from "../services/Auth";
-import env from "../../env";
+import env from '../utils/Env';
 
 
 const options = {
@@ -114,7 +114,7 @@ class EditProfileScreen extends React.Component{
                         "authorization": `Bearer ${this.state.token}`
                     },
                     data: formdata,          
-                    url: `${env.apiUrl}/auth/change-photo`
+                    url: `/auth/change-photo`
                 }).then(result=>{
                     var obj = {
                             avatarSource: {uri: `${env.baseUrl}/storage/${result.data.data.data}`},

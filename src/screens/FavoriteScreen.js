@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Content, Item, Input, CardItem, Body, Button, Icon } from 'native-base';
 import { StyleSheet } from 'react-native';
-import axios from 'axios';
 
 
-import env from '../../env';
+import axios from "../utils/Api";
+import env from '../utils/Env';
 import Auth from '../services/Auth';
 
 
@@ -38,7 +38,7 @@ class FavoriteScreen extends React.Component {
               'content-type': 'application/json',
               "authorization": `Bearer ${this.state.token}`
           },
-          url: `${env.apiUrl}/toons/favorite`
+          url: `/toons/favorite`
       }).then(result=>{
           this.setState({favorites:result.data.data.data});
       });
@@ -60,7 +60,7 @@ class FavoriteScreen extends React.Component {
               'content-type': 'application/json',
               "authorization": `Bearer ${this.state.token}`
           },
-          url: `${env.apiUrl}/toons/search/${text}`
+          url: `/toons/search/${text}`
       }).then(result => {
           // this.setState({
           //     toons: result.data.data.data

@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, Container, Content, CardItem, Body, Button, Item, Input, Icon } from "native-base";
 import { FlatList, Image, TouchableOpacity, StyleSheet } from "react-native";
-import axios from 'axios';
 
 
-import env from '../../env';
+import axios from "../utils/Api";
+import env from '../utils/Env';
 import Auth from '../services/Auth';
 
 
@@ -111,7 +111,7 @@ class EditToonScreen extends React.Component{
                 'content-type': 'application/json',
                 "authorization": `Bearer ${this.state.token}`
             },   
-            url: `${env.apiUrl}/toon-episode/${id}`
+            url: `/toon-episode/${id}`
         }).then(result=>{
             this.setState({
                 episodes: eps,
@@ -134,7 +134,7 @@ class EditToonScreen extends React.Component{
             data: {
                 title:data.name
             },          
-            url: `${env.apiUrl}/toon-episode/${data.id}/edit`
+            url: `/toon-episode/${data.id}/edit`
         }).then(result=>{
             var items = this.state.episodes;
             var index = this.state.episodes.findIndex(item => item.id === data.id);
@@ -168,7 +168,7 @@ class EditToonScreen extends React.Component{
                 "authorization": `Bearer ${this.state.token}`
             },
             data: formdata,          
-            url: `${env.apiUrl}/toon-episode/create`
+            url: `/toon-episode/create`
         }).then(result=>{
             var item = result.data.data.data;
             var eps = this.state.episodes;
@@ -200,7 +200,7 @@ class EditToonScreen extends React.Component{
             headers: {
                 'content-type': 'application/json'
             },
-            url: `${env.apiUrl}/toon/${id}`
+            url: `/toon/${id}`
         }).then(result => {
             var item = result.data.data.data
             obj1 = {
@@ -215,7 +215,7 @@ class EditToonScreen extends React.Component{
             headers: {
                 'content-type': 'application/json'
             },
-            url: `${env.apiUrl}/toon/${id}/episodes`
+            url: `/toon/${id}/episodes`
         }).then(result => {
             var item = result.data.data.data
             obj2 = {

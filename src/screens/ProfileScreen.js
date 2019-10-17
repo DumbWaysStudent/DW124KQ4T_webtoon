@@ -4,7 +4,7 @@ import { Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 
 import Auth from "../services/Auth";
-import env from "../../env";
+import env from '../utils/Env';
 
 
 class ProfileScreen extends React.Component {

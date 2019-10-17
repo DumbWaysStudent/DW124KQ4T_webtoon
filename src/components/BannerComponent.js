@@ -3,7 +3,7 @@ import { Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 
-import env from '../../env'
+import env from '../utils/Env';
 
 
 const {width, height} = Dimensions.get('window');
@@ -31,7 +31,7 @@ class BannerComponent extends React.Component {
 
   render(){
     return (
-      <Swiper style={styles.wrapper} showsButtons={true}>
+      <Swiper autoplay={true} style={styles.wrapper} showsButtons={true}>
         {this.state.items.map((item, index)=>(
           <TouchableOpacity onPress={this.props.onDetailTitle.bind(this, item.id)} key={item.id}>
             <Image

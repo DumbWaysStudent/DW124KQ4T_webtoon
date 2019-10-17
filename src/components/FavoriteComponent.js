@@ -3,7 +3,7 @@ import { Card, CardItem, Body, Text } from 'native-base';
 import { Image, TouchableOpacity, Dimensions, FlatList, StyleSheet } from 'react-native';
 
 
-import env from '../../env';
+import env from '../utils/Env';
 
 
 const {width, height} = Dimensions.get('window');

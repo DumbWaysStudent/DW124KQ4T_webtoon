@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, Container, Content, CardItem, Fab, Icon, Body } from "native-base";
 import { FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
-import axios  from 'axios';
 
 
-import env  from '../../env';
+import axios from "../utils/Api";
+import env from '../utils/Env';
 import Auth  from '../services/Auth';
 
 
@@ -59,7 +59,7 @@ class MyCreationScreen extends React.Component{
                 'content-type': 'application/json',
                 "authorization": `Bearer ${this.state.token}`
             },   
-            url: `${env.apiUrl}/toon/${id}`
+            url: `/toon/${id}`
         }).then(result=>{
             var items = this.state.items.filter((item)=> item.id !== id);
             this.setState({items:items});
@@ -75,7 +75,7 @@ class MyCreationScreen extends React.Component{
                 "authorization": `Bearer ${this.state.token}`
             },
             data: data,          
-            url: `${env.apiUrl}/toon/${id}/edit`
+            url: `/toon/${id}/edit`
         }).then(result=>{
             var items = this.state.items;
             var index = this.state.items.findIndex(item => item.id === id);
@@ -98,7 +98,7 @@ class MyCreationScreen extends React.Component{
                 "authorization": `Bearer ${this.state.token}`
             },
             data: data,          
-            url: `${env.apiUrl}/toon/create`
+            url: `/toon/create`
         }).then(result=>{
             var items = this.state.items;
             items.unshift(result.data.data.data);
@@ -115,7 +115,7 @@ class MyCreationScreen extends React.Component{
                 'content-type': 'application/json',
                 "authorization": `Bearer ${this.state.token}`
             },
-            url: `${env.apiUrl}/my-toons`
+            url: `/my-toons`
         }).then(result=>{
             this.setState({items:result.data.data.data})
         });

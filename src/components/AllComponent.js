@@ -3,7 +3,7 @@ import { Button, Text, Icon, View } from 'native-base';
 import {Image, TouchableOpacity, FlatList, StyleSheet} from "react-native"
 
 
-import env from "../../env"
+import env from "../utils/Env";
 
 
 class BannerComponent extends React.Component {
