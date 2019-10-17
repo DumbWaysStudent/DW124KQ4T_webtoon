@@ -122,18 +122,13 @@ class RegisterScreen extends React.Component {
     }
 
     handleSubmit = async () => {
-        var auth = (new Auth);
-        await axios({
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            data: {
-                name: this.state.inputName,
-                email: this.state.inputEmail,
-                password: this.state.inputPassword
-            },          
-            url: `/auth/register`
-        }).then(async result=>{
-            await auth.save(result.data.data);
+        var data = {
+            name: this.state.inputName,
+            email: this.state.inputEmail,
+            password: this.state.inputPassword
+        };
+        await Auth.register(data).then(async result=>{
+            await Auth.save(result.data.data);
             this.props.navigation.navigate('Main');
         }).catch(error=>{
             if(typeof error.response.data.errors !== "undefined"){

@@ -7,6 +7,8 @@ import Auth from "../services/Auth";
 import env from '../utils/Env';
 
 
+
+
 class ProfileScreen extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
@@ -45,10 +47,10 @@ class ProfileScreen extends React.Component {
     }
 
     getProfile = async() =>{
-      var img = (await (new Auth).fetch("image"));
+      var img = (await Auth.fetch("image"));
       var obj = {
         image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
-        name: await (new Auth).fetch("name")
+        name: await Auth.fetch("name")
       };
       this.setState({
         profile: {...obj}
@@ -56,7 +58,7 @@ class ProfileScreen extends React.Component {
     }
 
     handleLogout = async () => {
-      await (new Auth).destroy().then(()=>{
+      await Auth.destroy().then(()=>{
         this.props.navigation.navigate("Login");
       }) 
     }

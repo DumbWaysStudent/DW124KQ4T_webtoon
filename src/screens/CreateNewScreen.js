@@ -3,9 +3,8 @@ import { View, Text, CardItem, Container, Content, Item, Body, Input, Button, Ic
 import { FlatList, Image, StyleSheet } from "react-native";
 
 
-import axios from "../utils/Api";
 import env from '../utils/Env';
-import Auth from "../services/Auth";
+import Toon from "../services/Toon";
 
 
 class CreateNewScreen extends React.Component{
@@ -51,17 +50,12 @@ class CreateNewScreen extends React.Component{
             isReady: false,
             errors: [],
             isChanged: true,
-            token: "",
             epsCheck:[]
         }
     }
 
     async componentDidMount(){
 
-        var token = await (new Auth).fetch('token');
-        this.setState({
-            token: token
-        })
         if(this.state.isChanged){
 
             this.props.navigation.setParams({
@@ -97,21 +91,14 @@ class CreateNewScreen extends React.Component{
         this.props.navigation.setParams({...{
             newEpisode: undefined
         }});
-        var formdata = new FormData;
-        formdata.append("title", data.name);
-        formdata.append("toonId", this.state.id);
-        for(var i=0;i<data.images.length;i++){
-            formdata.append("images[]", data.images[i].img);
+        var form = {
+            "title":data.name,
+            "toonId":this.state.id
         }
-        await axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            data: formdata,          
-            url: `/toon-episode/create`
-        }).then(result=>{
+        for(var i=0;i<data.images.length;i++){
+            form["images[]"] = data.images[i].img;
+        }
+        await Toon.createEpisode(form).then(result=>{
             var item = result.data.data.data;
             var eps = this.state.episodes;
             var epsCheck = this.state.epsCheck;
@@ -177,19 +164,12 @@ class CreateNewScreen extends React.Component{
         }
         else{
             if(this.state.id===null){
-                await axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                        "authorization": `Bearer ${this.state.token}`
-                    },
-                    data: {
-                        title: this.state.title,
-                        image: "",
-                        isDraft: 1
-                    },          
-                    url: `/toon/create`
-                }).then(result=>{
+                var data = {
+                    title: this.state.title,
+                    image: "",
+                    isDraft: 1
+                };
+                await Toon.create(data).then(result=>{
                     this.setState({
                         id: result.data.data.data.id
                     });

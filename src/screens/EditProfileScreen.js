@@ -4,7 +4,6 @@ import { Image, TouchableOpacity, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 
 
-import axios from "../utils/Api";
 import Auth from "../services/Auth";
 import env from '../utils/Env';
 
@@ -63,9 +62,9 @@ class EditProfileScreen extends React.Component{
     }
   
     getProfile = async() =>{
-        var img = (await (new Auth).fetch("image"));
-        var name = await (new Auth).fetch("name");
-        var token = await (new Auth).fetch("token");
+        var img = (await Auth.fetch("image"));
+        var name = await Auth.fetch("name");
+        var token = await Auth.fetch("token");
         this.setState({
           profile: {
             image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
@@ -87,8 +86,8 @@ class EditProfileScreen extends React.Component{
         });
     }
 
-    handleChangeAvatar = () => {
-        ImagePicker.showImagePicker(options, (response) => {
+    handleChangeAvatar = async () => {
+        ImagePicker.showImagePicker(options, async (response) => {
           
             if (response.didCancel) {
               console.log('User cancelled image picker');
@@ -101,28 +100,23 @@ class EditProfileScreen extends React.Component{
           
               // You can also display the image using data:
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-              var formdata=new FormData();
-              formdata.append("avatar", {
-                uri: response.uri  ,
-                type: response.type,
-                name: response.fileName
-        
-              });
-                axios({
-                    method: 'POST',
-                    headers: { 'content-type': 'multipart/form-data',
-                        "authorization": `Bearer ${this.state.token}`
-                    },
-                    data: formdata,          
-                    url: `/auth/change-photo`
-                }).then(result=>{
+                var data ={
+                  avatar: {
+                    uri: response.uri  ,
+                    type: response.type,
+                    name: response.fileName
+                  }
+                }
+                await Auth.changePhoto(data).then(result=>{
                     var obj = {
                             avatarSource: {uri: `${env.baseUrl}/storage/${result.data.data.data}`},
                             isChangingPhoto: true
                           };
-                    (new Auth).update(`storage/${result.data.data.data}`,"image");
+                    Auth.update(`storage/${result.data.data.data}`,"image");
                     this.setState({...obj});
                 }).catch(err=>{
+                    console.log("========");
+                    console.log(err);
                     console.log(err.response);
                 });
             }

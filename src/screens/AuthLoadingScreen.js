@@ -14,7 +14,7 @@ export default class AuthLoadingScreen extends React.Component {
     }
 
     async componentDidMount(){
-        if(await (new Auth).exist()){
+        if(await Auth.exist()){
             this.props.navigation.navigate("Main");
         }
         else{

@@ -3,9 +3,8 @@ import { Container, Content, Button, Icon, View } from 'native-base';
 import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
 
 
-import axios from "../utils/Api";
 import env from '../utils/Env';
-import Auth from '../services/Auth';
+import Toon from '../services/Toon';
 
 
 const {width, height} = Dimensions.get('window');
@@ -34,22 +33,12 @@ class DetailEpisodeScreen extends React.Component {
         super(props);
         this.state = {
             countMount: 0,
-            episode: null,
-            token: ""
+            episode: null
         }
     }
 
     async componentDidMount(){
-        this.setState({
-            token: await (new Auth).fetch('token')
-        });
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json'
-            },
-            url: `/toon-episode/${this.props.navigation.getParam("id")}`
-        }).then(async result => {
+        await Toon.episodeDetail(this.props.navigation.getParam("id")).then(async result => {
             var episode = result.data.data.data;
             for(var i =0;i<episode.images.length;i++){
                 await Image.getSize(`${env.baseUrl}/${episode.images[i].url}`, (w, h) => {
@@ -62,7 +51,6 @@ class DetailEpisodeScreen extends React.Component {
                 episode: result.data.data.data
             })
             this.props.navigation.setParams({title:this.state.episode.title});
-            
         });
     }
     render(){

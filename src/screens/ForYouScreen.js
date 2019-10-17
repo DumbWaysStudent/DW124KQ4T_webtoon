@@ -3,9 +3,7 @@ import { Container, Content, Item, Input, CardItem, Body, Button, H3, Icon, View
 import { StyleSheet } from 'react-native';
 
 
-import axios from "../utils/Api";
-import env from '../utils/Env';
-import Auth from '../services/Auth';
+import Toon from '../services/Toon';
 
 
 import BannerComponent from '../components/BannerComponent';
@@ -23,63 +21,26 @@ class ForYouScreen extends React.Component {
           entries : [],
           banners: [],
           favorites: [],
-          token: "",
           keyword: "",
           searchResult: []
       }
   }
 
   async componentDidMount(){
-      this.setState({
-          token: await (new Auth).fetch('token')
-      });
       
-      this.onBanner();
-      this.onFavorite();
-      this.onAll();
-  }
+        var banners = [];
+        var favorites = [];
+        var entries = [];
+        
+        await Toon.banner().then(result=> banners = result.data.data.data ).catch(err=> console.log(err.response));
+        await Toon.favorite().then(result=> favorites = result.data.data.data );
+        await Toon.all().then(result=> entries = result.data.data.data );
 
-  onBanner = async() => {
-    await axios({
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            "authorization": `Bearer ${this.state.token}`
-        },
-        url: `/toons/banner`
-    }).then(result=>{
-        this.setState({banners:result.data.data.data})
-    });
-  }
-
-  onFavorite = async() => {
-    await axios({
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            "authorization": `Bearer ${this.state.token}`
-        },
-        url: `/toons/favorite`
-    }).then(result=>{
-        this.setState({favorites:result.data.data.data})
-    });
-  }
-
-  onAll = async() => {
-    await axios({
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            "authorization": `Bearer ${this.state.token}`
-        },
-        url: `/toons/all`
-    }).then(result=>{
-        this.setState({entries:result.data.data.data})
-    });
+        this.setState({ banners, favorites, entries })
   }
 
   onDetailTitle = (id) => {
-      this.props.navigation.navigate("DetailTitle", {id});
+      this.props.navigation.navigate("DetailTitle", { id });
   }
 
   onKeyword = async (text) => {
@@ -87,20 +48,9 @@ class ForYouScreen extends React.Component {
         keyword: text
     });
 
-    await axios({
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            "authorization": `Bearer ${this.state.token}`
-        },
-        url: `/toons/search/${text}`
-    }).then(result => {
-        // this.setState({
-        //     toons: result.data.data.data
-        // })
+    await toon.search(text).then(result => {
         this.setState({searchResult: result.data.data.data});
-        
-    })
+    });
   }
 
 

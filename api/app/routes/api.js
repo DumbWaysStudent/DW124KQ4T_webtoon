@@ -33,17 +33,17 @@ module.exports = (router) => {
     });
 
     router.group("/toons", (toons) =>{
-        toons.get("/all", [mid.auth], ToonController.index);
-        toons.get("/banner", [mid.auth], ToonController.banner);
-        toons.get("/favorite", [mid.auth], ToonController.favorite);
-        toons.get("/search/:keyword", [mid.auth], ToonController.search);
+        toons.get("/all", [mid.auth], ToonController.index); // /
+        toons.get("/banner", [mid.auth], ToonController.banner); // ?page=1&per_page=3
+        toons.get("/favorite", [mid.auth], ToonController.favorite); // /favorite
+        toons.get("/search/:keyword", [mid.auth], ToonController.search); // ?search[title,descriptio]=
     });
 
     router.group("/toon", (toon) =>{
-        toon.post("/create", [mid.auth, bodyParser.json()], ToonController.store);
+        toon.post("/create", [mid.auth, bodyParser.json()], ToonController.store); // /
         toon.get("/:id", ToonController.show);
         toon.get("/:id/episodes", ToonController.episodes);
-        toon.put("/:id/edit", [mid.auth, bodyParser.json()], ToonController.update);
+        toon.put("/:id/edit", [mid.auth, bodyParser.json()], ToonController.update); // /:id
         toon.delete("/:id", [mid.auth], ToonController.delete);
     });
 

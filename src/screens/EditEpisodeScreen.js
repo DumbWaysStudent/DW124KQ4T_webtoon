@@ -4,8 +4,7 @@ import { FlatList, Image, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 
 
-import axios from "../utils/Api";
-import Auth from '../services/Auth';
+import Toon from '../services/Toon';
 import env from '../utils/Env';
 
 
@@ -56,15 +55,12 @@ class EditEpisodeScreen extends React.Component {
             isReady: true,
             errors: [],
             countMount: 0,
-            id: (edit)?edit.id:null,
-            token:""
+            id: (edit)?edit.id:null
         }
     }
     
 
     async componentDidMount(){
-        var token = await (new Auth).fetch('token');
-        this.setState({token});
         this.onImages();
         if(this.state.isChanged){
 
@@ -91,13 +87,7 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onImages = async () => {
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json'
-            },
-            url: `/toon-episode/${this.state.id}`
-        }).then(result => {
+        await Toon.episodeDetail(this.state.id).then(result => {
             var episode = result.data.data.data;
             this.setState({
                 images: [...episode.images]
@@ -141,22 +131,15 @@ class EditEpisodeScreen extends React.Component {
           
               // You can also display the image using data:
               // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-              var img = {
-                uri: response.uri,
-                type: response.type,
-                name: response.fileName
-              };
-              var formdata = new FormData;
-              formdata.append("image",img);
-              axios({
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                        "authorization": `Bearer ${this.state.token}`
-                    },
-                    data: formdata,          
-                    url: `/toon-episode/${this.state.id}/upload-image`
-                }).then(result=>{
+              
+              var form = {
+                  image: {
+                    uri: response.uri,
+                    type: response.type,
+                    name: response.fileName
+                  }
+              }
+              Toon.uploadEpisodeImage(form, this.state.id).then(result=>{
                     var images = this.state.images;
                     images.push(result.data.data.data);
                     this.setState({
@@ -190,14 +173,7 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteImage = (id) => {
-        axios({
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },        
-            url: `/toon-episode/delete-image/${id}`
-        }).then(result=>{
+        Toon.deleteEpisodeImage(id).then(result=>{
             var images = this.state.images.filter((item)=>item.id!==id);
             this.setState({
                 images:images

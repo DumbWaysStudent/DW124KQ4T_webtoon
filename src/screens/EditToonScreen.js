@@ -3,9 +3,8 @@ import { View, Text, Container, Content, CardItem, Body, Button, Item, Input, Ic
 import { FlatList, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 
-import axios from "../utils/Api";
 import env from '../utils/Env';
-import Auth from '../services/Auth';
+import Toon from '../services/Toon';
 
 
 class EditToonScreen extends React.Component{
@@ -42,13 +41,10 @@ class EditToonScreen extends React.Component{
             isReady: true,
             isChanged: true,
             isNew: false,
-            epsCheck: [],
-            token: ''
+            epsCheck: []
         }
     }
     async componentDidMount(){
-        var token = await (new Auth).fetch('token');
-        this.setState({token});
         this.onDetail(this.props.navigation.getParam("id"));
         if(this.state.isChanged){
 
@@ -105,14 +101,7 @@ class EditToonScreen extends React.Component{
         
         this.props.navigation.setParams({onDelete:undefined});
 
-        await axios({
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },   
-            url: `/toon-episode/${id}`
-        }).then(result=>{
+        await Toon.deleteEpisode(id).then(result=>{
             this.setState({
                 episodes: eps,
                 isChanged: true
@@ -125,17 +114,9 @@ class EditToonScreen extends React.Component{
     onUpdateEpisode = async (data) => {
         this.props.navigation.setParams({editEpisode:undefined});
 
-        axios({
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            data: {
-                title:data.name
-            },          
-            url: `/toon-episode/${data.id}/edit`
-        }).then(result=>{
+        await Toon.updateEpisode({
+            title:data.name
+        }, data.id).then(result=>{
             var items = this.state.episodes;
             var index = this.state.episodes.findIndex(item => item.id === data.id);
             items[index].title = data.name;
@@ -145,37 +126,25 @@ class EditToonScreen extends React.Component{
                 isChanged: true
             });
         });
-
-
-
-        
     }
 
     onNewEpisode = async (data) => {
         this.props.navigation.setParams({...{
             newEpisode: undefined
         }});
-        var formdata = new FormData;
-        formdata.append("title", data.name);
-        formdata.append("toonId", this.state.id);
-        for(var i=0;i<data.images.length;i++){
-            formdata.append("images[]", data.images[i].img);
+        var form = {
+            "title": data.name,
+            "toonId": this.state.id
         }
-        await axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            data: formdata,          
-            url: `/toon-episode/create`
-        }).then(result=>{
+        for(var i=0;i<data.images.length;i++){
+            form["images[]"] = data.images[i].img;
+        }
+        await Toon.createEpisode(form).then(result=>{
             var item = result.data.data.data;
             var eps = this.state.episodes;
             var epsCheck = this.state.epsCheck;
             epsCheck.unshift(data);
             eps.unshift(item);
-            console.log(eps);
 
             this.setState({
                 image: eps[0].image,
@@ -195,13 +164,7 @@ class EditToonScreen extends React.Component{
     onDetail = async (id)=> {
         var obj1=null;
         var obj2 = null;
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json'
-            },
-            url: `/toon/${id}`
-        }).then(result => {
+        await Toon.detail(id).then(result => {
             var item = result.data.data.data
             obj1 = {
                 image: item.image,
@@ -210,13 +173,7 @@ class EditToonScreen extends React.Component{
             };
             
         });
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json'
-            },
-            url: `/toon/${id}/episodes`
-        }).then(result => {
+        await Toon.episodeList(id).then(result => {
             var item = result.data.data.data
             obj2 = {
                 episodes: item,

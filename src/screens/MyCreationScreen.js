@@ -3,9 +3,8 @@ import { View, Text, Container, Content, CardItem, Fab, Icon, Body } from "nativ
 import { FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 
-import axios from "../utils/Api";
 import env from '../utils/Env';
-import Auth  from '../services/Auth';
+import Toon  from '../services/Toon';
 
 
 class MyCreationScreen extends React.Component{
@@ -13,16 +12,14 @@ class MyCreationScreen extends React.Component{
         super(props);
         this.state = {
             items: [],
-            token: "",
             sending: 0
         }
     }
 
     async componentDidMount(){
-        this.setState({
-            token: await (new Auth).fetch('token')
+        await Toon.myToon().then(result=>{
+            this.setState({items:result.data.data.data})
         });
-        this.onMyToon();
     }
 
     async componentDidUpdate(prevProps, prevState){
@@ -53,14 +50,7 @@ class MyCreationScreen extends React.Component{
     onDelete = async (id) => {
         this.props.navigation.setParams({onDelete: undefined});
 
-        await axios({
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },   
-            url: `/toon/${id}`
-        }).then(result=>{
+        await Toon.delete(id).then(result=>{
             var items = this.state.items.filter((item)=> item.id !== id);
             this.setState({items:items});
         });
@@ -68,15 +58,7 @@ class MyCreationScreen extends React.Component{
 
     onSubmitUpdate = async (data, id) => {
         this.props.navigation.setParams({onEdit: undefined});
-        axios({
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            data: data,          
-            url: `/toon/${id}/edit`
-        }).then(result=>{
+        await Toon.update(data, id).then(result=>{
             var items = this.state.items;
             var index = this.state.items.findIndex(item => item.id === id);
             if(typeof items[index] === "undefined"){
@@ -91,34 +73,13 @@ class MyCreationScreen extends React.Component{
     }
 
     onSubmitNew = async (data) => {
-        axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            data: data,          
-            url: `/toon/create`
-        }).then(result=>{
+        await Toon.create(data).then(result=>{
             var items = this.state.items;
             items.unshift(result.data.data.data);
             this.setState({
                 items: [...items]
             });
         }).catch();
-    }
-
-    onMyToon = async () => {
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            url: `/my-toons`
-        }).then(result=>{
-            this.setState({items:result.data.data.data})
-        });
     }
 
     onDetailTitle = (id) => {

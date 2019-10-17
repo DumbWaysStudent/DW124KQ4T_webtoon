@@ -4,8 +4,7 @@ import { StyleSheet } from 'react-native';
 
 
 import axios from "../utils/Api";
-import env from '../utils/Env';
-import Auth from '../services/Auth';
+import Toon from '../services/Toon';
 
 
 import MyFavoriteCompnent from '../components/MyFavoriteComponent';
@@ -18,31 +17,17 @@ class FavoriteScreen extends React.Component {
         super(props);
         this.state = {
           favorites: [],
-          token: "",
           keyword: "",
           searchResult: []
         }
     }
 
     async componentDidMount(){
-      this.setState({
-          token: await (new Auth).fetch('token')
-      });
-      this.onFavorite();
+      var favorites = [];
+      await Toon.favorite().then(result=> favorites = result.data.data.data );
+      this.setState({ favorites });
     }
 
-    onFavorite = async() => {
-      await axios({
-          method: 'GET',
-          headers: {
-              'content-type': 'application/json',
-              "authorization": `Bearer ${this.state.token}`
-          },
-          url: `/toons/favorite`
-      }).then(result=>{
-          this.setState({favorites:result.data.data.data});
-      });
-    }
 
     onDetailTitle = (id) => {
         this.props.navigation.navigate("DetailTitle", {id});

@@ -99,8 +99,7 @@ class LoginScreen extends React.Component {
     }
 
     handleSubmit = async () => {
-        var auth = (new Auth);
-        await axios({
+        var data = {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             data: {
@@ -108,10 +107,15 @@ class LoginScreen extends React.Component {
                 password: this.state.inputPassword
             },          
             url: `/auth/authenticate`
-        }).then(async result=>{
-            await auth.save(result.data.data);
+        };
+        await Auth.login(data).then(async result=>{
+            await Auth.save(result.data.data);
             this.props.navigation.navigate('Main');
         }).catch(error=>{
+            console.log("=======");
+            console.log(error);
+            console.log("=======");
+            console.log(error.response);
             if(typeof error.response.data.msg !== "undefined"){
                 alert(error.response.data.msg);
             }

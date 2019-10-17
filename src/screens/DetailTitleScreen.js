@@ -3,13 +3,11 @@ import { View, Text, Container, Content, CardItem, Body, Button, Icon } from 'na
 import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
 
 
-import axios from "../utils/Api";
-import Auth from "../services/Auth";
 import env from '../utils/Env';
+import Toon from '../services/Toon';
 
 
 const {width, height} = Dimensions.get('window');
-
 
 class DetailTitleScreen extends React.Component {
 
@@ -40,38 +38,15 @@ class DetailTitleScreen extends React.Component {
         }
     }
 
-    
-
-    
-
     async componentDidMount(){
-        this.setState({
-            token: await (new Auth).fetch('token')
-        });
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json',
-                "authorization": `Bearer ${this.state.token}`
-            },
-            url: `/toon/${this.props.navigation.getParam("id")}`
-        }).then(result => {
-            this.setState({
-                toon: result.data.data.data
-            })
-            this.props.navigation.setParams({title:this.state.toon.title});
-            
-        });
-        await axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json'
-            },
-            url: `/toon/${this.props.navigation.getParam("id")}/episodes`
-        }).then(result => {
-            this.setState({episodes: result.data.data.data});
-            
-        });
+        var toon = {};
+        var episodes = [];
+        
+        await Toon.detail(this.props.navigation.getParam("id")).then(result => toon = result.data.data.data );
+        await Toon.episodeList(this.props.navigation.getParam("id")).then(result => episodes = result.data.data.data );
+
+        this.setState({ toon, episodes });
+        this.props.navigation.setParams({title: toon.title});
     }
 
     onOpenEpisode = (id) => {

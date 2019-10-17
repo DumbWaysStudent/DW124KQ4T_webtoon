@@ -1,6 +1,7 @@
 import { AsyncStorage } from "react-native";
+import axios from "../utils/Api";
 
-export default class Auth {
+class Auth {
     save = async (data) => {
         for(key in data){
             await AsyncStorage.setItem(`authUser.${key}`, data[key] );
@@ -35,4 +36,40 @@ export default class Auth {
         await AsyncStorage.setItem(`authUser.${key}`, data);
     }
 
+    changePhoto = async (data) => {
+        var formdata = new FormData;
+        var token = await this.fetch("token")
+        for(var key in data){
+            formdata.append(key, data[key]);
+        }
+        return axios({
+            method: 'POST',
+            headers: { 'content-type': 'multipart/form-data',
+                "authorization": `Bearer ${token}`
+            },
+            data: formdata,          
+            url: `/auth/change-photo`
+        });
+    }
+
+    register = async (data) => {
+        return await axios({
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            data: data,          
+            url: `/auth/register`
+        });
+    }
+
+    login = async (data) => {
+        return axios({
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            data: data,          
+            url: `/auth/authenticate`
+        });
+    }
+
 }
+
+export default new Auth;
