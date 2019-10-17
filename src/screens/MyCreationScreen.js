@@ -1,12 +1,12 @@
 import React from "react";
-
-import { View, Text, Container, Content, Card, CardItem, Fab, Icon, Button, Body, ListItem } from "native-base";
-import { FlatList, TouchableOpacity, Image, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Container, Content, CardItem, Fab, Icon, Body } from "native-base";
+import { FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
 import axios  from 'axios';
+
+
 import env  from '../../env';
 import Auth  from '../services/Auth';
 
-const {width, height} = Dimensions.get('screen');
 
 class MyCreationScreen extends React.Component{
     constructor(props){

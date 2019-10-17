@@ -1,12 +1,10 @@
 import React from 'react';
-
 import { Container, Content, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View } from 'native-base';
-
 import { Image, TouchableOpacity, StyleSheet } from 'react-native';
+
 
 import Auth from "../services/Auth";
 import env from "../../env";
-
 
 
 class ProfileScreen extends React.Component {

@@ -1,25 +1,17 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React from 'react';
 import { Container, Content, Item, Input, CardItem, Body, Button, H3, Icon, View } from 'native-base';
 import { StyleSheet } from 'react-native';
 import axios from 'axios';
+
+
 import env from '../../env';
 import Auth from '../services/Auth';
+
 
 import BannerComponent from '../components/BannerComponent';
 import FavoriteComponent from '../components/FavoriteComponent';
 import AllComponent from '../components/AllComponent';
 import SearchComponent from '../components/SearchComponent';
-
-
-
 
 
 class ForYouScreen extends React.Component {

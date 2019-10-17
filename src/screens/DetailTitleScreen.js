@@ -1,10 +1,12 @@
 import React from 'react';
-
 import { View, Text, Container, Content, CardItem, Body, Button, Icon } from 'native-base';
 import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
-import Auth from "../services/Auth";
 import axios from "axios";
+
+
+import Auth from "../services/Auth";
 import env from "../../env";
+
 
 const {width, height} = Dimensions.get('window');
 

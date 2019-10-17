@@ -2,9 +2,12 @@ import React from "react";
 import { View, Container, Content, CardItem, Icon, Input, Item, Button } from "native-base";
 import { Image, TouchableOpacity, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import axios from "axios";
+
+
 import Auth from "../services/Auth";
 import env from "../../env";
-import axios from "axios";
+
 
 const options = {
   title: 'Select Avatar',
@@ -15,7 +18,6 @@ const options = {
 };
 
   
-
 class EditProfileScreen extends React.Component{
 
     static navigationOptions = ({ navigation }) => {

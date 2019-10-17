@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text, Button, Container, Content, CardItem, Body, Item, Icon, Input } from "native-base"
 import { FlatList, Image, Dimensions, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+
+
 const {width, height} = Dimensions.get('window');
-
-
 const options = {
     title: 'Select Avatar',
     storageOptions: {
@@ -12,6 +12,7 @@ const options = {
       path: 'images',
     },
   };
+
 
 class CreateNewEpisodeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => {

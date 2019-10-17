@@ -1,10 +1,10 @@
 import React from 'react';
-
 import { Card, CardItem, Body, Text } from 'native-base';
+import { Image, TouchableOpacity, Dimensions, FlatList, StyleSheet } from 'react-native';
 
-import {Image, TouchableOpacity, Dimensions, FlatList, StyleSheet} from 'react-native';
 
 import env from '../../env';
+
 
 const {width, height} = Dimensions.get('window');
 

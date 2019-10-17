@@ -1,12 +1,13 @@
 import React from 'react';
-
-import {Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
-
+import { Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
+
 
 import env from '../../env'
 
+
 const {width, height} = Dimensions.get('window');
+
 
 class BannerComponent extends React.Component {
 

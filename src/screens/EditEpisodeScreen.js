@@ -2,9 +2,12 @@ import React from "react";
 import { View, Text, Container, Content, CardItem, Body, Item, Button, Icon, Input } from "native-base";
 import { FlatList, Image, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import axios from 'axios';
+
+
 import Auth from '../services/Auth';
 import env from '../../env';
-import axios from 'axios';
+
 
 const options = {
     title: 'Select Avatar',
@@ -14,6 +17,7 @@ const options = {
     },
   };
 
+  
 class EditEpisodeScreen extends React.Component {
     static navigationOptions = ({ navigation }) => {
         return {

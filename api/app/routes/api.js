@@ -1,12 +1,14 @@
 const bodyParser = require('body-parser');
 const multer = require("multer");
-const path             = require('path');
-const mid = require('./middleware')
+const path = require('path');
+
+
+const mid = require('./middleware');
+
 
 const ToonController = require("../controllers/api/ToonController");
 const AuthController = require("../controllers/api/AuthController");
 const ToonEpisodeController = require("../controllers/api/ToonEpisodeController");
-
 
 
 const upload = multer({
@@ -23,17 +25,20 @@ const upload = multer({
 
 
 module.exports = (router) => {
+
     router.group("/auth", (auth) =>{
         auth.post("/authenticate", [bodyParser.json()], AuthController.authenticate);
         auth.post("/register", [bodyParser.json()], AuthController.register);
         auth.post("/change-photo", [mid.auth, upload.single('avatar')], AuthController.changePhoto);
     });
+
     router.group("/toons", (toons) =>{
         toons.get("/all", [mid.auth], ToonController.index);
         toons.get("/banner", [mid.auth], ToonController.banner);
         toons.get("/favorite", [mid.auth], ToonController.favorite);
         toons.get("/search/:keyword", [mid.auth], ToonController.search);
     });
+
     router.group("/toon", (toon) =>{
         toon.post("/create", [mid.auth, bodyParser.json()], ToonController.store);
         toon.get("/:id", ToonController.show);
@@ -41,6 +46,7 @@ module.exports = (router) => {
         toon.put("/:id/edit", [mid.auth, bodyParser.json()], ToonController.update);
         toon.delete("/:id", [mid.auth], ToonController.delete);
     });
+
     router.group("/toon-episode", (toonEpisode) =>{
         toonEpisode.get("/:id", ToonEpisodeController.show);
         toonEpisode.post("/create", [mid.auth, upload.array("images[]")], ToonEpisodeController.store);
@@ -51,6 +57,5 @@ module.exports = (router) => {
     });
     
     router.get("/my-toons", [mid.auth], ToonController.myToon);
-    
     
 }

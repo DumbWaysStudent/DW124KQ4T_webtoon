@@ -1,10 +1,13 @@
 import React from 'react';
-
 import { Container, Content, Button, Icon, View } from 'native-base';
 import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
 import axios from 'axios';
+
+
 import env from '../../env';
 import Auth from '../services/Auth';
+
+
 const {width, height} = Dimensions.get('window');
 
 

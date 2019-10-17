@@ -1,8 +1,13 @@
+const fs = require("fs");
+
+
 const models = require('../../../models');
+const validator = require(`../../libraries/Validator.js`);
+
+
 const Episode = models.toon_episode;
 const EpisodeIMG = models.toon_episode_image;
-const validator = require(`../../libraries/Validator.js`);
-const fs = require("fs");
+
 
 module.exports = {
     show: async (req, res) => {

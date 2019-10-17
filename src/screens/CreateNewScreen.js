@@ -2,8 +2,11 @@ import React from "react";
 import { View, Text, CardItem, Container, Content, Item, Body, Input, Button, Icon } from "native-base";
 import { FlatList, Image, StyleSheet } from "react-native";
 import axios from "axios";
+
+
 import env from "../../env";
 import Auth from "../services/Auth";
+
 
 class CreateNewScreen extends React.Component{
     static navigationOptions = ({ navigation }) => {

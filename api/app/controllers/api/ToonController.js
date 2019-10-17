@@ -1,11 +1,16 @@
+const Sequelize = require('sequelize');
+
+
+const validator = require(`../../libraries/Validator.js`);
 const models = require('../../../models');
+
+
+const Op = Sequelize.Op;
 const User = models.user;
 const Toon = models.toon;
 const Episode = models.toon_episode;
 const Favorite = models.favorite;
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-const validator = require(`../../libraries/Validator.js`);
+
 
 module.exports = {
     index: async (req, res)=>{

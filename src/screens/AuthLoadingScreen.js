@@ -1,7 +1,12 @@
 import React from "react"
 import { View, Text, Dimensions, StyleSheet } from "react-native"
+
+
 import Auth  from '../services/Auth';
+
+
 const {width, height} = Dimensions.get('window');
+
 
 export default class AuthLoadingScreen extends React.Component {
     constructor(props){

@@ -1,13 +1,15 @@
-const validator = require(`../../libraries/Validator.js`);
 const bcrypt = require(`bcryptjs`);
-const models = require(`../../../models`);
 const jwt = require('jsonwebtoken');
-const env = require('../../../env');
 const fs = require("fs");
 
 
+const validator = require(`../../libraries/Validator.js`);
+const models = require(`../../../models`);
+const env = require('../../../env');
+
 
 const User = models.user;
+
 
 module.exports = {
     authenticate: async (req, res)=>{
