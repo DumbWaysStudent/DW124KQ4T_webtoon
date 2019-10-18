@@ -161,7 +161,14 @@ class Toon{
         var token = await Auth.fetch(`token`);
         var formdata = new FormData;
         for(var key in data){
-            formdata.append(key, data[key]);
+            if(Array.isArray(data[key])){
+                for(var i =0; i<data[key].length; i++){
+                    formdata.append(key, data[key][i]);
+                }
+            }
+            else{
+                formdata.append(key, data[key]);
+            }
         }
         return axios({
             method: 'POST',

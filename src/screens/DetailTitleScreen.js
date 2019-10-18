@@ -45,8 +45,11 @@ class DetailTitleScreen extends React.Component {
         await Toon.detail(this.props.navigation.getParam("id")).then(result => toon = result.data.data.data );
         await Toon.episodeList(this.props.navigation.getParam("id")).then(result => episodes = result.data.data.data );
 
+        console.log("===========");
+        console.log(toon);
+        console.log(episodes);
         this.setState({ toon, episodes });
-        this.props.navigation.setParams({title: toon.title});
+        this.props.navigation.setParams({title: this.state.toon.title});
     }
 
     onOpenEpisode = (id) => {
