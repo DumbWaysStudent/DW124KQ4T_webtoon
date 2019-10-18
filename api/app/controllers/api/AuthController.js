@@ -11,7 +11,9 @@ const env = require('../../../env');
 const User = models.user;
 
 
-module.exports = {
+function AuthController(){}
+
+AuthController.prototype = {
     authenticate: async (req, res)=>{
         var rules = {
             email: {
@@ -154,3 +156,5 @@ module.exports = {
         
     }
 }
+
+module.exports = new AuthController;

@@ -8,8 +8,8 @@ const validator = require(`../../libraries/Validator.js`);
 const Episode = models.toon_episode;
 const EpisodeIMG = models.toon_episode_image;
 
-
-module.exports = {
+function ToonEpisodeController () {}
+ToonEpisodeController.prototype = {
     show: async (req, res) => {
         var episode = null;
         await Episode.findOne({
@@ -161,3 +161,5 @@ module.exports = {
         });
     }
 }
+
+module.exports = new ToonEpisodeController;

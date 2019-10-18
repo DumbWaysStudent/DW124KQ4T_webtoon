@@ -11,8 +11,8 @@ const Toon = models.toon;
 const Episode = models.toon_episode;
 const Favorite = models.favorite;
 
-
-module.exports = {
+function ToonController (){}
+ToonController.prototype = {
     index: async (req, res)=>{
         var toons = []
         await Toon.findAll({
@@ -306,3 +306,6 @@ module.exports = {
         });
     }
 };
+
+
+module.exports = new ToonController;

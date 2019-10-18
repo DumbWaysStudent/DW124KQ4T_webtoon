@@ -87,7 +87,7 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onImages = async () => {
-        await Toon.episodeDetail(this.state.id).then(result => {
+        await Toon.episodeDetail(1,this.state.id).then(result => {
             var episode = result.data.data.data;
             this.setState({
                 images: [...episode.images]
@@ -139,7 +139,7 @@ class EditEpisodeScreen extends React.Component {
                     name: response.fileName
                   }
               }
-              Toon.uploadEpisodeImage(form, this.state.id).then(result=>{
+              Toon.uploadEpisodeImage(form, 1, this.state.id).then(result=>{
                     var images = this.state.images;
                     images.push(result.data.data.data);
                     this.setState({
@@ -173,7 +173,7 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteImage = (id) => {
-        Toon.deleteEpisodeImage(id).then(result=>{
+        Toon.deleteEpisodeImage(1,id).then(result=>{
             var images = this.state.images.filter((item)=>item.id!==id);
             this.setState({
                 images:images

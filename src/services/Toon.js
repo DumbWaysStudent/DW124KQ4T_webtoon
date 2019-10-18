@@ -12,7 +12,7 @@ class Toon{
                 'content-type': 'application/json',
                 "Authorization": `Bearer ${token}`
             },
-            url: `/toons/all`
+            url: `/toons`
         });
     }
 
@@ -72,13 +72,13 @@ class Toon{
         });
     }
 
-    episodeDetail = async (episodeId) => {
+    episodeDetail = async (toonId, episodeId) => {
         return axios({
             method: 'GET',
             headers: {
                 'content-type': 'application/json'
             },
-            url: `/toon-episode/${episodeId}`
+            url: `/toon/${toonId}/episode/${episodeId}`
         });
     }
 
@@ -132,7 +132,7 @@ class Toon{
         });
     }
 
-    deleteEpisode = async (id) => {
+    deleteEpisode = async (toonId, id) => {
         var token = await Auth.fetch(`token`);
         return axios({
             method: 'DELETE',
@@ -140,11 +140,11 @@ class Toon{
                 'content-type': 'application/json',
                 "Authorization": `Bearer ${token}`
             },   
-            url: `/toon-episode/${id}`
+            url: `/toon/${toonId}/episode/${id}`
         });
     }
 
-    updateEpisode = async (data, id) => {
+    updateEpisode = async (data, toonId, id) => {
         var token = await Auth.fetch(`token`);
         return axios({
             method: 'PUT',
@@ -153,11 +153,11 @@ class Toon{
                 "Authorization": `Bearer ${token}`
             },
             data: data,          
-            url: `/toon-episode/${id}/edit`
+            url: `/toon/${toonId}/episode/${id}/edit`
         });
     }
 
-    createEpisode = async (data) => {
+    createEpisode = async (data, toonId) => {
         var token = await Auth.fetch(`token`);
         var formdata = new FormData;
         for(var key in data){
@@ -177,11 +177,11 @@ class Toon{
                 "Authorization": `Bearer ${token}`
             },
             data: formdata,          
-            url: `/toon-episode/create`
+            url: `/toon/${toonId}/episode/create`
         });
     }
 
-    uploadEpisodeImage = async (data, id) => {
+    uploadEpisodeImage = async (data, toonId, id) => {
         var token = await Auth.fetch(`token`);
         var formdata = new FormData;
         for(var key in data){
@@ -194,11 +194,11 @@ class Toon{
                 "Authorization": `Bearer ${token}`
             },
             data: formdata,          
-            url: `/toon-episode/${id}/upload-image`
+            url: `/toon/${toonId}/episode/${id}/upload-image`
         });
     }
 
-    deleteEpisodeImage = async (id) => {
+    deleteEpisodeImage = async (toonId, id) => {
         var token = await Auth.fetch(`token`);
         return axios({
             method: 'DELETE',
@@ -206,7 +206,7 @@ class Toon{
                 'content-type': 'application/json',
                 "Authorization": `Bearer ${token}`
             },        
-            url: `/toon-episode/delete-image/${id}`
+            url: `/toon/${toonId}/episode/delete-image/${id}`
         });
     }
 }

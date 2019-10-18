@@ -38,7 +38,7 @@ class DetailEpisodeScreen extends React.Component {
     }
 
     async componentDidMount(){
-        await Toon.episodeDetail(this.props.navigation.getParam("id")).then(async result => {
+        await Toon.episodeDetail(1, this.props.navigation.getParam("id")).then(async result => {
             var episode = result.data.data.data;
             for(var i =0;i<episode.images.length;i++){
                 await Image.getSize(`${env.baseUrl}/${episode.images[i].url}`, (w, h) => {

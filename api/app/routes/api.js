@@ -33,29 +33,32 @@ module.exports = (router) => {
     });
 
     router.group("/toons", (toons) =>{
-        toons.get("/all", [mid.auth], ToonController.index); // /
-        toons.get("/banner", [mid.auth], ToonController.banner); // ?page=1&per_page=3
-        toons.get("/favorite", [mid.auth], ToonController.favorite); // /favorite
-        toons.get("/search/:keyword", [mid.auth], ToonController.search); // ?search[title,descriptio]=
+
+        toons.get("/", [mid.auth], ToonController.index); 
+        toons.get("/banner", [mid.auth], ToonController.banner); 
+        toons.get("/favorite", [mid.auth], ToonController.favorite); 
+        toons.get("/search/:keyword", [mid.auth], ToonController.search); 
+
     });
 
     router.group("/toon", (toon) =>{
+
         toon.post("/create", [mid.auth, bodyParser.json()], ToonController.store); // /
         toon.get("/:id", ToonController.show);
         toon.get("/:id/episodes", ToonController.episodes);
         toon.put("/:id/edit", [mid.auth, bodyParser.json()], ToonController.update); // /:id
         toon.delete("/:id", [mid.auth], ToonController.delete);
+
+        toon.group("/:toonId/episode", (toonEpisode) =>{
+            toonEpisode.get("/:id", ToonEpisodeController.show);
+            toonEpisode.post("/create", [mid.auth, upload.array("images[]")], ToonEpisodeController.store);
+            toonEpisode.put("/:id/edit", [mid.auth, bodyParser.json()], ToonEpisodeController.update);
+            toonEpisode.delete("/:id", [mid.auth], ToonEpisodeController.delete);
+            toonEpisode.post("/:id/upload-image", [mid.auth,upload.single("image")], ToonEpisodeController.uploadImage);
+            toonEpisode.delete("/delete-image/:id", [mid.auth], ToonEpisodeController.deleteImage);
+        });
     });
 
-    router.group("/toon-episode", (toonEpisode) =>{
-        toonEpisode.get("/:id", ToonEpisodeController.show);
-        toonEpisode.post("/create", [mid.auth, upload.array("images[]")], ToonEpisodeController.store);
-        toonEpisode.put("/:id/edit", [mid.auth, bodyParser.json()], ToonEpisodeController.update);
-        toonEpisode.delete("/:id", [mid.auth], ToonEpisodeController.delete);
-        toonEpisode.post("/:id/upload-image", [mid.auth,upload.single("image")], ToonEpisodeController.uploadImage);
-        toonEpisode.delete("/delete-image/:id", [mid.auth], ToonEpisodeController.deleteImage);
-    });
-    
     router.get("/my-toons", [mid.auth], ToonController.myToon);
     
 }

@@ -100,13 +100,8 @@ class LoginScreen extends React.Component {
 
     handleSubmit = async () => {
         var data = {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            data: {
                 email: this.state.inputEmail,
                 password: this.state.inputPassword
-            },          
-            url: `/auth/authenticate`
         };
         await Auth.login(data).then(async result=>{
             await Auth.save(result.data.data);

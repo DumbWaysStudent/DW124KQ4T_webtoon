@@ -3,7 +3,7 @@ import axios from "../utils/Api";
 
 class Auth {
     save = async (data) => {
-        for(key in data){
+        for(var key in data){
             await AsyncStorage.setItem(`authUser.${key}`, data[key] );
         }
     }
@@ -53,7 +53,7 @@ class Auth {
     }
 
     register = async (data) => {
-        return await axios({
+        return axios({
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             data: data,          

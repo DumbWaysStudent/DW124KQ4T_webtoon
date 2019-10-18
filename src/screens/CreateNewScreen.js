@@ -99,7 +99,7 @@ class CreateNewScreen extends React.Component{
         for(var i=0;i<data.images.length;i++){
             form["images[]"].push(data.images[i].img);
         }
-        await Toon.createEpisode(form).then(result=>{
+        await Toon.createEpisode(form, 1).then(result=>{
             var item = result.data.data.data;
             var eps = this.state.episodes;
             var epsCheck = this.state.epsCheck;

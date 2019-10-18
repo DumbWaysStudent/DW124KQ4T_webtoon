@@ -101,7 +101,7 @@ class EditToonScreen extends React.Component{
         
         this.props.navigation.setParams({onDelete:undefined});
 
-        await Toon.deleteEpisode(id).then(result=>{
+        await Toon.deleteEpisode(1,id).then(result=>{
             this.setState({
                 episodes: eps,
                 isChanged: true
@@ -116,7 +116,7 @@ class EditToonScreen extends React.Component{
 
         await Toon.updateEpisode({
             title:data.name
-        }, data.id).then(result=>{
+        }, 1 , data.id).then(result=>{
             var items = this.state.episodes;
             var index = this.state.episodes.findIndex(item => item.id === data.id);
             items[index].title = data.name;
@@ -139,7 +139,7 @@ class EditToonScreen extends React.Component{
         for(var i=0;i<data.images.length;i++){
             form["images[]"] = data.images[i].img;
         }
-        await Toon.createEpisode(form).then(result=>{
+        await Toon.createEpisode(form, 1).then(result=>{
             var item = result.data.data.data;
             var eps = this.state.episodes;
             var epsCheck = this.state.epsCheck;
