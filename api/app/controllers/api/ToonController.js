@@ -24,19 +24,19 @@ ToonController.prototype = {
             order: [
                 ['createdAt', 'DESC']
             ]
-        }).then(result=>toons=result)
+        }).then( result => toons = result );
 
         var toons2= JSON.parse(JSON.stringify(toons));
 
         for(var i=0;i<toons2.length; i++){
             var toon = null
-            await Favorite.findOne({where:{userId:req.user.userId, toonId: toons2[i].id}}).then(result=>toon=result);
+            await Favorite.findOne({where:{ userId: req.user.userId, toonId: toons2[i].id }}).then(result => toon = result );
             
             if(toon){
-                toons2[i].favorited = true;
+                toons2[i].isFavorited = true;
             }
             else{
-                toons2[i].favorited = false;
+                toons2[i].isFavorited = false;
             }
 
         }

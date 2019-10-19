@@ -30,7 +30,7 @@ class BannerComponent extends React.Component {
                             <View><Text>{item.title}</Text></View>
                         </TouchableOpacity>
                         <View>
-                            { item.favorited ?
+                            { item.isFavorited ?
                                 <Button rounded iconLeft disabled small>
                                     <Icon type="FontAwesome" name="plus" />
                                     <Text>Favorite</Text>

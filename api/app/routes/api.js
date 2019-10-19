@@ -37,7 +37,7 @@ module.exports = (router) => {
         toons.get("/", [mid.auth], ToonController.index); 
         toons.get("/banner", [mid.auth], ToonController.banner); 
         toons.get("/favorite", [mid.auth], ToonController.favorite); 
-        toons.get("/search/:keyword", [mid.auth], ToonController.search); 
+        toons.get("/search/:keyword", ToonController.search); 
 
     });
 
