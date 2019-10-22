@@ -4,9 +4,14 @@ import { StyleSheet } from 'react-native';
 
 
 import axios from "../utils/Api";
+import { connect } from 'react-redux'
+
+
 import Toon from '../services/Toon';
+import { saveFavorite } from '../_actions/toon';
 
 
+import Layout from '../layouts/Layout';
 import MyFavoriteCompnent from '../components/MyFavoriteComponent';
 import SearchComponent from '../components/SearchComponent';
 
@@ -16,7 +21,6 @@ class FavoriteScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          favorites: [],
           keyword: "",
           searchResult: []
         }
@@ -24,8 +28,15 @@ class FavoriteScreen extends React.Component {
 
     async componentDidMount(){
       var favorites = [];
-      await Toon.favorite().then(result=> favorites = result.data.data.data );
-      this.setState({ favorites });
+
+      try{
+        favorites = (await Toon.favorite()).data.data.data
+      }
+      catch(err){
+        console.log(err);
+      }
+
+      this.props.dispatch(saveFavorite(favorites));
     }
 
 
@@ -59,7 +70,7 @@ class FavoriteScreen extends React.Component {
 
   render() {
     return (
-        <Container>
+        <Layout screen={"FavoriteScreen"} navigation={this.props.navigation}>
           <Content>
               <CardItem>
                 <Body>
@@ -70,12 +81,12 @@ class FavoriteScreen extends React.Component {
                       </Button>
                   </Item>
                   { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) :
-                  <MyFavoriteCompnent items={this.state.favorites} onDetailTitle={this.onDetailTitle} />
+                  <MyFavoriteCompnent items={this.props.toon.favorites} onDetailTitle={this.onDetailTitle} />
                   }
                 </Body>
               </CardItem>
           </Content>
-        </Container>
+        </Layout>
     );
   }
 };
@@ -85,4 +96,10 @@ const styles = StyleSheet.create({
 });
 
 
-export default FavoriteScreen;
+const mapStateToProps = (state) => {
+  return {
+      toon: state.toon
+  }
+}
+
+export default connect(mapStateToProps)(FavoriteScreen);

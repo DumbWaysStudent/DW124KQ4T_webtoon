@@ -9,7 +9,8 @@
 import React from 'react';
 import { Icon} from 'native-base';
 
-import Auth from './src/services/Auth'
+import { Provider } from 'react-redux';
+import store from './src/_redux/store';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -86,155 +87,86 @@ const FavoriteStack = createStackNavigator({
   }
 });
 
-const ProfileStack = createStackNavigator({
-  Profile: {
-    screen: ProfileScreen,
-    navigationOptions:{
-      title: "Profile"
-    }
-  },
-  EditProfile:{
-    screen: EditProfileScreen,
-    navigationOptions:{
-      title: "Edit Profile"
-    }
-  },
-  MyCreation: {
-    screen: MyCreationScreen,
-    navigationOptions:{
-      title: "My Webtoon"
-    }
-  },
-  CreateNew: {
-    screen: CreateNewScreen,
-    navigationOptions: {
-      title: "Create Webtoon"
-    }
-  },
-  EditToon: {
-    screen: EditToonScreen,
-    navigationOptions: {
-      title: "Edit Webtoon"
-    }
-  },
-  EditEpisode: {
-    screen:EditEpisodeScreen,
-    navigationOptions:{
-      title: "EditEpisode"
-    }
-  },
-  CreateNewEpisode: {
-    screen: CreateNewEpisodeScreen,
-    navigationOptions: {
-      title: "Create Episode"
-    }
-  },
-  DetailTitle: {
-    screen:DetailTitleScreen,
-    navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
-      
-    }
-  },
-  DetailEpisode:{
-    screen:DetailEpisodeScreen,
-    navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
-      
-    }
-  }
-});
 
 
 
-
-const MainNavigator = createAppContainer(createMaterialBottomTabNavigator({
+const MainNavigator = createAppContainer(createStackNavigator({
       ForYou: {
         screen: ForYouStack,
-        navigationOptions:({navigation})=>{
-          var noBottomTabNav = [
-            "DetailTitle",
-            "DetailEpisode"
-          ];
-          var obj = {
-            tabBarIcon: ({ tintColor }) => (
-              <Icon type="FontAwesome" name="tablet" style={{color: tintColor}} />
-            )
-          };
-          if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
-            obj.tabBarVisible = false;
-          }
-          else{
-            obj.tabBarVisible = true;
-          }
-          return obj
+        navigationOptions:{
+          headerTransparent: true,
+          headerLeft: null
         }
       },
       Favorite: {
           screen: FavoriteStack,
-          navigationOptions:({navigation})=>{
-            var noBottomTabNav = [
-              "DetailTitle",
-              "DetailEpisode"
-            ];
-            var obj = {
-              tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="star" style={{color: tintColor}} />
-              )
-            };
-            if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
-              obj.tabBarVisible = false;
-            }
-            else{
-              obj.tabBarVisible = true;
-            }
-            return obj
+          navigationOptions:{
+            headerTransparent: true,
+            headerLeft: null
           }
       },
       Profile: {
-          screen: ProfileStack,
-          navigationOptions:({navigation})=>{
-            var noBottomTabNav = [
-              "MyCreation",
-              "CreateNew",
-              "CreateNewEpisode",
-              "EditToon",
-              "EditEpisode",
-              "DetailTitle",
-              "DetailEpisode"
-            ];
-            var obj = {
-              tabBarIcon: ({ tintColor }) => (
-                <Icon type="FontAwesome" name="user" style={{color: tintColor}} />
-              )
-            };
-            if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
-              obj.tabBarVisible = false;
-            }
-            else{
-              obj.tabBarVisible = true;
-            }
-            return obj
-          }
+        screen: ProfileScreen,
+        navigationOptions:{
+          title:"Profile",
+          headerLeft: null
+        }
+      },
+      EditProfile:{
+        screen: EditProfileScreen,
+        navigationOptions:{
+          title: "Edit Profile"
+        }
+      },
+      MyCreation: {
+        screen: MyCreationScreen,
+        navigationOptions:{
+          title: "My Webtoon"
+        }
+      },
+      CreateNew: {
+        screen: CreateNewScreen,
+        navigationOptions: {
+          headerTransparent: true,
+          headerLeft: null
+        }
+      },
+      EditToon: {
+        screen: EditToonScreen,
+        navigationOptions: {
+          title: "Edit Webtoon"
+        }
+      },
+      EditEpisode: {
+        screen:EditEpisodeScreen,
+        navigationOptions:{
+          title: "EditEpisode"
+        }
+      },
+      CreateNewEpisode: {
+        screen: CreateNewEpisodeScreen,
+        navigationOptions: {
+          headerTransparent: true,
+          headerLeft: null
+        }
+      },
+      DetailTitle: {
+        screen:DetailTitleScreen,
+        navigationOptions:{
+          gesturesEnabled: false,
+          tabBarVisible: false
+          
+        }
+      },
+      DetailEpisode:{
+        screen:DetailEpisodeScreen,
+        navigationOptions:{
+          gesturesEnabled: false,
+          tabBarVisible: false
+          
+        }
       }
-},{
-  // tabBarOptions: {
-  //   showLabel: false,
-  //   activeTintColor: '#ecf0f1',
-  //   inactiveTintColor: '#bdc3c7',
-  //   labelStyle: {
-  //     fontSize: 12,
-  //   },
-  //   style: {
-  //     backgroundColor: '#2980b9',
-  //   },
-  // }
-  labeled: false,
-  activeColor: '#ecf0f1',
-  inactiveColor: '#bdc3c7',
-  barStyle: { backgroundColor: '#2980b9' },
+    
 }));
 
 const AppNavigator = createStackNavigator({
@@ -254,7 +186,16 @@ const RegNavigator = createStackNavigator({
   }
 });
 
-export default createAppContainer(createSwitchNavigator(
+const MainApp = () => {
+  return (
+    <Provider store={store}>
+      <MainNavigator />
+    </Provider>
+  )
+}
+
+
+const RootNavigation = createAppContainer(createSwitchNavigator(
   {
     AuthLoading: {
       screen: AuthLoadingScreen
@@ -262,10 +203,24 @@ export default createAppContainer(createSwitchNavigator(
     Register: RegNavigator,
     Login: AppNavigator,
     // Login: Coba,
-    Main: MainNavigator
+    Main: MainApp
   },
   {
     initialRouteName: 'AuthLoading',
   }
 ));
+
+
+
+
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <RootNavigation />
+    </Provider>
+  )
+}
+
+export default App;
 console.disableYellowBox = true;

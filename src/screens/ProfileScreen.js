@@ -1,10 +1,12 @@
 import React from 'react';
 import { Container, Content, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View } from 'native-base';
 import { Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
 
 
 import Auth from "../services/Auth";
 import env from '../utils/Env';
+import Layout from '../layouts/Layout';
 
 
 
@@ -18,7 +20,8 @@ class ProfileScreen extends React.Component {
             onPress={() => navigation.navigate("EditProfile") }>
                 <Icon name="pencil" type="FontAwesome" style={styles.headerRightButtonIcon} />
             </Button>
-        )
+        ),
+        tabBarVisible: false
       };
   }
 
@@ -71,12 +74,12 @@ class ProfileScreen extends React.Component {
 
   render() {
     return (
-        <Container>
+      <Layout screen={"ProfileScreen"} navigation={this.props.navigation}>
           <Content>
               <CardItem>
                 <Body style={styles.imageWrap}>
-                    <Image style={styles.imagePhoto} source={{uri: this.state.profile.image}} />
-                    <H1 style={styles.profileName}>{this.state.profile.name}</H1>
+                    <Image style={styles.imagePhoto} source={{uri: (this.props.auth.data.image) ? ((this.handleURL(this.props.auth.data.image))?this.props.auth.data.image:`${env.baseUrl}/${this.props.auth.data.image}`) : ""}} />
+                    <H1 style={styles.profileName}>{this.props.auth.data.name}</H1>
                 </Body>
               </CardItem>
               <List style={{marginRight: 15}}>
@@ -96,7 +99,7 @@ class ProfileScreen extends React.Component {
               </List>
             
           </Content>
-        </Container>
+        </Layout>
     );
   }
 };
@@ -111,4 +114,10 @@ const styles = StyleSheet.create({
 
 });
 
-export default ProfileScreen;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
+
+export default connect(mapStateToProps)(ProfileScreen);

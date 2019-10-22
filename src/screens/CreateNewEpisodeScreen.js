@@ -1,7 +1,9 @@
 import React from "react";
-import { View, Text, Button, Container, Content, CardItem, Body, Item, Icon, Input } from "native-base"
+import { View, Text, Button, Container, Content, CardItem, Body, Item, Icon, Input, Header, Left, Right, Title } from "native-base"
 import { FlatList, Image, Dimensions, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
+import { connect } from "react-redux";
+import { saveNewToon, saveToon, saveUpdatedToon, saveNewEpisode } from "../_actions/mytoon";
 
 
 const {width, height} = Dimensions.get('window');
@@ -15,35 +17,6 @@ const options = {
 
 
 class CreateNewEpisodeScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerRight: (
-            <Button transparent
-              onPress={() => {
-                    if(navigation.getParam("isReady")){
-                        var submiting = navigation.state.params;
-                        submiting.name = submiting.inputName;
-                        delete submiting.inputName;
-                        delete submiting.isReady;
-                        delete submiting.isChanged;
-                        delete submiting.errors;
-                        delete submiting.countMount;
-                        submiting.time = parseInt((new Date).getTime());
-                        submiting.cover = submiting.images[0].src;
-                        if(typeof navigation.state.params.edit === "undefined"){
-                            navigation.navigate("CreateNew", {newEpisode: submiting});
-                        }
-                        else{
-                            delete submiting.edit;
-                            navigation.navigate("EditToon", {newEpisode: submiting});
-                        }
-                    }
-              }}>
-                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
-            </Button>
-          )
-        };
-    }
 
     constructor(props){
         super(props);
@@ -170,9 +143,43 @@ class CreateNewEpisodeScreen extends React.Component {
         });
     }
 
+    onBackSubmit = () => {
+        if(this.state.isReady){
+            let data = {
+                title: this.state.inputName,
+                images: this.state.images,
+                time: (new Date).getTime()
+            }
+            this.props.dispatch(saveNewEpisode(data));
+            if(typeof this.props.navigation.getParam("isNew") !== "undefined"){
+                this.props.navigation.navigate("CreateNew");
+            }
+            else{
+                this.props.navigation.navigation("EditToon");
+
+            }
+        }
+    }
+
     render(){
         return (
             <Container>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>Create Episode</Title>
+                    </Body>
+                    <Right>
+                        <Button transparent
+                        onPress={this.onBackSubmit}>
+                            <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
+                        </Button>
+                    </Right>
+                </Header>
                 <Content>
                         <CardItem>
                             <Body>
@@ -226,4 +233,10 @@ const styles = StyleSheet.create({
     
 });
 
-export default CreateNewEpisodeScreen
+const mapStateToProps = (state) => {
+    return {
+        mytoon: state.mytoon
+    }
+}
+
+export default connect(mapStateToProps)(CreateNewEpisodeScreen);

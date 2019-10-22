@@ -8,6 +8,11 @@ import env from '../utils/Env';
 import Auth  from '../services/Auth';
 
 
+import { connect } from 'react-redux';
+
+import { saveAuth, saveAuthPending } from '../_actions/auth'
+
+
 class LoginScreen extends React.Component {
 
     constructor(props){
@@ -99,22 +104,25 @@ class LoginScreen extends React.Component {
     }
 
     handleSubmit = async () => {
+        this.props.dispatch(saveAuthPending());
         var data = {
                 email: this.state.inputEmail,
                 password: this.state.inputPassword
         };
-        await Auth.login(data).then(async result=>{
-            await Auth.save(result.data.data);
+        try{
+            const user = await Auth.login(data);
+            await Auth.save(user.data.data);
+            this.props.dispatch(saveAuth(user.data.data));
             this.props.navigation.navigate('Main');
-        }).catch(error=>{
-            console.log("=======");
-            console.log(error);
-            console.log("=======");
-            console.log(error.response);
+        }
+        catch(error){
             if(typeof error.response.data.msg !== "undefined"){
                 alert(error.response.data.msg);
             }
-        });
+            else{
+                alert("Check your internet connection!");
+            }
+        }
     }
 
   render() {
@@ -178,4 +186,11 @@ const styles = StyleSheet.create({
     buttonEyeIcon: {color:'#3498db'}
   });
 
-export default LoginScreen;
+
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth
+    }
+}
+
+export default connect(mapStateToProps)(LoginScreen);

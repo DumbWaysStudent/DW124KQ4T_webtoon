@@ -1,41 +1,15 @@
 import React from "react";
-import { View, Text, CardItem, Container, Content, Item, Body, Input, Button, Icon } from "native-base";
+import { View, Text, CardItem, Container, Content, Item, Body, Input, Button, Icon, Header, Left, Right, Title } from "native-base";
 import { FlatList, Image, StyleSheet } from "react-native";
 
 
+import { connect } from "react-redux";
+import { s, saveNewToon, saveToon, saveNewEpisode } from "../_actions/mytoon"
 import env from '../utils/Env';
 import Toon from "../services/Toon";
 
 
 class CreateNewScreen extends React.Component{
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerRight: (
-            <Button transparent
-              onPress={() => {
-                if(navigation.getParam("isReady")){
-                    var submiting = navigation.state.params;
-                    if(submiting.id != null){
-                        submiting.isNew = false;
-                        submiting.onEdit = submiting.id ;
-                        submiting.isDraft = 0 ;
-                    }
-                    else{
-                        submiting.isNew = true;
-                    }
-                    delete submiting.isReady;
-                    delete submiting.isChanged;
-                    delete submiting.errors;
-                    submiting.time = parseInt((new Date).getTime());
-                    navigation.navigate("MyCreation", submiting);
-                }
-              }}>
-                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
-            </Button>
-          )
-
-        };
-    }
 
     constructor(props){
         super(props);
@@ -54,66 +28,41 @@ class CreateNewScreen extends React.Component{
         }
     }
 
-    async componentDidMount(){
-
-        if(this.state.isChanged){
-
-            this.props.navigation.setParams({
-                ...this.state
-            })
-            
-            this.setState({
-                isChanged: false
-            });
-        }
-    }
-
-    async componentDidUpdate(prevProps, prevState){
-        if(this.state.isChanged){
-
-            this.props.navigation.setParams({
-                ...this.state
-            })
-            
-            this.setState({
-                isChanged: false
-            });
-        }
-        if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.epsCheck.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
-            if(this.state.episodes === prevState.episodes){
-                await this.onNewEpisode(this.props.navigation.getParam('newEpisode'));
-            }   
-            
+    componentDidUpdate(prevProps, prevState){
+        if(this.props.mytoon.newEpisode!== null){
+            this.onNewEpisode(this.props.mytoon.newEpisode);
         }
     }
 
     onNewEpisode = async (data) => {
-        this.props.navigation.setParams({...{
-            newEpisode: undefined
-        }});
-        var form = {
-            "title":data.name,
-            "toonId":this.state.id
-        }
-        form["images[]"] = [];
-        for(var i=0;i<data.images.length;i++){
-            form["images[]"].push(data.images[i].img);
-        }
-        await Toon.createEpisode(form, 1).then(result=>{
-            var item = result.data.data.data;
-            var eps = this.state.episodes;
-            var epsCheck = this.state.epsCheck;
-            epsCheck.unshift(data);
-            eps.unshift(item);
+        let temp = this.props.mytoon.tempEpisode;
+        if(temp.filter((item)=>item.time===data.time)[0]===undefined){
+            let form = {
+                "title":data.title,
+                "toonId":this.state.id
+            }
+            form["images[]"] = [];
+            for(let i=0;i<data.images.length;i++){
+                form["images[]"].push(data.images[i].img);
+            }
+            try{
+                let item = (await Toon.createEpisode(form, 1)).data.data.data;
+                let eps = this.state.episodes;
+                eps.push(item);
+                temp.push(data);
+                this.props.dispatch(saveNewEpisode(null));
+                this.setState({
+                    image: eps[0].image,
+                    episodes: [...eps],
+                });
+                
 
-            this.setState({
-                image: eps[0].image,
-                episodes: [...eps],
-                epsCheck: [...epsCheck],
-                isChanged: true
-            });
-            
-        }).catch();
+            }
+            catch(err){
+                console.log(err);
+                console.log(err.response);
+            }
+        }
     }
 
     onChangeTitle = (text) => {
@@ -165,27 +114,74 @@ class CreateNewScreen extends React.Component{
         }
         else{
             if(this.state.id===null){
-                var data = {
-                    title: this.state.title,
-                    image: "",
-                    isDraft: 1
-                };
-                await Toon.create(data).then(result=>{
+                try{
+
+                    var data = {
+                        title: this.state.title,
+                        image: "",
+                        isDraft: 1
+                    };
+                    let item = (await Toon.create(data)).data.data.data;
+
                     this.setState({
-                        id: result.data.data.data.id
+                        id: item.id
                     });
-                    this.props.navigation.setParams({
-                        id: result.data.data.data.id
-                    });
-                }).catch();
+                    let toons = this.props.mytoon.toons;
+                    toons.unshift(item);
+                    this.props.dispatch(saveToon(toons))
+                }
+                catch(err){
+                    console.log(err);
+                }
             }
-            this.props.navigation.navigate("CreateNewEpisode");
+            this.props.navigation.navigate("CreateNewEpisode", {isNew: true});
         }
     }
+
+    onSubmit = async () => {
+        if(this.state.isReady){
+            if(this.state.id!==null){
+                this.props.dispatch(saveNewToon({
+                    id: this.state.id,
+                    title: this.state.title,
+                    image: this.state.image,
+                    episodes: this.state.episodes,
+                    isDraft: 0,
+                    time: (new Date).getTime()
+                }));
+                this.props.navigation.navigate("MyCreation", {isEdit:true});
+            }
+            else{
+                this.props.dispatch(saveNewToon({
+                    title: this.state.title,
+                    image: "",
+                    time: (new Date).getTime()
+                }));
+                this.props.navigation.navigate("MyCreation");
+            }
+        }
+    }
+
 
     render(){
         return (
             <Container>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>Create Episode</Title>
+                    </Body>
+                    <Right>
+                        <Button transparent
+                        onPress={this.onSubmit}>
+                            <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
+                        </Button>
+                    </Right>
+                </Header>
                 <Content>
                         <CardItem>
                             <Body>
@@ -233,4 +229,9 @@ const styles = StyleSheet.create({
     headerRightButtonIcon: {color:'#3498db'}
 });
 
-export default CreateNewScreen;
+const mapStateToProps = (state)=>{
+    return {
+    mytoon: state.mytoon
+}}
+
+export default connect(mapStateToProps)(CreateNewScreen);

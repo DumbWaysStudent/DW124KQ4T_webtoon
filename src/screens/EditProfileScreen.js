@@ -8,6 +8,10 @@ import Auth from "../services/Auth";
 import env from '../utils/Env';
 
 
+import { connect } from 'react-redux';
+import { saveAuth } from '../_actions/auth'
+
+
 const options = {
   title: 'Select Avatar',
   storageOptions: {
@@ -24,7 +28,7 @@ class EditProfileScreen extends React.Component{
           headerRight: (
             <Button transparent
               onPress={() => {
-                  navigation.navigate("Profile", navigation.state.params)
+                  navigation.navigate("Profile")
                   }}>
                   <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
             </Button>
@@ -36,45 +40,10 @@ class EditProfileScreen extends React.Component{
         super(props);
 
         this.state = {
-            profile: {},
-            inputName: "",
-            avatarSource: {},
-            isChangingPhoto: false,
-            token: ""
-        }
-    }
-
-    async componentDidMount(){
-        await this.getProfile();
-    }
-    componentDidUpdate(prevProps, prevState){
-        if(this.state.isChangingPhoto){
-            this.props.navigation.setParams({
-                avatar: this.state.avatarSource
-            })
-            var profileNew = this.state.profile;
-            profileNew.image = this.state.avatarSource.uri
-            this.setState({
-                profile: profileNew,
-                isChangingPhoto:false
-            });
+            inputName: this.props.auth.data.name,
         }
     }
   
-    getProfile = async() =>{
-        var img = (await Auth.fetch("image"));
-        var name = await Auth.fetch("name");
-        var token = await Auth.fetch("token");
-        this.setState({
-          profile: {
-            image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
-            name: name
-          },
-          inputName: name,
-          avatarSource: {uri: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : ""},
-          token: token
-        });
-    }
 
     handleURL = (url) => {
         return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(url);
@@ -107,18 +76,18 @@ class EditProfileScreen extends React.Component{
                     name: response.fileName
                   }
                 }
-                await Auth.changePhoto(data).then(result=>{
-                    var obj = {
-                            avatarSource: {uri: `${env.baseUrl}/storage/${result.data.data.data}`},
-                            isChangingPhoto: true
-                          };
-                    Auth.update(`storage/${result.data.data.data}`,"image");
-                    this.setState({...obj});
-                }).catch(err=>{
-                    console.log("========");
-                    console.log(err);
-                    console.log(err.response);
-                });
+                try{
+                  const img = await Auth.changePhoto(data);
+                  Auth.update(`storage/${img.data.data.data}`,"image");
+                  let user = this.props.auth.data;
+                  user.image = `storage/${img.data.data.data}`;
+                  this.props.dispatch(saveAuth(user));
+                }
+                catch(err){
+                  console.log("========");
+                  console.log(err);
+                  console.log(err.response);
+                }
             }
         });
     }
@@ -129,7 +98,7 @@ class EditProfileScreen extends React.Component{
                 <Content>
                         <CardItem>
                             <TouchableOpacity onPress={this.handleChangeAvatar} style={styles.button}>
-                                <Image style={styles.imagePhoto} source={this.state.avatarSource} />
+                                <Image style={styles.imagePhoto} source={{uri:(this.props.auth.data.image) ? ((this.handleURL(this.props.auth.data.image))?this.props.auth.data.image:`${env.baseUrl}/${this.props.auth.data.image}`) : ""}} />
                                 <View style={styles.iconWrap}>
                                     <Icon style={styles.buttonIcon} name="camera" type="FontAwesome" />
                                 </View>
@@ -155,4 +124,11 @@ const styles = StyleSheet.create({
   headerRightButtonIcon: {color:'#3498db'}
 });
 
-export default EditProfileScreen;
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
+
+export default connect(mapStateToProps)(EditProfileScreen);
