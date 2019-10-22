@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, Button, Icon, View } from 'native-base';
+import { Container, Content, Button, Icon, View, Header, Left, Title, Right, Body } from 'native-base';
 import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
 
 
@@ -11,24 +11,6 @@ const {width, height} = Dimensions.get('window');
 
 
 class DetailEpisodeScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-          title: navigation.getParam('title'),
-          headerRight: (
-            <Button transparent
-              onPress={()=> Share.share(
-                {
-                  title: "a title",
-                  message: "some message",
-                  url: "www.example.com"
-                }
-            )}>
-                  <Icon style={styles.headerRightButtonIcon} name="share-alt" type="FontAwesome" />
-              </Button>
-          )
-        };
-    }
-
     constructor(props){
         super(props);
         this.state = {
@@ -55,7 +37,29 @@ class DetailEpisodeScreen extends React.Component {
     }
     render(){
         return (
-            <Container>
+            <Container style={{paddingTop: 25}}>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>{this.props.navigation.getParam('title')}</Title>
+                    </Body>
+                    <Right>
+                        <Button transparent
+                            onPress={()=> Share.share(
+                                {
+                                title: "a title",
+                                message: "some message",
+                                url: "www.example.com"
+                                }
+                            )}>
+                                <Icon style={styles.headerRightButtonIcon} name="share-alt" type="FontAwesome" />
+                        </Button>
+                    </Right>
+                </Header>
                 <Content>
                                 {this.state.episode ?
                                     <FlatList

@@ -11,7 +11,7 @@ class Layout extends React.Component {
 
     render() {
         return <>
-        <Container>
+        <Container style={{paddingTop: 25}}>
             {this.props.children}
             <Footer>
                 <FooterTab style={{backgroundColor: "#2980b9"}}>

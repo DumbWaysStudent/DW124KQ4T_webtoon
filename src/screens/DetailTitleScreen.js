@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Container, Content, CardItem, Body, Button, Icon } from 'native-base';
+import { View, Text, Container, Content, CardItem, Body, Button, Icon, Header, Left, Title, Right } from 'native-base';
 import {  Image, FlatList, StyleSheet, TouchableOpacity, Share, Dimensions } from 'react-native';
 
+import { connect } from 'react-redux';
 
 import env from '../utils/Env';
 import Toon from '../services/Toon';
@@ -11,45 +12,15 @@ const {width, height} = Dimensions.get('window');
 
 class DetailTitleScreen extends React.Component {
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-          title: navigation.getParam('title'),
-          headerRight: (
-            <Button transparent
-              onPress={()=> Share.share(
-                {
-                  title: "a title",
-                  message: "some message",
-                  url: "www.example.com"
-                }
-            )}>
-                  <Icon style={styles.headerRightButtonIcon} name="share-alt" type="FontAwesome" />
-              </Button>
-          )
-        };
-    }
 
     constructor(props){
         super(props);
-        this.state = {
-            toon: null,
-            countMount: 0,
-            episodes: []
-        }
     }
 
     async componentDidMount(){
-        var toon = {};
-        var episodes = [];
         
-        await Toon.detail(this.props.navigation.getParam("id")).then(result => toon = result.data.data.data );
-        await Toon.episodeList(this.props.navigation.getParam("id")).then(result => episodes = result.data.data.data );
-
-        console.log("===========");
-        console.log(toon);
-        console.log(episodes);
-        this.setState({ toon, episodes });
-        this.props.navigation.setParams({title: this.state.toon.title});
+        this.props.fetchDetailToon(this.props.navigation.getParam("id"));
+        this.props.fetchEpisodeToon(this.props.navigation.getParam("id"));
     }
 
     onOpenEpisode = (id) => {
@@ -65,15 +36,37 @@ class DetailTitleScreen extends React.Component {
 
   render(){
     return (
-        <Container>
+        <Container style={{paddingTop: 25}}>
+            <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                <Left>
+                    <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                    <Icon name='arrow-back' style={{color: "#3498db"}} />
+                    </Button>
+                </Left>
+                <Body>
+                    <Title style={{color:"#000"}}>{(this.props.toon.detailToon!==null)?this.props.toon.detailToon.title:<></>}</Title>
+                </Body>
+                <Right>
+                    <Button transparent
+                        onPress={()=> Share.share(
+                            {
+                            title: "a title",
+                            message: "some message",
+                            url: "www.example.com"
+                            }
+                        )}>
+                            <Icon style={styles.headerRightButtonIcon} name="share-alt" type="FontAwesome" />
+                    </Button>
+                </Right>
+            </Header>
             <Content>
-                    {(this.state.toon)?<Image
+                    {(this.props.toon.detailToon!==null)?<Image
                         style={styles.coverImage}
-                        source={{uri: `${env.baseUrl}/${this.state.toon.image}`}} />: <View />}
+                        source={{uri: `${env.baseUrl}/${this.props.toon.detailToon.image}`}} />: <View />}
                     <CardItem>
                         <Body>
                             <FlatList style={{marginTop: 30}}
-                                data={this.state.episodes}
+                                data={this.props.toon.episodeToon}
                                 renderItem={({ item }) => 
                                 <View style={styles.listItem}>
                                     <TouchableOpacity style={styles.buttonImage} onPress={this.onOpenEpisode.bind(this, item.id)}>
@@ -108,4 +101,13 @@ const styles = StyleSheet.create({
     headerRightButtonIcon: {color: '#3498db'}
   });
 
-export default DetailTitleScreen;
+const mapStateToProps = (state) => ({
+    toon: state.toon
+})
+
+const mapDispatchToProps = {
+    fetchDetailToon: Toon.detail,
+    fetchEpisodeToon: Toon.episodeList
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailTitleScreen);

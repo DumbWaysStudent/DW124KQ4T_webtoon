@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Container, Content, CardItem, Icon, Input, Item, Button } from "native-base";
+import { View, Container, Content, CardItem, Icon, Input, Item, Button, Header, Body, Left, Right, Title } from "native-base";
 import { Image, TouchableOpacity, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 
@@ -22,19 +22,6 @@ const options = {
 
   
 class EditProfileScreen extends React.Component{
-
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerRight: (
-            <Button transparent
-              onPress={() => {
-                  navigation.navigate("Profile")
-                  }}>
-                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
-            </Button>
-          )
-        };
-    }
 
     constructor(props){
         super(props);
@@ -94,7 +81,23 @@ class EditProfileScreen extends React.Component{
     
     render() {
         return (
-            <Container>
+            <Container style={{paddingTop: 25}}>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>Edit Profile</Title>
+                    </Body>
+                    <Right>
+                      <Button transparent
+                        onPress={() => this.props.navigation.navigate("Profile") }>
+                          <Icon name="check" type="FontAwesome" style={styles.headerRightButtonIcon} />
+                      </Button>
+                    </Right>
+                </Header>
                 <Content>
                         <CardItem>
                             <TouchableOpacity onPress={this.handleChangeAvatar} style={styles.button}>

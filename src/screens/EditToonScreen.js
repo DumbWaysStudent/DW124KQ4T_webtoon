@@ -1,41 +1,21 @@
 import React from "react";
-import { View, Text, Container, Content, CardItem, Body, Button, Item, Input, Icon } from "native-base";
+import { View, Text, Container, Content, CardItem, Body, Button, Item, Input, Icon, Header, Title, Right, Left } from "native-base";
 import { FlatList, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { saveNewToon, saveToon, saveNewEpisode } from "../_actions/mytoon"
 
-
+import { connect } from "react-redux";
 import env from '../utils/Env';
 import Toon from '../services/Toon';
 
 
 class EditToonScreen extends React.Component{
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerRight: (
-            <Button transparent
-              onPress={() => {
-                if(navigation.getParam("isReady")){
-                    var submiting = navigation.state.params;
-                    submiting.onEdit = submiting.id;
-                    delete submiting.isReady;
-                    delete submiting.isChanged;
-                    delete submiting.errors;
-                    navigation.navigate("MyCreation", submiting);
-                }
-              }}>
-                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
-            </Button>
-          )
-
-        };
-    }
-
     constructor(props){
         super(props)
         this.state={
             id: null,
             image: null,
-            title: null,
+            title: "",
             episodes: [],
             errors:[],
             isReady: true,
@@ -59,26 +39,6 @@ class EditToonScreen extends React.Component{
     }
 
     async componentDidUpdate(prevProps, prevState){
-        if(prevState.title !== this.state.title){
-            this.props.navigation.setParams({
-                title: this.state.title
-            });
-            
-            this.setState({
-                title: this.state.title
-            });
-        }
-        if(prevState.isChanged === this.state.isChanged){
-            if(this.state.isChanged){
-                this.props.navigation.setParams({
-                    ...this.state
-                })
-                
-                this.setState({
-                    isChanged: false
-                });
-            }
-        }
         if(prevState.episodes === this.state.episodes){
             if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.epsCheck.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
                 await this.onNewEpisode(this.props.navigation.getParam('newEpisode'));
@@ -134,17 +94,17 @@ class EditToonScreen extends React.Component{
         }});
         var form = {
             "title": data.name,
-            "toonId": this.state.id
+            "toonId": this.props.toon.detailToon.id
         }
         for(var i=0;i<data.images.length;i++){
             form["images[]"] = data.images[i].img;
         }
         await Toon.createEpisode(form, 1).then(result=>{
             var item = result.data.data.data;
-            var eps = this.state.episodes;
+            var eps = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeDetail;
             var epsCheck = this.state.epsCheck;
-            epsCheck.unshift(data);
-            eps.unshift(item);
+            epsCheck.push(data);
+            eps.push(item);
 
             this.setState({
                 image: eps[0].image,
@@ -161,29 +121,15 @@ class EditToonScreen extends React.Component{
         });
     }
 
-    onDetail = async (id)=> {
-        var obj1=null;
-        var obj2 = null;
-        await Toon.detail(id).then(result => {
-            var item = result.data.data.data
-            obj1 = {
-                image: item.image,
-                title: item.title,
-                id: item.id
-            };
-            
-        });
-        await Toon.episodeList(id).then(result => {
-            var item = result.data.data.data
-            obj2 = {
-                episodes: item,
-            }
-        });
-        this.setState({...obj1,...obj2,isChanged: true});
+    onDetail = (id)=> {
+        this.setState({ id });
+        this.props.fetchDetailToon(id);
+
+        this.props.fetchEpisodeToon(id);
     }
 
     onAddEpisode = () => {
-        this.props.navigation.navigate("CreateNewEpisode", {edit:this.state.id});
+        this.props.navigation.navigate("CreateNewEpisode", {toonId: this.state.id});
     }
 
     onChangeTitle = (text) => {
@@ -209,7 +155,8 @@ class EditToonScreen extends React.Component{
     }
 
     onDelete = () => {
-        this.props.navigation.navigate("MyCreation", {onDelete:this.state.id})
+        this.props.deleteToon(this.props.auth.data.token, this.props.toon.detailToon.id);
+        this.props.navigation.goBack();
     }
 
     checkError = (json=null) => {
@@ -225,7 +172,7 @@ class EditToonScreen extends React.Component{
             isReady= true;
         }
 
-        var state = {...json, isReady: isReady, isChanged: true}
+        var state = {...json, isReady: isReady}
         this.setState(state);
     }
 
@@ -234,21 +181,75 @@ class EditToonScreen extends React.Component{
         this.props.navigation.navigate("EditEpisode", {edit: item});
     }
 
+    onSubmit = () => {
+        if(this.state.isReady){
+            let image = this.state.image;
+            if(image==null || image == ""){
+                image = this.props.toon.detailToon.image
+            }
+            if((image==null || image == "" ) && typeof this.state.episodes[0]!=="undefined"){
+                image = this.state.episodes[0].image
+            }
+            if((image==null || image == "" ) && typeof this.props.toon.episodeToon[0]!=="undefined"){
+                image = this.props.toon.episodeToon[0].image
+            }
+
+            let title = ((this.state.title=="")?((this.props.toon.detailToon!==null)?this.props.toon.detailToon.title:""):this.state.title);
+            let id = this.props.toon.detailToon.id;
+
+            let save = {
+                id: id,
+                title: title,
+                image: image,
+                isDraft: 0,
+            };
+
+            this.props.updateToon(this.props.auth.data.token,save, id);
+            this.props.navigation.navigate('MyCreation');
+            
+        }
+    }
+    addEpisodeToState = () =>{
+        console.log("==============")
+        let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
+        episodes.push(this.props.mytoon.createEpisodeSuccess);
+        this.props.resetEpisode();
+        this.setState({
+            episodes: [...episodes]
+        });
+    }
     render(){
         return (
-            <Container>
+            <Container style={{paddingTop: 25}}>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>Edit Webtoon</Title>
+                    </Body>
+                    <Right>
+                        <Button transparent
+                        onPress={this.onSubmit}>
+                            <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
+                        </Button>
+                    </Right>
+                </Header>
+                {(this.props.mytoon.createEpisodeSuccess!==null)?<>{this.addEpisodeToState()}</>:<></>}
                 <Content>
                         <CardItem>
                             <Body>
                                 <Item>
-                                    <Input value={this.state.title} onChangeText={this.onChangeTitle} placeholder="Title" />
+                                    <Input value={(this.state.title=="")?((this.props.toon.detailToon!==null)?this.props.toon.detailToon.title:""):this.state.title} onChangeText={this.onChangeTitle} placeholder="Title" />
                                 </Item>
                                 <View  style={styles.labelEpisode}>
                                     <Text>Episode</Text>
                                 </View>
-                                { (this.state.episodes.length>0) ?
+                                { (this.props.toon.episodeToon.length>0) ?
                                 <FlatList
-                                    data={this.state.episodes}
+                                    data={(this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon}
                                     renderItem={({item}) => (
                                         <View style={styles.itemWrap}>
                                             <Image style={styles.itemImage} source={{uri:`${env.baseUrl}/${item.image}`}} />
@@ -267,12 +268,29 @@ class EditToonScreen extends React.Component{
                             </Body>
                         </CardItem>
                 </Content>
-                <Button full style={styles.buttonAddImage} onPress={this.onAddEpisode}>
-                    <Text>Add Episode</Text>
-                </Button>
-                <Button full danger onPress={this.onDelete}>
-                    <Text>Delete</Text>
-                </Button>
+                {
+                    (this.props.toon.isDetailToonLoading)?
+                    <Button disabled full>
+                        <Text>Add Episode</Text>
+                    </Button>
+                    :
+                    <Button full style={styles.buttonAddImage} onPress={this.onAddEpisode}>
+                        <Text>Add Episode</Text>
+                    </Button>
+                }
+
+                {
+                    (this.props.toon.isDetailToonLoading)?
+                    <Button disabled full>
+                        <Text>Delete</Text>
+                    </Button>
+                    :
+                    <Button full danger onPress={this.onDelete}>
+                        <Text>Delete</Text>
+                    </Button>
+                }
+                
+                
             </Container>
         );
     }
@@ -288,4 +306,20 @@ const styles = StyleSheet.create({
     headerRightButtonIcon: {color:'#3498db'}
 });
 
-export default EditToonScreen;
+const mapStateToProps = (state)=>{
+    return {
+    mytoon: state.mytoon,
+    toon: state.toon,
+    auth: state.auth
+}}
+
+const mapDispatchToProps = {
+    fetchDetailToon: Toon.detail,
+    fetchEpisodeToon: Toon.episodeList,
+    updateToon: Toon.update,
+    deleteToon: Toon.delete,
+    resetEpisode: Toon.resetCreateEpisode
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditToonScreen);

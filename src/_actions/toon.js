@@ -1,21 +1,119 @@
-
-export const saveBanner = (data) => {
-    return {
-      type: 'SAVE_BANNER',
-      payload: data
-    }
-  }
-  
-export const saveFavorite = (data) => {
-    return {
-      type: 'SAVE_FAVORITE',
-      payload: data
-    }
-  }
-  
-export const saveAll = (data) => {
+export const getAllToonStarted = () => {
   return {
-    type: 'SAVE_ALL',
+    type: 'GET_ALL_TOON_PENDING',
+  }
+}
+
+export const getAllToonSuccess = (data) => {
+  return {
+    type: 'GET_ALL_TOON_SUCCESS',
+    payload: data
+  }
+}
+
+export const getAllToonFailure = (data) => {
+  return {
+    type: 'GET_ALL_TOON_FAILURE',
+    payload: data
+  }
+}
+
+export const getBannerToonStarted = () => {
+  return {
+    type: 'GET_BANNER_TOON_PENDING',
+  }
+}
+
+export const getBannerToonSuccess = (data) => {
+  return {
+    type: 'GET_BANNER_TOON_SUCCESS',
+    payload: data
+  }
+}
+
+export const getBannerToonFailure = (data) => {
+  return {
+    type: 'GET_BANNER_TOON_FAILURE',
+    payload: data
+  }
+}
+
+export const getFavoriteToonStarted = () => {
+  return {
+    type: 'GET_FAVORITE_TOON_PENDING',
+  }
+}
+
+export const getFavoriteToonSuccess = (data) => {
+  return {
+    type: 'GET_FAVORITE_TOON_SUCCESS',
+    payload: data
+  }
+}
+
+export const getFavoriteToonFailure = (data) => {
+  return {
+    type: 'GET_FAVORITE_TOON_FAILURE',
+    payload: data
+  }
+}
+
+export const getSearchStarted = () => {
+  return {
+    type: 'GET_SEARCH_PENDING',
+  }
+}
+
+export const getSearchSuccess = (data) => {
+  return {
+    type: 'GET_SEARCH_SUCCESS',
+    payload: data
+  }
+}
+
+export const getSearchFailure = (data) => {
+  return {
+    type: 'GET_SEARCH_FAILURE',
+    payload: data
+  }
+}
+
+export const getDetailToonStarted = () => {
+  return {
+    type: 'GET_DETAIL_TOON_PENDING',
+  }
+}
+
+export const getDetailToonSuccess = (data) => {
+  return {
+    type: 'GET_DETAIL_TOON_SUCCESS',
+    payload: data
+  }
+}
+
+export const getDetailToonFailure = (data) => {
+  return {
+    type: 'GET_DETAIL_TOON_FAILURE',
+    payload: data
+  }
+}
+
+export const getEpisodeToonStarted = () => {
+  return {
+    type: 'GET_EPISODE_TOON_PENDING',
+  }
+}
+
+export const getEpisodeToonSuccess = (data) => {
+  return {
+    type: 'GET_EPISODE_TOON_SUCCESS',
+    payload: data
+  }
+}
+
+export const getEpisodeToonFailure = (data) => {
+  return {
+    type: 'GET_EPISODE_TOON_FAILURE',
     payload: data
   }
 }

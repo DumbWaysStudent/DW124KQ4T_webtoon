@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, Container, Content, CardItem, Fab, Icon, Body } from "native-base";
-import { FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, Container, Content, CardItem, Fab, Icon, Body, Header, Left, Button, Title, Right } from "native-base";
+import { FlatList, TouchableOpacity, Image, StyleSheet, RefreshControl } from "react-native";
 import { connect } from "react-redux";
 
 
@@ -12,12 +12,6 @@ import { saveAll, saveBanner } from '../_actions/toon';
 
 class MyCreationScreen extends React.Component{
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-            tabBarVisible: false
-        };
-    }
-
 
     constructor(props){
         super(props);
@@ -27,74 +21,41 @@ class MyCreationScreen extends React.Component{
         }
     }
 
-    async componentDidMount(){
-            await this.onLoad();
+    componentDidMount(){
+            this.onLoad();
     }
 
-    onLoad = async () => {
-        
-        let myToon = [];
-        this.setState({
-            isRefreshing: true
-        });
-        try{
-            myToon = (await Toon.myToon()).data.data.data;
-        }
-        catch(err){
-            console.log(err);
-        }
-
-        this.props.dispatch(saveToon(myToon));
-        this.setState({
-            isRefreshing: false
-        });
+    onLoad = () => {
+        this.props.myToon(this.props.auth.data.token);
     }
 
-    async componentDidUpdate(prevProps, prevState){
-        // if(prevState.items === this.state.items) {
-        //     if(typeof this.props.navigation.state.params !== "undefined"){
-        //         if(this.props.navigation.getParam('isNew') === true){
-        //                 await this.onSubmitNew({
-        //                     image: "",
-        //                     title: this.props.navigation.getParam("title")
-        //                 });
-        //         }
-        //         if(typeof this.props.navigation.getParam('onEdit') !== "undefined"){
-        //             var id = this.props.navigation.getParam('onEdit');
-        //             await this.onSubmitUpdate({
-        //                 title: this.props.navigation.getParam('title'),
-        //                 image: this.props.navigation.getParam('image')
-        //             }, id);
+    componentDidUpdate(prevProps, prevState){
 
-        //         }
+        // if(this.props.mytoon.newToon!=null && this.props.navigation.getParam("isEdit")==null){
+        //     try{
+        //         (await this.onSubmitNew(this.props.mytoon.newToon));
+        //     }
+        //     catch(err){
+        //         console.log(err);
         //     }
         // }
-
-        if(this.props.mytoon.newToon!=null && this.props.navigation.getParam("isEdit")==null){
-            try{
-                (await this.onSubmitNew(this.props.mytoon.newToon));
-            }
-            catch(err){
-                console.log(err);
-            }
-        }
-        if(this.props.mytoon.newToon!=null && this.props.navigation.getParam("isEdit")!=null){
-            try{
-                (await this.onSubmitUpdate(this.props.mytoon.newToon, this.props.mytoon.newToon.id));
-            }
-            catch(err){
-                console.log(err);
-            }
-        }
-        if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
-            var id = this.props.navigation.getParam('onDelete');
-            try{
-                await this.onDelete(id);
-            }
-            catch(err){
-                console.log(err);
-            }
-        }
+        // if(this.props.mytoon.newToon!=null && this.props.navigation.getParam("isEdit")!=null){
+        //     try{
+        //         (await this.onSubmitUpdate(this.props.mytoon.newToon, this.props.mytoon.newToon.id));
+        //     }
+        //     catch(err){
+        //         console.log(err);
+        //     }
+        // }
+        // if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
+        //     var id = this.props.navigation.getParam('onDelete');
+        //     try{
+        //         await this.onDelete(id);
+        //     }
+        //     catch(err){
+        //         console.log(err);
+        //     }
+        // }
     }
 
     onDelete = async (id) => {
@@ -116,6 +77,7 @@ class MyCreationScreen extends React.Component{
 
     onSubmitUpdate = async (data, id) => {
         try{
+            console.log(data);
             let result = (await Toon.update(data, id)).data.data.data;
             let items = this.props.mytoon.toons;
             let index = items.findIndex(item => item.id === id);
@@ -184,13 +146,28 @@ class MyCreationScreen extends React.Component{
 
     render(){
         return (
-            <Container>
-                <Content>
+            <Container style={{paddingTop:25}}>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>My Webtoon</Title>
+                    </Body>
+                    <Right />
+                </Header>
+                <Content
+                    refreshControl={
+                        <RefreshControl
+                        onRefresh={this.onLoad}
+                        refreshing = {this.props.mytoon.isLoading} />
+                    }
+                >
                     <CardItem>
                         <Body style={{flex: 1, flexDirection: "row"}}>
                             <FlatList
-                                onRefresh={this.onLoad}
-                                refreshing = {this.state.isRefreshing}
                                 data = {this.props.mytoon.toons}
                                 keyExtractor = {item => item.id.toString()}
                                 renderItem = {({item})=>(
@@ -238,7 +215,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
     mytoon: state.mytoon,
-    toon: state.toon
+    toon: state.toon,
+    auth: state.auth
 })
 
-export default connect(mapStateToProps)(MyCreationScreen);
+const mapDispatchToProps = {
+    myToon: Toon.myToon
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyCreationScreen);

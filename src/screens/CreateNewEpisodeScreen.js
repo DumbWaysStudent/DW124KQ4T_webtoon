@@ -3,7 +3,7 @@ import { View, Text, Button, Container, Content, CardItem, Body, Item, Icon, Inp
 import { FlatList, Image, Dimensions, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 import { connect } from "react-redux";
-import { saveNewToon, saveToon, saveUpdatedToon, saveNewEpisode } from "../_actions/mytoon";
+import Toon from "../services/Toon";
 
 
 const {width, height} = Dimensions.get('window');
@@ -29,42 +29,20 @@ class CreateNewEpisodeScreen extends React.Component {
             isChanged: false,
             isReady: false,
             errors: [],
-            countMount: 0
+            countMount: 0,
+            id: null,
+            toonId: null
         }
+    }
+
+    componentDidMount(){
+        this.setState({
+            toonId: this.props.navigation.getParam("toonId")
+        })
+        this.props.resetToonTemp();
     }
     
 
-    componentDidMount(){
-        if(this.state.countMount === 0){
-            this.onChangeName("");
-            this.setState({
-                countMount: this.state.countMount+1
-            });
-        }
-        
-        if(this.state.isChanged){
-
-            this.props.navigation.setParams({
-                ...this.state
-            })
-
-            this.setState({
-                isChanged: false
-            });
-        }
-    }
-
-    componentDidUpdate(){
-        if(this.state.isChanged){
-            this.props.navigation.setParams({
-                ...this.state
-            })
-            
-            this.setState({
-                isChanged: false
-            });
-        }
-    }
 
     onChangeName = (text) => {
         var error = [];
@@ -145,25 +123,27 @@ class CreateNewEpisodeScreen extends React.Component {
 
     onBackSubmit = () => {
         if(this.state.isReady){
+            console.log("---------------------")
+            console.log("clicked");
+            console.log(this.props.navigation.getParam("isNew"));
             let data = {
                 title: this.state.inputName,
-                images: this.state.images,
-                time: (new Date).getTime()
+                "images[]": [],
+                toonId: this.state.toonId
             }
-            this.props.dispatch(saveNewEpisode(data));
-            if(typeof this.props.navigation.getParam("isNew") !== "undefined"){
-                this.props.navigation.navigate("CreateNew");
+            for(let i=0;i<this.state.images.length; i++){
+                data["images[]"].push(this.state.images[i].img);
             }
-            else{
-                this.props.navigation.navigation("EditToon");
-
-            }
+            this.props.createEpisode(this.props.auth.data.token, data, this.state.toonId);
+            this.props.navigation.goBack();
         }
     }
 
+   
+
     render(){
         return (
-            <Container>
+            <Container  style={{paddingTop: 25}}>
                 <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
                     <Left>
                         <Button transparent onPress={()=>this.props.navigation.goBack()}>
@@ -233,10 +213,16 @@ const styles = StyleSheet.create({
     
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state)=>{
     return {
-        mytoon: state.mytoon
-    }
+    mytoon: state.mytoon,
+    toon: state.toon,
+    auth: state.auth
+}}
+
+const mapDispatchToProps = {
+    createEpisode: Toon.createEpisode,
+    resetToonTemp: Toon.resetToonTemp
 }
 
-export default connect(mapStateToProps)(CreateNewEpisodeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateNewEpisodeScreen);

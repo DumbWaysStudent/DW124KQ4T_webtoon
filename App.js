@@ -47,16 +47,16 @@ const ForYouStack = createStackNavigator({
   DetailTitle: {
     screen:DetailTitleScreen,
     navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
+      headerTransparent: true,
+      headerLeft: null
       
     }
   },
   DetailEpisode:{
     screen:DetailEpisodeScreen,
     navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
+      headerTransparent: true,
+      headerLeft: null
       
     }
   }
@@ -66,22 +66,23 @@ const FavoriteStack = createStackNavigator({
   Favorite: {
     screen: FavoriteScreen,
     navigationOptions:{
-      headerTransparent: true
+      headerTransparent: true,
+      headerLeft: null
     }
   },
   DetailTitle: {
     screen:DetailTitleScreen,
     navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
+      headerTransparent: true,
+      headerLeft: null
       
     }
   },
   DetailEpisode:{
     screen:DetailEpisodeScreen,
     navigationOptions:{
-      gesturesEnabled: false,
-      tabBarVisible: false
+      headerTransparent: true,
+      headerLeft: null
       
     }
   }
@@ -108,20 +109,22 @@ const MainNavigator = createAppContainer(createStackNavigator({
       Profile: {
         screen: ProfileScreen,
         navigationOptions:{
-          title:"Profile",
+          headerTransparent: true,
           headerLeft: null
         }
       },
       EditProfile:{
         screen: EditProfileScreen,
         navigationOptions:{
-          title: "Edit Profile"
+          headerTransparent: true,
+          headerLeft: null
         }
       },
       MyCreation: {
         screen: MyCreationScreen,
         navigationOptions:{
-          title: "My Webtoon"
+          headerTransparent: true,
+          headerLeft: null
         }
       },
       CreateNew: {
@@ -134,7 +137,8 @@ const MainNavigator = createAppContainer(createStackNavigator({
       EditToon: {
         screen: EditToonScreen,
         navigationOptions: {
-          title: "Edit Webtoon"
+          headerTransparent: true,
+          headerLeft: null
         }
       },
       EditEpisode: {
@@ -153,16 +157,16 @@ const MainNavigator = createAppContainer(createStackNavigator({
       DetailTitle: {
         screen:DetailTitleScreen,
         navigationOptions:{
-          gesturesEnabled: false,
-          tabBarVisible: false
+          headerTransparent: true,
+          headerLeft: null
           
         }
       },
       DetailEpisode:{
         screen:DetailEpisodeScreen,
         navigationOptions:{
-          gesturesEnabled: false,
-          tabBarVisible: false
+          headerTransparent: true,
+          headerLeft: null
           
         }
       }

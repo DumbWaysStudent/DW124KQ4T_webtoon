@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View } from 'native-base';
+import { Container, Content, CardItem, Body, Button, Text, H1, Icon, List, ListItem, View, Header, Right, Title } from 'native-base';
 import { Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -12,18 +12,6 @@ import Layout from '../layouts/Layout';
 
 
 class ProfileScreen extends React.Component {
-
-    static navigationOptions = ({ navigation }) => {
-      return {
-        headerRight: (
-          <Button transparent
-            onPress={() => navigation.navigate("EditProfile") }>
-                <Icon name="pencil" type="FontAwesome" style={styles.headerRightButtonIcon} />
-            </Button>
-        ),
-        tabBarVisible: false
-      };
-  }
 
     constructor(props){
         super(props);
@@ -75,6 +63,17 @@ class ProfileScreen extends React.Component {
   render() {
     return (
       <Layout screen={"ProfileScreen"} navigation={this.props.navigation}>
+          <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+              <Body>
+                  <Title style={{color:"#000"}}>Profile</Title>
+              </Body>
+              <Right>
+                <Button transparent
+                  onPress={() => this.props.navigation.navigate("EditProfile") }>
+                    <Icon name="pencil" type="FontAwesome" style={styles.headerRightButtonIcon} />
+                </Button>
+              </Right>
+          </Header>
           <Content>
               <CardItem>
                 <Body style={styles.imageWrap}>

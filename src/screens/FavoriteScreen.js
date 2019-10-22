@@ -1,19 +1,18 @@
 import React from 'react';
-import { Container, Content, Item, Input, CardItem, Body, Button, Icon } from 'native-base';
+import { Content, Item, Input, CardItem, Body, Button, Icon } from 'native-base';
 import { StyleSheet } from 'react-native';
 
 
-import axios from "../utils/Api";
 import { connect } from 'react-redux'
 
 
 import Toon from '../services/Toon';
-import { saveFavorite } from '../_actions/toon';
 
 
 import Layout from '../layouts/Layout';
 import MyFavoriteCompnent from '../components/MyFavoriteComponent';
 import SearchComponent from '../components/SearchComponent';
+import { Text } from 'react-native-paper';
 
 
 class FavoriteScreen extends React.Component {
@@ -21,22 +20,12 @@ class FavoriteScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          keyword: "",
-          searchResult: []
+          keyword: ""
         }
     }
 
-    async componentDidMount(){
-      var favorites = [];
-
-      try{
-        favorites = (await Toon.favorite()).data.data.data
-      }
-      catch(err){
-        console.log(err);
-      }
-
-      this.props.dispatch(saveFavorite(favorites));
+    componentDidMount(){
+      this.props.fetchFavorite(this.props.auth.data.token);
     }
 
 
@@ -50,20 +39,7 @@ class FavoriteScreen extends React.Component {
           keyword: text
       });
   
-      await axios({
-          method: 'GET',
-          headers: {
-              'content-type': 'application/json',
-              "authorization": `Bearer ${this.state.token}`
-          },
-          url: `/toons/search/${text}`
-      }).then(result => {
-          // this.setState({
-          //     toons: result.data.data.data
-          // })
-          this.setState({searchResult: result.data.data.data});
-          
-      })
+      this.props.fetchSearch(this.props.auth.data.token, text);
     }
 
     
@@ -80,8 +56,11 @@ class FavoriteScreen extends React.Component {
                           <Icon style={styles.iconSearch} type="FontAwesome" name="search" />
                       </Button>
                   </Item>
-                  { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.state.searchResult} />) :
-                  <MyFavoriteCompnent items={this.props.toon.favorites} onDetailTitle={this.onDetailTitle} />
+                  { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.props.toon.searchResult} />) :
+                  <>
+                    {(this.props.toon.isFavoriteLoading)?<Text>Loading ...</Text>:<MyFavoriteCompnent items={this.props.toon.favorites} onDetailTitle={this.onDetailTitle} />}
+                  </>
+                  
                   }
                 </Body>
               </CardItem>
@@ -98,8 +77,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-      toon: state.toon
+      toon: state.toon,
+      auth: state.auth
   }
 }
 
-export default connect(mapStateToProps)(FavoriteScreen);
+const mapDispatchToProps = {
+  fetchFavorite: Toon.favorite,
+  fetchSearch: Toon.search
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FavoriteScreen);
