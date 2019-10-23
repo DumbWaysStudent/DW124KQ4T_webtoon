@@ -1,6 +1,6 @@
 import { AsyncStorage } from "react-native";
 import axios from "../utils/Api";
-import { loginStarted, loginSuccess, loginFailure, resetAuth, registerAuthStarted, registerAuthSuccess, registerAuthFailure } from "../_actions/auth"
+import { loginStarted, loginSuccess, loginFailure, resetAuth, registerAuthStarted, registerAuthSuccess, registerAuthFailure, changePhotoStarted, changePhotoSuccess, changePhotoFailure, changePhotoReset } from "../_actions/auth"
 
 class Auth {
     save = async (data) => {
@@ -37,20 +37,37 @@ class Auth {
         await AsyncStorage.setItem(`authUser.${key}`, data);
     }
 
-    changePhoto = async (data) => {
+    changePhoto = (token, data) => {
         var formdata = new FormData;
-        var token = await this.fetch("token")
         for(var key in data){
             formdata.append(key, data[key]);
         }
-        return axios({
-            method: 'POST',
-            headers: { 'content-type': 'multipart/form-data',
-                "authorization": `Bearer ${token}`
-            },
-            data: formdata,          
-            url: `/auth/change-photo`
-        });
+        return dispatch => {
+            dispatch(changePhotoStarted());
+            axios({
+                method: 'POST',
+                headers: { 'content-type': 'multipart/form-data',
+                    "authorization": `Bearer ${token}`
+                },
+                data: formdata,          
+                url: `/auth/change-photo`
+            }).then(result=>{
+                dispatch(changePhotoSuccess(`storage/${result.data.data.data}`));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(changePhotoFailure(err.response));
+                }
+                else{
+                    dispatch(changePhotoFailure(err));
+                }
+            });
+        }
+    }
+
+    resetChangePhoto = () => {
+        return dispatch => {
+            dispatch(changePhotoReset());
+        }
     }
 
     register = (data) => {

@@ -5,7 +5,10 @@ const initialState = {
     data:null,
     loginAuthError: null,
     isRegisterAuthLoading: false,
-    registerAuthError: null
+    registerAuthError: null,
+    isChangePhotoLoading: false,
+    changePhotoSuccess: null,
+    changePhotoError: null
 }
 
 const auth = (state = initialState, action) => {
@@ -74,6 +77,36 @@ const auth = (state = initialState, action) => {
             data: null,
             loginAuthError: null
           } 
+      case 'CHANGE_PHOTO_STARTED':
+        return{
+          ...state,
+          isChangePhotoLoading: true,
+          changePhotoSuccess: null,
+          changePhotoError: null
+        }
+      case 'CHANGE_PHOTO_SUCCESS':
+        state.data.image = action.payload;
+        return{
+          ...state,
+          isChangePhotoLoading: false,
+          changePhotoSuccess: action.payload,
+          changePhotoError: null,
+          data: state.data
+        }
+      case 'CHANGE_PHOTO_FAILURE':
+        return{
+          ...state,
+          isChangePhotoLoading: false,
+          changePhotoSuccess: null,
+          changePhotoError: action.payload
+        }
+      case 'RESET_CHANGE_PHOTO':
+        return{
+          ...state,
+          isChangePhotoLoading: false,
+          changePhotoSuccess: null,
+          changePhotoError: null
+        }
       default:
         return state;
     }

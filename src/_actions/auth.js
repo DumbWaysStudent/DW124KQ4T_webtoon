@@ -51,3 +51,25 @@ export const resetAuth = () => {
     type: 'RESET_AUTH'
   }
 }
+export const changePhotoStarted = () =>{
+  return {
+    type: 'CHANGE_PHOTO_STARTED'
+  }
+}
+export const changePhotoSuccess = (data) =>{
+  return {
+    type: 'CHANGE_PHOTO_SUCCESS',
+    payload: data
+  }
+}
+export const changePhotoFailure = (data) =>{
+  return {
+    type: 'CHANGE_PHOTO_FAILURE',
+    payload: data
+  }
+}
+export const changePhotoReset = () =>{
+  return {
+    type: 'RESET_CHANGE_PHOTO',
+  }
+}

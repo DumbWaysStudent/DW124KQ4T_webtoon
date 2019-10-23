@@ -63,20 +63,14 @@ class EditProfileScreen extends React.Component{
                     name: response.fileName
                   }
                 }
-                try{
-                  const img = await Auth.changePhoto(data);
-                  Auth.update(`storage/${img.data.data.data}`,"image");
-                  let user = this.props.auth.data;
-                  user.image = `storage/${img.data.data.data}`;
-                  this.props.dispatch(saveAuth(user));
-                }
-                catch(err){
-                  console.log("========");
-                  console.log(err);
-                  console.log(err.response);
-                }
+                this.props.changePhoto(this.props.auth.data.token, data);
             }
         });
+    }
+
+    successChangePhoto = ()=>{
+      Auth.update(`${this.props.auth.data.image}`,"image");
+      this.props.resetChangePhoto();
     }
     
     render() {
@@ -98,6 +92,7 @@ class EditProfileScreen extends React.Component{
                       </Button>
                     </Right>
                 </Header>
+                {(this.props.auth.isChangePhotoLoading===false && this.props.auth.changePhotoSuccess)?<>{this.successChangePhoto()}</>:<></>}
                 <Content>
                         <CardItem>
                             <TouchableOpacity onPress={this.handleChangeAvatar} style={styles.button}>
@@ -133,5 +128,9 @@ const mapStateToProps = (state) => {
     auth: state.auth
   }
 }
+const mapDispatchToProps = {
+  changePhoto: Auth.changePhoto,
+  resetChangePhoto: Auth.resetChangePhoto
+};
 
-export default connect(mapStateToProps)(EditProfileScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfileScreen);
