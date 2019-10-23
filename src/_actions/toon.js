@@ -144,3 +144,10 @@ export const addImageToEpisode = (data) => {
     payload: data
   }
 }
+
+export const deleteImageFromEpisode = (data) => {
+  return {
+    type: 'DELETE_IMAGE_FROM_EPISODE',
+    payload: data
+  }
+}

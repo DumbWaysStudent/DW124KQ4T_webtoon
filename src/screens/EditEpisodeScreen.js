@@ -109,13 +109,7 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteImage = (id) => {
-        Toon.deleteEpisodeImage(1,id).then(result=>{
-            var images = this.state.images.filter((item)=>item.id!==id);
-            this.setState({
-                images:images
-            });
-        });
-        
+        this.props.deleteEpisodeImage(this.props.auth.data.token, 1, id);
     }
 
     onDeleteEps = ()=>{
@@ -132,6 +126,11 @@ class EditEpisodeScreen extends React.Component {
             this.props.updateEpisode(this.props.auth.data.token, {title:this.state.inputName}, 1, this.state.id);
             this.props.navigation.goBack();
         }
+    }
+
+    successDeleteImage = () => {
+        console.log("============== succcess delete ", this.props.mytoon.deleteEpisodeImageSuccess);
+        this.props.deleteImageFromEpisode(this.props.mytoon.deleteEpisodeImageSuccess);
     }
 
     render(){
@@ -163,6 +162,7 @@ class EditEpisodeScreen extends React.Component {
                 :
                 <></>
                 }
+                {(this.props.mytoon.isDeleteEpisodeImageLoading===false && this.props.mytoon.deleteEpisodeImageSuccess)?<>{this.successDeleteImage()}</>:<></>}
                 <Content>
                         <CardItem>
                             <Body>
@@ -229,7 +229,9 @@ const mapDispatchToProps = {
     uploadImageEpisode: Toon.uploadEpisodeImage,
     addImageToEpisode: Toon.addImageToEpisode,
     updateEpisode: Toon.updateEpisode,
-    deleteEpisode: Toon.deleteEpisode
+    deleteEpisode: Toon.deleteEpisode,
+    deleteEpisodeImage: Toon.deleteEpisodeImage,
+    deleteImageFromEpisode: Toon.deleteImageFromEpisode
 }
 
 

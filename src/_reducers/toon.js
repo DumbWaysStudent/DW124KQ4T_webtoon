@@ -170,6 +170,14 @@ const toon = (state = initialState, action) => {
             ...state,
             imageEpisode
         }
+    case 'DELETE_IMAGE_FROM_EPISODE':
+        if(imageEpisode!=null){
+                imageEpisode.images = imageEpisode.images.filter((item)=>item.id!==action.payload);
+            }
+        return {
+            ...state,
+            imageEpisode
+        }
     default:
         return state;
     }

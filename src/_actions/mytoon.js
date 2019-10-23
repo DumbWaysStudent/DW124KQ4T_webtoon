@@ -177,3 +177,26 @@ export const resetDeleteEpisodeSuccess = () => {
     type: 'RESET_DELETE_EPISODE_SUCCESS'
   }
 }
+
+export const deleteEpisodeImageStarted = () => {
+  return {
+    type: 'DELETE_EPISODE_IMAGE_STARTED'
+  }
+}
+export const deleteEpisodeImageSuccess = (data) => {
+  return {
+    type: 'DELETE_EPISODE_IMAGE_SUCCESS',
+    payload: data
+  }
+}
+export const deleteEpisodeImageFailure = (data) => {
+  return {
+    type: 'DELETE_EPISODE_IMAGE_FAILURE',
+    payload: data
+  }
+}
+export const resetDeleteEpisodeImageSuccess = () => {
+  return {
+    type: 'RESET_DELETE_EPISODE_IMAGE_SUCCESS'
+  }
+}

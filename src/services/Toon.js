@@ -1,8 +1,8 @@
 import axios from "../utils/Api";
 import Auth from './Auth';
-import { getAllToonStarted, getAllToonSuccess, getAllToonFailure, getBannerToonStarted, getBannerToonSuccess, getBannerToonFailure, getFavoriteToonStarted, getFavoriteToonSuccess, getFavoriteToonFailure, getSearchStarted, getSearchSuccess, getDetailToonStarted, getDetailToonSuccess, getDetailToonFailure, getEpisodeToonStarted, getEpisodeToonSuccess, getEpisodeToonFailure,getImageEpisodeStarted, getImageEpisodeSuccess, getImageEpisodeFailure, addImageToEpisode } from '../_actions/toon';
+import { getAllToonStarted, getAllToonSuccess, getAllToonFailure, getBannerToonStarted, getBannerToonSuccess, getBannerToonFailure, getFavoriteToonStarted, getFavoriteToonSuccess, getFavoriteToonFailure, getSearchStarted, getSearchSuccess, getDetailToonStarted, getDetailToonSuccess, getDetailToonFailure, getEpisodeToonStarted, getEpisodeToonSuccess, getEpisodeToonFailure,getImageEpisodeStarted, getImageEpisodeSuccess, getImageEpisodeFailure, addImageToEpisode, deleteImageFromEpisode } from '../_actions/toon';
 
-import { getMyToonStarted, getMyToonSuccess, getMyToonFailure, getUpdateToonStarted, getUpdateToonFailure, getUpdateToonSuccess, createToonStarted, createToonSuccess, createToonFailure, createEpisodeStarted, createEpisodeSuccess, resetCreateEpisode, createEpisodeFailure, resetToonTemp, deleteToonStarted, deleteToonSuccess, deleteToonFailure, uploadImageEpisodeSuccess, uploadImageEpisodeStarted, uploadImageEpisodeFailure, resetUploadImageEpisodeSuccess, updateEpisodeStarted, updateEpisodeSuccess, updateEpisodeFailure, deleteEpisodeStarted, deleteEpisodeSuccess, deleteEpisodeFailure, resetDeleteEpisodeSuccess } from '../_actions/mytoon'
+import { getMyToonStarted, getMyToonSuccess, getMyToonFailure, getUpdateToonStarted, getUpdateToonFailure, getUpdateToonSuccess, createToonStarted, createToonSuccess, createToonFailure, createEpisodeStarted, createEpisodeSuccess, resetCreateEpisode, createEpisodeFailure, resetToonTemp, deleteToonStarted, deleteToonSuccess, deleteToonFailure, uploadImageEpisodeSuccess, uploadImageEpisodeStarted, uploadImageEpisodeFailure, resetUploadImageEpisodeSuccess, updateEpisodeStarted, updateEpisodeSuccess, updateEpisodeFailure, deleteEpisodeStarted, deleteEpisodeSuccess, deleteEpisodeFailure, resetDeleteEpisodeSuccess, deleteEpisodeImageStarted, deleteEpisodeImageSuccess, deleteEpisodeImageFailure, resetDeleteEpisodeImageSuccess } from '../_actions/mytoon'
 
 
 class Toon{
@@ -404,16 +404,35 @@ class Toon{
         }
     }
 
-    deleteEpisodeImage = async (toonId, id) => {
-        var token = await Auth.fetch(`token`);
-        return axios({
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },        
-            url: `/toon/${toonId}/episode/delete-image/${id}`
-        });
+    deleteEpisodeImage = (token, toonId, id) => {
+        return dispatch=> {
+            dispatch(deleteEpisodeImageStarted());
+            axios({
+                method: 'DELETE',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                },        
+                url: `/toon/${toonId}/episode/delete-image/${id}`
+            }).then(result=>{
+                dispatch(deleteEpisodeImageSuccess(id));
+            }).catch(err=>{
+                console.log("====== errror delete");
+                console.log(err);
+                if(typeof err.response !== "undefined"){
+                    dispatch(deleteEpisodeImageFailure(err.response));
+                }
+                else{
+                    dispatch(deleteEpisodeImageFailure(err));
+                }
+            });
+        }
+    }
+    deleteImageFromEpisode = (data) => {
+        return dispatch=>{
+            dispatch(deleteImageFromEpisode(data));
+            dispatch(resetDeleteEpisodeImageSuccess());
+        }
     }
 }
 

@@ -20,7 +20,10 @@ const initialState = {
     updateEpisodeError: null,
     isDeleteEpisodeLoading: false,
     deleteEpisodeSuccess: null,
-    deleteEpisodeError: null
+    deleteEpisodeError: null,
+    isDeleteEpisodeImageLoading: false,
+    deleteEpisodeImageSuccess: null,
+    deleteEpisodeImageError: null
 }
 
 const mytoon = (state = initialState, action) => {
@@ -238,7 +241,36 @@ const mytoon = (state = initialState, action) => {
             isDeleteEpisodeLoading: false,
             deleteEpisodeSuccess: null,
             deleteEpisodeError: null
-        }  
+        } 
+    
+    case 'DELETE_EPISODE_IMAGE_STARTED':
+        return {
+            ...state,
+            isDeleteEpisodeImageLoading: true,
+            deleteEpisodeImageSuccess: null,
+            deleteEpisodeImageError: null
+        }
+    case 'DELETE_EPISODE_IMAGE_SUCCESS':
+        return {
+            ...state,
+            isDeleteEpisodeImageLoading: false,
+            deleteEpisodeImageSuccess: action.payload,
+            deleteEpisodeImageError: null
+        }
+    case 'DELETE_EPISODE_IMAGE_FAILURE':
+        return {
+            ...state,
+            isDeleteEpisodeImageLoading: false,
+            deleteEpisodeImageSuccess: null,
+            deleteEpisodeImageError: null
+        }
+    case 'RESET_DELETE_EPISODE_IMAGE_SUCCESS':
+        return {
+            ...state,
+            isDeleteEpisodeImageLoading: false,
+            deleteEpisodeImageSuccess: null,
+            deleteEpisodeImageError: action.payload
+        }
         
     default:
         return state;
