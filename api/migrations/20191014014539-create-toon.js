@@ -32,6 +32,10 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('toons');
+    return queryInterface.sequelize.transaction((t) => {
+      return Promise.all([
+          queryInterface.dropTable('toons')
+      ])
+    })
   }
 };

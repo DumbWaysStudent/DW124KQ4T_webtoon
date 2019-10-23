@@ -39,6 +39,10 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('favorites');
+    return queryInterface.sequelize.transaction((t) => {
+      return Promise.all([
+          queryInterface.dropTable('favorites')
+      ])
+    })
   }
 };

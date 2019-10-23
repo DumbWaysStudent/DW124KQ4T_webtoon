@@ -104,8 +104,15 @@ ToonEpisodeController.prototype = {
                     id: req.params.id
                 }
             });
+            let data=null;
+            await Episode.findOne({
+                where: {
+                    id: req.params.id
+                }
+            }).then(result=> data = result);
             return res.status(200).json({
-                msg: "Success"
+                msg: "Success",
+                data: {data}
             });
         }
     },

@@ -3,7 +3,7 @@ const express = require('express');
 require('express-group-routes');
 
 const app = express();
-const port = 3000;
+const port = Number(process.env.PORT || 3000);
 
 //controllers
 const ApiRoutes = require('./app/routes/api.js');
