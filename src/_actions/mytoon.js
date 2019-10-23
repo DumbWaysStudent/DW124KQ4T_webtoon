@@ -108,3 +108,72 @@ export const deleteToonFailure = (data) => {
     payload: data
   }
 }
+
+export const uploadImageEpisodeStarted = () => {
+  return {
+    type: 'UPLOAD_IMAGE_EPISODE_STARTED'
+  }
+}
+
+export const uploadImageEpisodeSuccess = (data) => {
+  return {
+    type: 'UPLOAD_IMAGE_EPISODE_SUCCESS',
+    payload:data
+  }
+}
+
+export const uploadImageEpisodeFailure = (data) => {
+  return {
+    type: 'UPLOAD_IMAGE_EPISODE_FAILURE',
+    payload:data
+  }
+}
+
+export const resetUploadImageEpisodeSuccess = () => {
+  return {
+    type: 'RESET_UPLOAD_IMAGE_EPISODE_SUCCESS'
+  }
+}
+
+export const updateEpisodeStarted = () => {
+  return {
+    type: 'UPDATE_EPISODE_STARTED'
+  }
+}
+
+export const updateEpisodeSuccess = (data) => {
+  return {
+    type: 'UPDATE_EPISODE_SUCCESS',
+    payload: data
+  }
+}
+
+export const updateEpisodeFailure = (data) => {
+  return {
+    type: 'UPDATE_EPISODE_FAILURE',
+    payload: data
+  }
+}
+
+export const deleteEpisodeStarted = () => {
+  return {
+    type: 'DELETE_EPISODE_STARTED'
+  }
+}
+export const deleteEpisodeSuccess = (data) => {
+  return {
+    type: 'DELETE_EPISODE_SUCCESS',
+    payload: data
+  }
+}
+export const deleteEpisodeFailure = (data) => {
+  return {
+    type: 'DELETE_EPISODE_FAILURE',
+    payload: data
+  }
+}
+export const resetDeleteEpisodeSuccess = () => {
+  return {
+    type: 'RESET_DELETE_EPISODE_SUCCESS'
+  }
+}

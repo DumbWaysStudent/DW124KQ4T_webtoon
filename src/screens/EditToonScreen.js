@@ -177,7 +177,8 @@ class EditToonScreen extends React.Component{
     }
 
     onEditEpisode = (id) => {
-        var item = this.state.episodes.filter((item)=>item.id===id)[0];
+        let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
+        var item = episodes.filter((item)=>item.id===id)[0];
         this.props.navigation.navigate("EditEpisode", {edit: item});
     }
 
@@ -210,10 +211,27 @@ class EditToonScreen extends React.Component{
         }
     }
     addEpisodeToState = () =>{
-        console.log("==============")
         let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
         episodes.push(this.props.mytoon.createEpisodeSuccess);
         this.props.resetEpisode();
+        this.setState({
+            episodes: [...episodes]
+        });
+    }
+    updateEpisodeState = () => {
+        let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
+        let updatedData = this.props.mytoon.updateEpisodeSuccess;
+        let index = episodes.findIndex(item => item.id === updatedData.id);
+        episodes[index]=updatedData;
+        this.props.resetEpisode();
+        this.setState({
+            episodes: [...episodes]
+        });
+    }
+    deleteEpisodeState = () => {
+        let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
+        episodes = episodes.filter((item)=>item.id!==this.props.mytoon.deleteEpisodeSuccess);
+        this.props.resetDeleteEpisodeSuccess();
         this.setState({
             episodes: [...episodes]
         });
@@ -238,6 +256,8 @@ class EditToonScreen extends React.Component{
                     </Right>
                 </Header>
                 {(this.props.mytoon.createEpisodeSuccess!==null)?<>{this.addEpisodeToState()}</>:<></>}
+                {(this.props.mytoon.updateEpisodeSuccess!==null)?<>{this.updateEpisodeState()}</>:<></>}
+                {(this.props.mytoon.deleteEpisodeSuccess!==null)?<>{this.deleteEpisodeState()}</>:<></>}
                 <Content>
                         <CardItem>
                             <Body>
@@ -318,7 +338,8 @@ const mapDispatchToProps = {
     fetchEpisodeToon: Toon.episodeList,
     updateToon: Toon.update,
     deleteToon: Toon.delete,
-    resetEpisode: Toon.resetCreateEpisode
+    resetEpisode: Toon.resetCreateEpisode,
+    resetDeleteEpisodeSuccess: Toon.resetDeleteEpisodeSuccess
 }
 
 

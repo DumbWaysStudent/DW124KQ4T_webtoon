@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, Container, Content, CardItem, Body, Item, Button, Icon, Input } from "native-base";
+import { View, Text, Container, Content, CardItem, Body, Item, Button, Icon, Input, Header, Title, Left, Right } from "native-base";
 import { FlatList, Image, StyleSheet } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 
+import { connect } from 'react-redux';
 
 import Toon from '../services/Toon';
 import env from '../utils/Env';
@@ -18,30 +19,6 @@ const options = {
 
   
 class EditEpisodeScreen extends React.Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerRight: (
-            <Button transparent
-              onPress={() => {
-                    if(navigation.getParam("isReady")){
-                        var submiting = navigation.state.params;
-                        submiting.name = submiting.inputName;
-                        delete submiting.inputName;
-                        delete submiting.isReady;
-                        delete submiting.isChanged;
-                        delete submiting.errors;
-                        delete submiting.countMount;
-                        // submiting.cover = submiting.images[0].src;
-                        submiting.edit.edit = submiting.edit;
-                        delete submiting.edit;
-                        navigation.navigate("EditToon", {editEpisode: submiting, newEpisode: undefined, onDelete: undefined});
-                    }
-              }}>
-                  <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
-            </Button>
-          )
-        };
-    }
 
     constructor(props){
         super(props);
@@ -60,42 +37,10 @@ class EditEpisodeScreen extends React.Component {
     }
     
 
-    async componentDidMount(){
-        this.onImages();
-        if(this.state.isChanged){
-
-            this.props.navigation.setParams({
-                ...this.state
-            })
-
-            this.setState({
-                isChanged: false
-            });
-        }
+    componentDidMount(){
+        this.props.fetchImageEpisode(1, this.state.id);
     }
 
-    componentDidUpdate(){
-        if(this.state.isChanged){
-            this.props.navigation.setParams({
-                ...this.state
-            })
-            
-            this.setState({
-                isChanged: false
-            });
-        }
-    }
-
-    onImages = async () => {
-        await Toon.episodeDetail(1,this.state.id).then(result => {
-            var episode = result.data.data.data;
-            this.setState({
-                images: [...episode.images]
-            });
-        }).catch(error=>{
-            console.log(error.response);
-        });
-    }
 
     onChangeName = (text) => {
         var error = [];
@@ -139,16 +84,7 @@ class EditEpisodeScreen extends React.Component {
                     name: response.fileName
                   }
               }
-              Toon.uploadEpisodeImage(form, 1, this.state.id).then(result=>{
-                    var images = this.state.images;
-                    images.push(result.data.data.data);
-                    this.setState({
-                        images:images
-                    });
-                    this.checkError();
-                });
-
-              
+              this.props.uploadImageEpisode(this.props.auth.data.token,form, 1, this.state.id);
               
             }
         });
@@ -164,7 +100,7 @@ class EditEpisodeScreen extends React.Component {
 
         var isReady = false
 
-        if(allError.length === 0 && this.state.images.length > 0 ){
+        if(allError.length === 0 && this.props.toon.imageEpisode.images.length > 0 ){
             isReady= true;
         }
 
@@ -183,12 +119,50 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteEps = ()=>{
-        this.props.navigation.navigate("EditToon", {onDelete:this.state.id, editEpisode: undefined, newEpisode: undefined})
+        this.props.deleteEpisode(this.props.auth.data.token, 1, this.state.id);
+        this.props.navigation.goBack();
+    }
+
+    successUploadImage = () => {
+        this.props.addImageToEpisode(this.props.mytoon.uploadImageSuccess)
+    }
+
+    onSubmit = () => {
+        if(this.state.isReady){
+            this.props.updateEpisode(this.props.auth.data.token, {title:this.state.inputName}, 1, this.state.id);
+            this.props.navigation.goBack();
+        }
     }
 
     render(){
         return (
-            <Container>
+            <Container style={{paddingTop: 25}}>
+                <Header style={{backgroundColor:"#fff", borderBottomColor: "#ddd", borderBottomWidth: 4}}>
+                    <Left>
+                        <Button transparent onPress={()=>this.props.navigation.goBack()}>
+                        <Icon name='arrow-back' style={{color: "#3498db"}} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:"#000"}}>Edit Episode</Title>
+                    </Body>
+                    <Right>
+                        <Button transparent onPress={this.onSubmit}>
+                                <Icon style={styles.headerRightButtonIcon} name="check" type="FontAwesome" />
+                        </Button>
+                    </Right>
+                </Header>
+                
+                {(this.props.toon.imageEpisode && this.state.isChanged===false)?
+                    <>{this.checkError()}</>
+                    :
+                    <></>
+                }
+                {(this.props.mytoon.isUploadImageLoading===false && this.props.mytoon.uploadImageSuccess)?
+                <>{this.successUploadImage()}</>
+                :
+                <></>
+                }
                 <Content>
                         <CardItem>
                             <Body>
@@ -198,9 +172,9 @@ class EditEpisodeScreen extends React.Component {
                                 <View style={styles.imageLabel}>
                                     <Text>Images</Text>
                                 </View>
-                                {(this.state.images.length > 0) ? 
+                                {(!this.props.toon.isImageEpisodeLoading) ? 
                                 <FlatList
-                                    data={this.state.images}
+                                    data={(this.props.toon.imageEpisode)?this.props.toon.imageEpisode.images:[]}
                                     renderItem={({item}) => (
                                         
                                         <View style={styles.itemWrap}>
@@ -243,4 +217,20 @@ const styles = StyleSheet.create({
     headerRightButtonIcon: {color:'#3498db'}
 });
 
-export default EditEpisodeScreen;
+const mapStateToProps = (state)=>{
+    return {
+    mytoon: state.mytoon,
+    toon: state.toon,
+    auth: state.auth
+}}
+
+const mapDispatchToProps = {
+    fetchImageEpisode: Toon.episodeDetail,
+    uploadImageEpisode: Toon.uploadEpisodeImage,
+    addImageToEpisode: Toon.addImageToEpisode,
+    updateEpisode: Toon.updateEpisode,
+    deleteEpisode: Toon.deleteEpisode
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditEpisodeScreen);

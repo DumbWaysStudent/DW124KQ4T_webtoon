@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container, Content, Button, Icon, View, Header, Left, Title, Right, Body } from 'native-base';
+import { Container, Content, Button, Icon, View, Header, Left, Title, Right, Body, Text } from 'native-base';
 import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
 
-
+import {connect} from 'react-redux';
 import env from '../utils/Env';
 import Toon from '../services/Toon';
 
@@ -15,25 +15,35 @@ class DetailEpisodeScreen extends React.Component {
         super(props);
         this.state = {
             countMount: 0,
-            episode: null
+            episode: null,
+            images: []
         }
     }
 
     async componentDidMount(){
-        await Toon.episodeDetail(1, this.props.navigation.getParam("id")).then(async result => {
-            var episode = result.data.data.data;
-            for(var i =0;i<episode.images.length;i++){
-                await Image.getSize(`${env.baseUrl}/${episode.images[i].url}`, (w, h) => {
-                    var wi = width*(100/100);
-                    episode.images[i].width=wi;
-                    episode.images[i].height=h*(wi/w);
+        this.props.fetchDetailEpisode(1, this.props.navigation.getParam("id"), width);
+
+    }
+    handleSize = (images) =>{
+        images.map((item,i)=>{
+            let index = this.state.images.findIndex(a => a.id === item.id);
+
+            if(index<0){
+                Image.getSize(`${env.baseUrl}/${item.url}`, (w, h) => {
+
+                    
+                    let newData = item;
+                    newData.width=width;
+                    newData.height=h*(width/w);
+                    let ntap = this.state.images;
+                    ntap.push(newData);
+                    this.setState({
+                        images: ntap
+                    });
                 });
             }
-            this.setState({
-                episode: result.data.data.data
-            })
-            this.props.navigation.setParams({title:this.state.episode.title});
         });
+        
     }
     render(){
         return (
@@ -45,7 +55,7 @@ class DetailEpisodeScreen extends React.Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title style={{color:"#000"}}>{this.props.navigation.getParam('title')}</Title>
+                        <Title style={{color:"#000"}}>{(this.props.toon.imageEpisode)?this.props.toon.imageEpisode.title:""}</Title>
                     </Body>
                     <Right>
                         <Button transparent
@@ -60,17 +70,19 @@ class DetailEpisodeScreen extends React.Component {
                         </Button>
                     </Right>
                 </Header>
+                {(this.props.toon.imageEpisode)?<>{this.handleSize(this.props.toon.imageEpisode.images)}</>:<></>}
                 <Content>
-                                {this.state.episode ?
+                                {!this.props.toon.isImageEpisodeLoading ?
                                     <FlatList
-                                        data={this.state.episode.images}
-                                        renderItem={({ item }) => 
+                                        data={(this.props.toon.imageEpisode)?this.state.images:[]}
+                                        renderItem={({ item }) => <>
                                             <Image style={{width:item.width, height: item.height}}
                                                 source={{uri: `${env.baseUrl}/${item.url}`}} />
+                                                </>
                                             }
                                         keyExtractor={item => item.id.toString()}
                                     />
-                                : <View /> }
+                                : <Text>Loading ...</Text> }
                     
                 </Content>
             </Container>
@@ -82,4 +94,12 @@ const styles = StyleSheet.create({
     headerRightButtonIcon: {color:'#3498db'}
 });
 
-export default DetailEpisodeScreen;
+const mapStateToProps = (state) => ({
+    toon: state.toon
+})
+
+const mapDispatchToProps = {
+    fetchDetailEpisode: Toon.episodeDetail,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailEpisodeScreen);

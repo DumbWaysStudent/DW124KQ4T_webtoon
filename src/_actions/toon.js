@@ -117,3 +117,30 @@ export const getEpisodeToonFailure = (data) => {
     payload: data
   }
 }
+
+export const getImageEpisodeStarted = () => {
+  return {
+    type: 'GET_IMAGE_EPISODE_STARTED'
+  }
+}
+
+export const getImageEpisodeSuccess = (data) => {
+  return {
+    type: 'GET_IMAGE_EPISODE_SUCCESS',
+    payload: data
+  }
+}
+
+export const getImageEpisodeFailure = (data) => {
+  return {
+    type: 'GET_IMAGE_EPISODE_FAILURE',
+    payload: data
+  }
+}
+
+export const addImageToEpisode = (data) => {
+  return {
+    type: 'ADD_IMAGE_TO_EPISODE',
+    payload: data
+  }
+}

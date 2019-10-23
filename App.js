@@ -93,14 +93,14 @@ const FavoriteStack = createStackNavigator({
 
 const MainNavigator = createAppContainer(createStackNavigator({
       ForYou: {
-        screen: ForYouStack,
+        screen: ForYouScreen,
         navigationOptions:{
           headerTransparent: true,
           headerLeft: null
         }
       },
       Favorite: {
-          screen: FavoriteStack,
+          screen: FavoriteScreen,
           navigationOptions:{
             headerTransparent: true,
             headerLeft: null
@@ -143,8 +143,9 @@ const MainNavigator = createAppContainer(createStackNavigator({
       },
       EditEpisode: {
         screen:EditEpisodeScreen,
-        navigationOptions:{
-          title: "EditEpisode"
+        navigationOptions: {
+          headerTransparent: true,
+          headerLeft: null
         }
       },
       CreateNewEpisode: {

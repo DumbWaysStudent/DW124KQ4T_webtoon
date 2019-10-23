@@ -12,6 +12,15 @@ const initialState = {
     createEpisodeError: null,
     deleteToonLoading: false,
     deleteToonError: null,
+    isUploadImageLoading: false,
+    uploadImageSuccess: null,
+    uploadImageError: null,
+    isUpdateEpisodeLoading: false,
+    updateEpisodeSuccess: null,
+    updateEpisodeError: null,
+    isDeleteEpisodeLoading: false,
+    deleteEpisodeSuccess: null,
+    deleteEpisodeError: null
 }
 
 const mytoon = (state = initialState, action) => {
@@ -121,7 +130,9 @@ const mytoon = (state = initialState, action) => {
             ...state,
             isCreateEpisodeLoading: false,
             createEpisodeError: null,
-            createEpisodeSuccess: null
+            createEpisodeSuccess: null,
+            updateEpisodeSuccess: null,
+            updateEpisodeError: null
         } 
     case 'RESET_TOON_TEMP':
             return {
@@ -149,6 +160,86 @@ const mytoon = (state = initialState, action) => {
                 deleteToonLoading: false,
                 deleteToonError: action.payload,
             } 
+    case 'UPLOAD_IMAGE_EPISODE_STARTED':
+            return {
+                ...state,
+                isUploadImageLoading: true,
+                uploadImageSuccess: null,
+                uploadImageError: null,
+            } 
+    case 'UPLOAD_IMAGE_EPISODE_SUCCESS':
+            return {
+                ...state,
+                isUploadImageLoading: false,
+                uploadImageSuccess: action.payload,
+                uploadImageError: null,
+            } 
+    case 'UPLOAD_IMAGE_EPISODE_FAILURE':
+            return {
+                ...state,
+                isUploadImageLoading: false,
+                uploadImageSuccess: null,
+                uploadImageError: action.payload,
+            } 
+    case 'RESET_UPLOAD_IMAGE_EPISODE_SUCCESS':
+        return {
+            ...state,
+            isUploadImageLoading: false,
+            uploadImageSuccess: null,
+            uploadImageError: null,
+        }
+    case 'UPDATE_EPISODE_STARTED':
+        return {
+            ...state,
+            isUpdateEpisodeLoading: true,
+            updateEpisodeSuccess: null,
+            updateEpisodeError: null,
+        }
+
+    case 'UPDATE_EPISODE_SUCCESS':
+        return {
+            ...state,
+            isUpdateEpisodeLoading: false,
+            updateEpisodeSuccess: action.payload,
+            updateEpisodeError: null,
+        }
+
+    case 'UPDATE_EPISODE_FAILURE':
+        return {
+            ...state,
+            isUpdateEpisodeLoading: false,
+            updateEpisodeSuccess: null,
+            updateEpisodeError: action.payload,
+        }
+    case 'DELETE_EPISODE_STARTED':
+        return {
+            ...state,
+            isDeleteEpisodeLoading: true,
+            deleteEpisodeSuccess: null,
+            deleteEpisodeError: null
+        }
+    case 'DELETE_EPISODE_SUCCESS':
+        return {
+            ...state,
+            isDeleteEpisodeLoading: false,
+            deleteEpisodeSuccess: action.payload,
+            deleteEpisodeError: null
+        }
+    case 'DELETE_EPISODE_FAILURE':
+        return {
+            ...state,
+            isDeleteEpisodeLoading: false,
+            deleteEpisodeSuccess: null,
+            deleteEpisodeError: action.payload
+        }
+    case 'RESET_DELETE_EPISODE_SUCCESS':
+        return {
+            ...state,
+            isDeleteEpisodeLoading: false,
+            deleteEpisodeSuccess: null,
+            deleteEpisodeError: null
+        }  
+        
     default:
         return state;
     }

@@ -1,8 +1,8 @@
 import axios from "../utils/Api";
 import Auth from './Auth';
-import { getAllToonStarted, getAllToonSuccess, getAllToonFailure, getBannerToonStarted, getBannerToonSuccess, getBannerToonFailure, getFavoriteToonStarted, getFavoriteToonSuccess, getFavoriteToonFailure, getSearchStarted, getSearchSuccess, getDetailToonStarted, getDetailToonSuccess, getDetailToonFailure, getEpisodeToonStarted, getEpisodeToonSuccess, getEpisodeToonFailure } from '../_actions/toon';
+import { getAllToonStarted, getAllToonSuccess, getAllToonFailure, getBannerToonStarted, getBannerToonSuccess, getBannerToonFailure, getFavoriteToonStarted, getFavoriteToonSuccess, getFavoriteToonFailure, getSearchStarted, getSearchSuccess, getDetailToonStarted, getDetailToonSuccess, getDetailToonFailure, getEpisodeToonStarted, getEpisodeToonSuccess, getEpisodeToonFailure,getImageEpisodeStarted, getImageEpisodeSuccess, getImageEpisodeFailure, addImageToEpisode } from '../_actions/toon';
 
-import { getMyToonStarted, getMyToonSuccess, getMyToonFailure, getUpdateToonStarted, getUpdateToonFailure, getUpdateToonSuccess, createToonStarted, createToonSuccess, createToonFailure, createEpisodeStarted, createEpisodeSuccess, resetCreateEpisode, createEpisodeFailure, resetToonTemp, deleteToonStarted, deleteToonSuccess, deleteToonFailure } from '../_actions/mytoon'
+import { getMyToonStarted, getMyToonSuccess, getMyToonFailure, getUpdateToonStarted, getUpdateToonFailure, getUpdateToonSuccess, createToonStarted, createToonSuccess, createToonFailure, createEpisodeStarted, createEpisodeSuccess, resetCreateEpisode, createEpisodeFailure, resetToonTemp, deleteToonStarted, deleteToonSuccess, deleteToonFailure, uploadImageEpisodeSuccess, uploadImageEpisodeStarted, uploadImageEpisodeFailure, resetUploadImageEpisodeSuccess, updateEpisodeStarted, updateEpisodeSuccess, updateEpisodeFailure, deleteEpisodeStarted, deleteEpisodeSuccess, deleteEpisodeFailure, resetDeleteEpisodeSuccess } from '../_actions/mytoon'
 
 
 class Toon{
@@ -145,14 +145,26 @@ class Toon{
         }
     }
 
-    episodeDetail = async (toonId, episodeId) => {
-        return axios({
-            method: 'GET',
-            headers: {
-                'content-type': 'application/json'
-            },
-            url: `/toon/${toonId}/episode/${episodeId}`
-        });
+    episodeDetail = (toonId, episodeId) => {
+        return dispatch => {
+            dispatch(getImageEpisodeStarted());
+            axios({
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                url: `/toon/${toonId}/episode/${episodeId}`
+            }).then(result=>{
+                dispatch(getImageEpisodeSuccess(result.data.data.data));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(getImageEpisodeFailure(err.response));
+                }
+                else{
+                    dispatch(getImageEpisodeFailure(err));
+                }
+            });
+        }
     }
 
     delete = (token, id) => {
@@ -255,30 +267,60 @@ class Toon{
         }
     }
 
-    deleteEpisode = async (toonId, id) => {
-        var token = await Auth.fetch(`token`);
-        return axios({
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },   
-            url: `/toon/${toonId}/episode/${id}`
-        });
+    deleteEpisode = (token, toonId, id) => {
+        return dispatch => {
+            dispatch(deleteEpisodeStarted());
+            axios({
+                method: 'DELETE',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                },   
+                url: `/toon/${toonId}/episode/${id}`
+            }).then(result=>{
+                dispatch(deleteEpisodeSuccess(id));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(deleteEpisodeFailure(err.response));
+                }
+                else{
+                    dispatch(deleteEpisodeFailure(err));
+                }
+            });
+        }
     }
 
-    updateEpisode = async (data, toonId, id) => {
-        var token = await Auth.fetch(`token`);
-        return axios({
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            data: data,          
-            url: `/toon/${toonId}/episode/${id}/edit`
-        });
+    resetDeleteEpisodeSuccess = () => {
+        return dispatch => {
+            dispatch(resetDeleteEpisodeSuccess());
+        }
     }
+
+    updateEpisode = (token, data, toonId, id) => {
+        return dispatch=>{
+            dispatch(updateEpisodeStarted());
+            axios({
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                },
+                data: data,          
+                url: `/toon/${toonId}/episode/${id}/edit`
+            }).then(result=>{
+                dispatch(updateEpisodeSuccess(result.data.data.data));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(updateEpisodeFailure(err.response));
+                }
+                else{
+                    dispatch(updateEpisodeFailure(err));
+                }
+            });
+        }
+    }
+
+    
 
     createEpisode = (token, data, toonId) => {
         let formdata = new FormData;
@@ -327,21 +369,39 @@ class Toon{
         }
     }
 
-    uploadEpisodeImage = async (data, toonId, id) => {
-        var token = await Auth.fetch(`token`);
+    uploadEpisodeImage = (token, data, toonId, id) => {
         var formdata = new FormData;
         for(var key in data){
             formdata.append(key, data[key]);
         }
-        return axios({
-            method: 'POST',
-            headers: {
-                'content-type': 'multipart/form-data',
-                "Authorization": `Bearer ${token}`
-            },
-            data: formdata,          
-            url: `/toon/${toonId}/episode/${id}/upload-image`
-        });
+        return dispatch=>{
+            dispatch(uploadImageEpisodeStarted());
+            axios({
+                method: 'POST',
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    "Authorization": `Bearer ${token}`
+                },
+                data: formdata,          
+                url: `/toon/${toonId}/episode/${id}/upload-image`
+            }).then(result=>{
+                dispatch(uploadImageEpisodeSuccess(result.data.data.data));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(uploadImageEpisodeFailure(err.response));
+                }
+                else{
+                    dispatch(uploadImageEpisodeFailure(err));
+                }
+            });
+        }
+    }
+
+    addImageToEpisode = (image) => {
+        return dispatch => {
+            dispatch(addImageToEpisode(image));
+            dispatch(resetUploadImageEpisodeSuccess());
+        }
     }
 
     deleteEpisodeImage = async (toonId, id) => {

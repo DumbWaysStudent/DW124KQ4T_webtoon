@@ -16,10 +16,14 @@ const initialState = {
     detailToonError: null,
     episodeToon: [],
     isEpisodeToonLoading: false,
-    episodeToonError: null
+    episodeToonError: null,
+    imageEpisode: null,
+    isImageEpisodeLoading: false,
+    imageEpisodeError: null
 }
 
 const toon = (state = initialState, action) => {
+    let imageEpisode = state.imageEpisode;
     switch (action.type) {
     case 'GET_ALL_TOON_PENDING':
         return {
@@ -137,6 +141,35 @@ const toon = (state = initialState, action) => {
             isEpisodeToonLoading: false,
             episodeToonError: action.payload
         }  
+    case 'GET_IMAGE_EPISODE_STARTED':
+        return {
+            ...state,
+            imageEpisode: null,
+            isImageEpisodeLoading: true,
+            imageEpisodeError: null
+        }
+    case 'GET_IMAGE_EPISODE_SUCCESS':
+        return {
+            ...state,
+            imageEpisode: action.payload,
+            isImageEpisodeLoading: false,
+            imageEpisodeError: null
+        }
+    case 'GET_IMAGE_EPISODE_FAILURE':
+        return {
+            ...state,
+            imageEpisode: null,
+            isImageEpisodeLoading: false,
+            imageEpisodeError: action.payload
+        }
+    case 'ADD_IMAGE_TO_EPISODE':
+        if(imageEpisode!=null){
+            imageEpisode.images.push(action.payload);
+        }
+        return {
+            ...state,
+            imageEpisode
+        }
     default:
         return state;
     }
