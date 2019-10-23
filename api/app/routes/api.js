@@ -42,12 +42,14 @@ module.exports = (router) => {
     });
 
     router.group("/toon", (toon) =>{
-
+        
         toon.post("/create", [mid.checkAuth, mid.auth, bodyParser.json()], ToonController.store); // /
         toon.get("/:id", ToonController.show);
         toon.get("/:id/episodes", ToonController.episodes);
         toon.put("/:id/edit", [mid.checkAuth, mid.auth, bodyParser.json()], ToonController.update); // /:id
         toon.delete("/:id", [mid.checkAuth, mid.auth], ToonController.delete);
+
+        toon.post("/favorite/:id", [mid.checkAuth, mid.auth, bodyParser.json()], ToonController.favoriting)
 
         toon.group("/:toonId/episode", (toonEpisode) =>{
             toonEpisode.get("/:id", ToonEpisodeController.show);

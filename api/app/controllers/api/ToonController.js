@@ -18,7 +18,7 @@ ToonController.prototype = {
         await Toon.findAll({
             where: {
                 isDraft: {
-                    [Op.ne]: 1
+                    [Op.ne]: true
                 }
             },
             order: [
@@ -54,7 +54,7 @@ ToonController.prototype = {
         await Toon.findAll({
             where: {
                 isDraft: {
-                    [Op.ne]: 1
+                    [Op.ne]: true
                 }
             },
             order: [
@@ -189,12 +189,13 @@ ToonController.prototype = {
         let validate = await validator.make(req.body, rules);
         if(validate.fails()){
             return res.status(400).json({
+                msg: "Something went wrong!",
                 errors: validate.getMessages()
             });
         }
         else{
             var toon = null;
-            var isDraft = 0;
+            var isDraft = false;
             if(typeof req.body.isDraft !== "undefined"){
                 isDraft = req.body.isDraft;
             }
@@ -229,12 +230,13 @@ ToonController.prototype = {
         let validate = await validator.make(req.body, rules);
         if(validate.fails()){
             return res.status(400).json({
+                msg: "Something went wrong!",
                 errors: validate.getMessages()
             });
         }
         else{
             var currentToon = null;
-            var isDraft = 0;
+            var isDraft = false;
             if(typeof req.body.isDraft !== "undefined"){
                 isDraft = req.body.isDraft;
             }
@@ -299,6 +301,16 @@ ToonController.prototype = {
                 id: req.params.id,
                 userId: req.user.userId
             }
+        }).then(result=>{
+            return res.status(200).json({
+                msg: "success"
+            });
+        });
+    },
+    favoriting: async (req, res)=>{
+        await Favorite.create({
+            toonId: req.params.id,
+            userId: req.user.userId
         }).then(result=>{
             return res.status(200).json({
                 msg: "success"

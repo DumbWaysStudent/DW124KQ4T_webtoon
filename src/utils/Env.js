@@ -1,4 +1,4 @@
-const baseUrl = "http://192.168.1.44:3000"
+const baseUrl = "https://afternoon-depths-59888.herokuapp.com"
 
 module.exports = {
     apiUrl: baseUrl+"/api/v1",

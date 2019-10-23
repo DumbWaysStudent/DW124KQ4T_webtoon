@@ -34,6 +34,7 @@ AuthController.prototype = {
         let validate = await validator.make(req.body, rules);
         if(validate.fails()){
             return res.status(400).json({
+                msg: "Something went wrong!",
                 errors: validate.getMessages()
             });
         }
@@ -97,6 +98,7 @@ AuthController.prototype = {
         let validate = await validator.make(req.body, rules);
         if(validate.fails()){
             return res.status(400).json({
+                msg: "Something went wrong!",
                 errors: validate.getMessages()
             });
         }

@@ -48,6 +48,7 @@ ToonEpisodeController.prototype = {
                 fs.unlinkSync(`${__dirname}/../../../storage/${req.files[i].filename}`);
             }
             return res.status(400).json({
+                msg: "Something went wrong!",
                 errors: validate.getMessages()
             });
         }
@@ -93,6 +94,7 @@ ToonEpisodeController.prototype = {
         let validate = await validator.make(req.body, rules);
         if(validate.fails()){
             return res.status(400).json({
+                msg: "Something went wrong!",
                 errors: validate.getMessages()
             });
         }
