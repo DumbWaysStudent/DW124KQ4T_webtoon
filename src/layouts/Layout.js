@@ -13,7 +13,7 @@ class Layout extends React.Component {
         return <>
         <Container style={{paddingTop: 25}}>
             {this.props.children}
-            <Footer>
+            {/* <Footer>
                 <FooterTab style={{backgroundColor: "#2980b9"}}>
                     <Button onPress={()=>this.props.navigation.navigate('ForYou')}>
                         <Icon type="FontAwesome" name="tablet" style={{color:((this.props.screen=="ForYouScreen")?"#ecf0f1":"#bdc3c7")}} />
@@ -25,7 +25,7 @@ class Layout extends React.Component {
                         <Icon type="FontAwesome" name="user" style={{color:((this.props.screen=="ProfileScreen")?"#ecf0f1":"#bdc3c7")}} />
                     </Button>
                 </FooterTab>
-            </Footer>
+            </Footer> */}
         </Container>
         </>
     }

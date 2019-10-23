@@ -1,5 +1,6 @@
 import { AsyncStorage } from "react-native";
 import axios from "../utils/Api";
+import { loginStarted, loginSuccess, loginFailure, resetAuth, registerAuthStarted, registerAuthSuccess, registerAuthFailure } from "../_actions/auth"
 
 class Auth {
     save = async (data) => {
@@ -52,22 +53,53 @@ class Auth {
         });
     }
 
-    register = async (data) => {
-        return axios({
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            data: data,          
-            url: `/auth/register`
-        });
+    register = (data) => {
+        return dispatch=>{
+            dispatch(registerAuthStarted());
+            axios({
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                data: data,          
+                url: `/auth/register`
+            }).then(result=>{
+                dispatch(registerAuthSuccess(result.data.data));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(registerAuthFailure(err.response));
+                }
+                else{
+                    dispatch(registerAuthFailure(err));
+                }
+            });
+        }
     }
 
-    login = async (data) => {
-        return axios({
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            data: data,          
-            url: `/auth/authenticate`
-        });
+    login = (data) => {
+        return dispatch => {
+            console.log("--------------loading")
+            dispatch(loginStarted());
+            axios({
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                data: data,          
+                url: `/auth/authenticate`
+            }).then(result=>{
+                console.log("--------------ntap")
+                dispatch(loginSuccess(result.data.data));
+            }).catch(err=>{
+                console.log("--------------error")
+                if(typeof err.response !== "undefined"){
+                    dispatch(loginFailure(err.response));
+                }
+                else{
+                    dispatch(loginFailure(err));
+                }
+            });
+        }
+    }
+
+    resetAuth = ()=>{
+        return dispatch=>{dispatch(resetAuth())};
     }
 
 }

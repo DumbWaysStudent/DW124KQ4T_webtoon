@@ -103,31 +103,35 @@ class LoginScreen extends React.Component {
         this.setState(objs);
     }
 
-    handleSubmit = async () => {
-        this.props.dispatch(saveAuthPending());
+    handleSubmit = () => {
         var data = {
                 email: this.state.inputEmail,
                 password: this.state.inputPassword
         };
-        try{
-            const user = await Auth.login(data);
-            await Auth.save(user.data.data);
-            this.props.dispatch(saveAuth(user.data.data));
+        this.props.login(data);
+    }
+    
+    loginSuccess = () =>{
+            Auth.save(this.props.auth.data);
             this.props.navigation.navigate('Main');
+    }
+
+    loginFail = () => {
+        let error = this.props.auth.loginAuthError;
+        if(typeof error.data !== "undefined" && typeof error.data.msg !== "undefined"){
+            alert(error.data.msg);
         }
-        catch(error){
-            if(typeof error.response.data.msg !== "undefined"){
-                alert(error.response.data.msg);
-            }
-            else{
-                alert("Check your internet connection!");
-            }
+        else{
+            alert("Check your internet connection!");
         }
+        this.props.authReset();
     }
 
   render() {
     return (
         <Container style={styles.container}>
+            {(this.props.auth.isLoginAuthLoading === false && this.props.auth.data)?<>{this.loginSuccess()}</>:<></>}
+            {(this.props.auth.isLoginAuthLoading === false && this.props.auth.loginAuthError)?<>{this.loginFail()}</>:<></>}
             <Content>
                 <Card>
                     <CardItem>
@@ -144,10 +148,12 @@ class LoginScreen extends React.Component {
                                         <Icon style={styles.buttonEyeIcon} type="FontAwesome" name={this.state.isSecurePassword ? "eye-slash":"eye"} />
                                     </Button>
                                 </Item>
-                                {((this.state.isSubmitEnable) ) ? 
+                                {((this.state.isSubmitEnable) ) ?
+                                    <> 
                                     <Button rounded onPress={this.handleSubmit} style={{...styles.buttonLogin, backgroundColor: '#3498db'}} block>
                                         <Text>Log In</Text>
                                     </Button>
+                                    </>
                                         : 
                                     <Button rounded disabled style={styles.buttonLogin} block>
                                         <Text>Log In</Text>
@@ -192,5 +198,9 @@ const mapStateToProps = (state) => {
         auth: state.auth
     }
 }
+const mapDispatchToProps = {
+    login: Auth.login,
+    authReset: Auth.resetAuth
+  };
 
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

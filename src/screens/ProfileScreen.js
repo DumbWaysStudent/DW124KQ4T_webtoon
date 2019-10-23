@@ -24,38 +24,26 @@ class ProfileScreen extends React.Component {
         }
     }
 
-    async componentDidMount(){
-      await this.getProfile();
-    }
-
-    async componentDidUpdate(){
-      if(this.props.navigation.getParam("avatar")!==undefined){
-        this.props.navigation.setParams({
-          avatar: undefined
-        });
-        await this.getProfile();
-      }
-    }
-
-    getProfile = async() =>{
-      var img = (await Auth.fetch("image"));
-      var obj = {
-        image: (img) ? ((this.handleURL(img))?img:`${env.baseUrl}/${img}`) : "",
-        name: await Auth.fetch("name")
-      };
-      this.setState({
-        profile: {...obj}
-      });
-    }
 
     handleLogout = async () => {
-      await Auth.destroy().then(()=>{
+      try{
+        await Auth.destroy();
+        this.props.authReset();
         this.props.navigation.navigate("Login");
-      }) 
+      }
+      catch(error){
+        console.log(error);
+      }
     }
 
     handleURL = (url) => {
       return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(url);
+    }
+
+    logoutSuccess = () => {
+      Auth.destroy().then(()=>{
+          this.props.navigation.navigate("Login");
+        });
     }
 
     
@@ -77,8 +65,8 @@ class ProfileScreen extends React.Component {
           <Content>
               <CardItem>
                 <Body style={styles.imageWrap}>
-                    <Image style={styles.imagePhoto} source={{uri: (this.props.auth.data.image) ? ((this.handleURL(this.props.auth.data.image))?this.props.auth.data.image:`${env.baseUrl}/${this.props.auth.data.image}`) : ""}} />
-                    <H1 style={styles.profileName}>{this.props.auth.data.name}</H1>
+                    <Image style={styles.imagePhoto} source={{uri: (this.props.auth.data) ? ((this.handleURL(this.props.auth.data.image))?this.props.auth.data.image:`${env.baseUrl}/${this.props.auth.data.image}`) : ""}} />
+                    <H1 style={styles.profileName}>{(this.props.auth.data)?this.props.auth.data.name:""}</H1>
                 </Body>
               </CardItem>
               <List style={{marginRight: 15}}>
@@ -119,4 +107,8 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(ProfileScreen);
+const mapDispatchToProps = {
+  authReset: Auth.resetAuth,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

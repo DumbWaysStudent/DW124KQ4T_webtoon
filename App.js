@@ -62,6 +62,74 @@ const ForYouStack = createStackNavigator({
   }
 });
 
+const ProfileStack = createStackNavigator({
+  Profile: {
+    screen: ProfileScreen,
+    navigationOptions:{
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  EditProfile:{
+    screen: EditProfileScreen,
+    navigationOptions:{
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  MyCreation: {
+    screen: MyCreationScreen,
+    navigationOptions:{
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  CreateNew: {
+    screen: CreateNewScreen,
+    navigationOptions: {
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  EditToon: {
+    screen: EditToonScreen,
+    navigationOptions: {
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  EditEpisode: {
+    screen:EditEpisodeScreen,
+    navigationOptions: {
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  CreateNewEpisode: {
+    screen: CreateNewEpisodeScreen,
+    navigationOptions: {
+      headerTransparent: true,
+      headerLeft: null
+    }
+  },
+  DetailTitle: {
+    screen:DetailTitleScreen,
+    navigationOptions:{
+      headerTransparent: true,
+      headerLeft: null
+      
+    }
+  },
+  DetailEpisode:{
+    screen:DetailEpisodeScreen,
+    navigationOptions:{
+      headerTransparent: true,
+      headerLeft: null
+      
+    }
+  }
+})
+
 const FavoriteStack = createStackNavigator({
   Favorite: {
     screen: FavoriteScreen,
@@ -91,113 +159,88 @@ const FavoriteStack = createStackNavigator({
 
 
 
-const MainNavigator = createAppContainer(createStackNavigator({
+const MainNavigator = createAppContainer(createMaterialBottomTabNavigator({
       ForYou: {
-        screen: ForYouScreen,
-        navigationOptions:{
-          headerTransparent: true,
-          headerLeft: null
+        screen: ForYouStack,
+        navigationOptions:({navigation})=>{
+          var noBottomTabNav = [
+            "DetailTitle",
+            "DetailEpisode"
+          ];
+          var obj = {
+            tabBarIcon: ({ tintColor }) => (
+              <Icon type="FontAwesome" name="tablet" style={{color: tintColor}} />
+            ),
+            headerTransparent: true,
+            headerLeft: null
+          };
+          if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
+            obj.tabBarVisible = false;
+          }
+          else{
+            obj.tabBarVisible = true;
+          }
+          return obj
         }
       },
       Favorite: {
-          screen: FavoriteScreen,
-          navigationOptions:{
-            headerTransparent: true,
-            headerLeft: null
+          screen: FavoriteStack,
+          navigationOptions:({navigation})=>{
+            var noBottomTabNav = [
+              "DetailTitle",
+              "DetailEpisode"
+            ];
+            var obj = {
+              tabBarIcon: ({ tintColor }) => (
+                <Icon type="FontAwesome" name="star" style={{color: tintColor}} />
+              ),
+              headerTransparent: true,
+              headerLeft: null
+            };
+            if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
+              obj.tabBarVisible = false;
+            }
+            else{
+              obj.tabBarVisible = true;
+            }
+            return obj
           }
       },
       Profile: {
-        screen: ProfileScreen,
-        navigationOptions:{
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      EditProfile:{
-        screen: EditProfileScreen,
-        navigationOptions:{
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      MyCreation: {
-        screen: MyCreationScreen,
-        navigationOptions:{
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      CreateNew: {
-        screen: CreateNewScreen,
-        navigationOptions: {
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      EditToon: {
-        screen: EditToonScreen,
-        navigationOptions: {
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      EditEpisode: {
-        screen:EditEpisodeScreen,
-        navigationOptions: {
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      CreateNewEpisode: {
-        screen: CreateNewEpisodeScreen,
-        navigationOptions: {
-          headerTransparent: true,
-          headerLeft: null
-        }
-      },
-      DetailTitle: {
-        screen:DetailTitleScreen,
-        navigationOptions:{
-          headerTransparent: true,
-          headerLeft: null
-          
-        }
-      },
-      DetailEpisode:{
-        screen:DetailEpisodeScreen,
-        navigationOptions:{
-          headerTransparent: true,
-          headerLeft: null
-          
+        screen: ProfileStack,
+        navigationOptions: ({navigation})=>{
+          var noBottomTabNav = [
+            "MyCreation",
+            "CreateNew",
+            "CreateNewEpisode",
+            "EditToon",
+            "EditEpisode",
+            "DetailTitle",
+            "DetailEpisode"
+          ];
+          var obj = {
+            tabBarIcon: ({ tintColor }) => (
+              <Icon type="FontAwesome" name="user" style={{color: tintColor}} />
+            ),
+            headerTransparent: true,
+            headerLeft: null
+          };
+          if(noBottomTabNav.indexOf(navigation.state.routes[navigation.state.index].routeName) >= 0){
+            obj.tabBarVisible = false;
+          }
+          else{
+            obj.tabBarVisible = true;
+          }
+          return obj
         }
       }
     
+},{
+  labeled: false,
+  activeColor: '#ecf0f1',
+  inactiveColor: '#bdc3c7',
+  barStyle: { backgroundColor: '#2980b9' },
 }));
-
-const AppNavigator = createStackNavigator({
-  Login: {
-    screen: LoginScreen,
-    navigationOptions:{
-      headerTransparent: true
-    }
-  }
-});
-const RegNavigator = createStackNavigator({
-  Register: {
-    screen: RegisterScreen,
-    navigationOptions:{
-      headerTransparent: true
-    }
-  }
-});
-
-const MainApp = () => {
-  return (
-    <Provider store={store}>
-      <MainNavigator />
-    </Provider>
-  )
-}
 
 
 const RootNavigation = createAppContainer(createSwitchNavigator(
@@ -205,10 +248,20 @@ const RootNavigation = createAppContainer(createSwitchNavigator(
     AuthLoading: {
       screen: AuthLoadingScreen
     },
-    Register: RegNavigator,
-    Login: AppNavigator,
+    Register: {
+      screen: RegisterScreen,
+      navigationOptions:{
+        headerTransparent: true
+      }
+    },
+    Login: {
+      screen: LoginScreen,
+      navigationOptions:{
+        headerTransparent: true
+      }
+    },
     // Login: Coba,
-    Main: MainApp
+    Main: MainNavigator
   },
   {
     initialRouteName: 'AuthLoading',

@@ -7,6 +7,8 @@ import axios from "../utils/Api";
 import env from '../utils/Env';
 import Auth  from '../services/Auth';
 
+import { connect } from 'react-redux';
+
 
 class RegisterScreen extends React.Component {
 
@@ -121,32 +123,35 @@ class RegisterScreen extends React.Component {
         this.setState(objs);
     }
 
-    handleSubmit = async () => {
+    handleSubmit = () => {
         var data = {
             name: this.state.inputName,
             email: this.state.inputEmail,
             password: this.state.inputPassword
         };
-        await Auth.register(data).then(async result=>{
-            await Auth.save(result.data.data);
-            this.props.navigation.navigate('Main');
-        }).catch(error=>{
-            if(typeof error.response.data.errors !== "undefined"){
-                var str = "";
-                var error = error.response.data.errors;
-                for(var key in error){
-                    for(var i=0;i<error[key].length; i++){
-                        str = str + error[key][i] + "\n";
-                    }
-                }
-                alert(str);
-            }
-        });
+        this.props.register(data);
+    }
+
+    successRegister = () => {
+        Auth.save(this.props.auth.data);
+        this.props.navigation.navigate('Main');
+    }
+    failRegister = () => {
+        let error = this.props.auth.loginAuthError;
+        if(typeof error.data !== "undefined" && typeof error.data.msg !== "undefined"){
+            alert(error.data.msg);
+        }
+        else{
+            alert("Check your internet connection!");
+        }
+        this.props.authReset();
     }
 
   render() {
     return (
         <Container style={styles.container}>
+            {(this.props.auth.isRegisterAuthLoading===false && this.props.auth.data)?<>{this.successRegister()}</>:<></>}
+            {(this.props.auth.isRegisterAuthLoading===false && this.props.auth.registerAuthError)?<>{this.failRegister()}</>:<></>}
             <Content>
                 <Card>
                     <CardItem>
@@ -207,4 +212,14 @@ const styles = StyleSheet.create({
     }
   });
 
-export default RegisterScreen;
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth
+    }
+}
+const mapDispatchToProps = {
+    register: Auth.register,
+    authReset: Auth.resetAuth
+  };
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterScreen);

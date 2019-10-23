@@ -20,46 +20,9 @@ class CreateNewScreen extends React.Component{
             image: "",
             title: "",
             episodes: [],
-            isNew: false,
             isReady: false,
             errors: [],
-            isChanged: true,
-            epsCheck:[]
         }
-    }
-
-    componentDidUpdate(prevProps, prevState){
-    }
-
-    onNewEpisode = (data) => {
-        // let temp = this.props.mytoon.tempEpisode;
-        // if(temp.filter((item)=>item.time===data.time)[0]===undefined){
-        //     let form = {
-        //         "title":data.title,
-        //         "toonId":this.state.id
-        //     }
-        //     form["images[]"] = [];
-        //     for(let i=0;i<data.images.length;i++){
-        //         form["images[]"].push(data.images[i].img);
-        //     }
-        //     try{
-        //         let item = (await Toon.createEpisode(form, 1)).data.data.data;
-        //         let eps = this.state.episodes;
-        //         eps.push(item);
-        //         temp.push(data);
-        //         this.props.dispatch(saveNewEpisode(null));
-        //         this.setState({
-        //             image: eps[0].image,
-        //             episodes: [...eps],
-        //         });
-                
-
-        //     }
-        //     catch(err){
-        //         console.log(err);
-        //         console.log(err.response);
-        //     }
-        // }
     }
 
     onChangeTitle = (text) => {
@@ -111,25 +74,6 @@ class CreateNewScreen extends React.Component{
         }
         else{
             if(this.state.id===null){
-                // try{
-
-                //     var data = {
-                //         title: this.state.title,
-                //         image: "",
-                //         isDraft: 1
-                //     };
-                //     let item = (await Toon.create(data)).data.data.data;
-
-                //     this.setState({
-                //         id: item.id
-                //     });
-                //     let toons = this.props.mytoon.toons;
-                //     toons.unshift(item);
-                //     this.props.dispatch(saveToon(toons))
-                // }
-                // catch(err){
-                //     console.log(err);
-                // }
 
                 let save = {
                     title: this.state.title,
@@ -146,7 +90,6 @@ class CreateNewScreen extends React.Component{
     }
 
     onAddEpisodeNext = ()=>{
-        console.log("masuk");
         this.state.id = this.props.mytoon.tempToon.id;
         this.props.navigation.navigate("CreateNewEpisode", {isNew: true, toonId: this.state.id});
     }
@@ -175,7 +118,6 @@ class CreateNewScreen extends React.Component{
     }
 
     addEpisodeToState = () =>{
-        console.log("==============")
         let episodes = this.state.episodes;
         episodes.push(this.props.mytoon.createEpisodeSuccess);
         this.props.resetEpisode();

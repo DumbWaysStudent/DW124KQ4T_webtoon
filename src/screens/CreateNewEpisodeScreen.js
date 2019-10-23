@@ -24,14 +24,11 @@ class CreateNewEpisodeScreen extends React.Component {
         
 
         this.state = {
-            inputName: "",
-            images: [],
-            isChanged: false,
-            isReady: false,
-            errors: [],
-            countMount: 0,
-            id: null,
-            toonId: null
+            inputName: "", 
+            images: [], 
+            isReady: false, 
+            errors: [], 
+            toonId: null 
         }
     }
 
@@ -123,9 +120,6 @@ class CreateNewEpisodeScreen extends React.Component {
 
     onBackSubmit = () => {
         if(this.state.isReady){
-            console.log("---------------------")
-            console.log("clicked");
-            console.log(this.props.navigation.getParam("isNew"));
             let data = {
                 title: this.state.inputName,
                 "images[]": [],

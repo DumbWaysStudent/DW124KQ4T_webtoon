@@ -27,11 +27,9 @@ class EditEpisodeScreen extends React.Component {
 
         this.state = {
             inputName: (edit)?edit.title:"",
-            images: [],
             isChanged: true,
             isReady: true,
             errors: [],
-            countMount: 0,
             id: (edit)?edit.id:null
         }
     }
@@ -129,7 +127,6 @@ class EditEpisodeScreen extends React.Component {
     }
 
     successDeleteImage = () => {
-        console.log("============== succcess delete ", this.props.mytoon.deleteEpisodeImageSuccess);
         this.props.deleteImageFromEpisode(this.props.mytoon.deleteEpisodeImageSuccess);
     }
 

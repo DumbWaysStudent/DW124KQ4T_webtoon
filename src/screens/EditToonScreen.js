@@ -19,106 +19,12 @@ class EditToonScreen extends React.Component{
             episodes: [],
             errors:[],
             isReady: true,
-            isChanged: true,
             isNew: false,
-            epsCheck: []
         }
     }
-    async componentDidMount(){
+    componentDidMount(){
+
         this.onDetail(this.props.navigation.getParam("id"));
-        if(this.state.isChanged){
-
-            this.props.navigation.setParams({
-                ...this.state
-            });
-            
-            this.setState({
-                isChanged: false
-            });
-        }
-    }
-
-    async componentDidUpdate(prevProps, prevState){
-        if(prevState.episodes === this.state.episodes){
-            if(typeof this.props.navigation.getParam('newEpisode') !== "undefined" && this.state.epsCheck.filter((item)=>item.time===this.props.navigation.getParam('newEpisode').time).length===0){
-                await this.onNewEpisode(this.props.navigation.getParam('newEpisode'));
-            }
-            if(typeof this.props.navigation.getParam('editEpisode') !== "undefined"){
-
-                var eps = this.props.navigation.getParam('editEpisode');
-                await this.onUpdateEpisode(eps);
-                
-            }
-            if(typeof this.props.navigation.getParam('onDelete') !== "undefined"){
-                
-                this.onDeleteEpisode(this.props.navigation.getParam('onDelete'));
-            }
-        }
-    }
-
-    onDeleteEpisode = async (id) => {
-        var eps = this.state.episodes.filter((item)=>item.id!==id);
-        
-        this.props.navigation.setParams({onDelete:undefined});
-
-        await Toon.deleteEpisode(1,id).then(result=>{
-            this.setState({
-                episodes: eps,
-                isChanged: true
-            });
-        });
-
-        
-    }
-
-    onUpdateEpisode = async (data) => {
-        this.props.navigation.setParams({editEpisode:undefined});
-
-        await Toon.updateEpisode({
-            title:data.name
-        }, 1 , data.id).then(result=>{
-            var items = this.state.episodes;
-            var index = this.state.episodes.findIndex(item => item.id === data.id);
-            items[index].title = data.name;
-
-            this.setState({
-                episodes: [ ...items],
-                isChanged: true
-            });
-        });
-    }
-
-    onNewEpisode = async (data) => {
-        this.props.navigation.setParams({...{
-            newEpisode: undefined
-        }});
-        var form = {
-            "title": data.name,
-            "toonId": this.props.toon.detailToon.id
-        }
-        for(var i=0;i<data.images.length;i++){
-            form["images[]"] = data.images[i].img;
-        }
-        await Toon.createEpisode(form, 1).then(result=>{
-            var item = result.data.data.data;
-            var eps = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeDetail;
-            var epsCheck = this.state.epsCheck;
-            epsCheck.push(data);
-            eps.push(item);
-
-            this.setState({
-                image: eps[0].image,
-                episodes: [...eps],
-                epsCheck: [...epsCheck],
-                isChanged: true
-            });
-            
-        }).catch(error=>{
-            console.log("====error=====");
-            console.log(error);
-            console.log("====error.response=====");
-            console.log(error.response);
-        });
     }
 
     onDetail = (id)=> {
