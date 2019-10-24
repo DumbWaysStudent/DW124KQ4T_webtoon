@@ -308,14 +308,50 @@ ToonController.prototype = {
         });
     },
     favoriting: async (req, res)=>{
-        await Favorite.create({
-            toonId: req.params.id,
-            userId: req.user.userId
-        }).then(result=>{
-            return res.status(200).json({
-                msg: "success"
+        try{
+            let toonExist = await Toon.count({
+                where: {
+                    id: req.params.id
+                },
+                distinct: true,
+                col: 'id'
             });
-        });
+            if(toonExist>0){
+                await Favorite.create({
+                    toonId: req.params.id,
+                    userId: req.user.userId
+                })
+                let result = await Favorite.findOne({
+                    where: {
+                        toonId: req.params.id,
+                        userId: req.user.userId
+                    },
+                    include:[{
+                        as: 'toon',
+                        model: Toon,
+                        include: [{
+                            as:'user',
+                            model: User,
+                            attributes: [ 'id', 'name', 'email' ]
+                        }]
+                    }],
+                })
+                return res.status(200).json({
+                    msg: "success",
+                    data: {
+                        data: result
+                    }
+                });
+            }
+            else{
+                return res.status(400).json({
+                    msg: "Toon does not exist"
+                });
+            }
+        }
+        catch(error){
+            console.log(error);
+        }
     }
 };
 
