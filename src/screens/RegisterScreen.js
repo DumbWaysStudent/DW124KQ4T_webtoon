@@ -171,9 +171,15 @@ class RegisterScreen extends React.Component {
                                     </Button>
                                 </Item>
                                 {((this.state.isSubmitEnable) ) ? 
+                                    <>{(this.props.auth.isRegisterAuthLoading===false)?
                                     <Button rounded onPress={this.handleSubmit} style={{...styles.buttonLogin, backgroundColor: '#3498db'}} block>
                                         <Text>Register</Text>
                                     </Button>
+                                    :
+                                    <Button rounded disabled style={styles.buttonLogin} block>
+                                        <Text>Loading</Text>
+                                    </Button>
+                                    }</>
                                         : 
                                     <Button rounded disabled style={styles.buttonLogin} block>
                                         <Text>Register</Text>

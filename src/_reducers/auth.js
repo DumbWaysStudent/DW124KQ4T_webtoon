@@ -1,7 +1,7 @@
 const initialState = {
     isLoading: false,
     data: null,
-    isLoginAuthLoading: true,
+    isLoginAuthLoading: false,
     data:null,
     loginAuthError: null,
     isRegisterAuthLoading: false,

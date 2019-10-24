@@ -150,9 +150,16 @@ class LoginScreen extends React.Component {
                                 </Item>
                                 {((this.state.isSubmitEnable) ) ?
                                     <> 
-                                    <Button rounded onPress={this.handleSubmit} style={{...styles.buttonLogin, backgroundColor: '#3498db'}} block>
-                                        <Text>Log In</Text>
-                                    </Button>
+                                    {(this.props.auth.isLoginAuthLoading===false)?<>
+                                        <Button rounded onPress={this.handleSubmit} style={{...styles.buttonLogin, backgroundColor: '#3498db'}} block>
+                                            <Text>Log In</Text>
+                                        </Button>
+                                    </>:<>
+                                        <Button rounded disabled style={styles.buttonLogin} block>
+                                            <Text>Loading</Text>
+                                        </Button>
+                                    </>}
+                                    
                                     </>
                                         : 
                                     <Button rounded disabled style={styles.buttonLogin} block>
