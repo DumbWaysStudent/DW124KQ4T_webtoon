@@ -1,6 +1,6 @@
 import React from 'react';
 import { Content, Item, Input, CardItem, Body, Button, Icon } from 'native-base';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, RefreshControl } from 'react-native';
 
 
 import { connect } from 'react-redux'
@@ -20,12 +20,23 @@ class FavoriteScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-          keyword: ""
+          keyword: "",
+          isLoading: false
         }
     }
 
     componentDidMount(){
+      this.onLoad();
+    }
+
+    onLoad = () => {
+      this.setState({
+        isLoading: true
+      });
       this.props.fetchFavorite(this.props.auth.data.token);
+      this.setState({
+        isLoading: false
+      });
     }
 
 
@@ -47,7 +58,11 @@ class FavoriteScreen extends React.Component {
   render() {
     return (
         <Layout screen={"FavoriteScreen"} navigation={this.props.navigation}>
-          <Content>
+          <Content refreshControl={
+            <RefreshControl
+            onRefresh={this.onLoad}
+            refreshing = {this.state.isLoading} />
+          }>
               <CardItem>
                 <Body>
                   <Item>

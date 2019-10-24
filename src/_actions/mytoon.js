@@ -200,3 +200,25 @@ export const resetDeleteEpisodeImageSuccess = () => {
     type: 'RESET_DELETE_EPISODE_IMAGE_SUCCESS'
   }
 }
+export const favoriteToonStarted = () => {
+  return {
+    type: 'FAVORITE_TOON_STARTED'
+  }
+}
+export const favoriteToonSuccess = (data) => {
+  return {
+    type: 'FAVORITE_TOON_SUCCESS',
+    payload: data
+  }
+}
+export const favoriteToonFailure = (data) => {
+  return {
+    type: 'FAVORITE_TOON_FAILURE',
+    payload: data
+  }
+}
+export const resetFavoriteToon = () => {
+  return {
+    type: 'RESET_FAVORITE_TOON'
+  }
+}

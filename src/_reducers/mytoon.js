@@ -23,7 +23,10 @@ const initialState = {
     deleteEpisodeError: null,
     isDeleteEpisodeImageLoading: false,
     deleteEpisodeImageSuccess: null,
-    deleteEpisodeImageError: null
+    deleteEpisodeImageError: null,
+    isFavoriteToonLoading:false,
+    favoriteToonSuccess:null,
+    favoriteToonError:null
 }
 
 const mytoon = (state = initialState, action) => {
@@ -270,6 +273,34 @@ const mytoon = (state = initialState, action) => {
             isDeleteEpisodeImageLoading: false,
             deleteEpisodeImageSuccess: null,
             deleteEpisodeImageError: action.payload
+        }
+
+    case 'FAVORITE_TOON_STARTED':
+        return {
+            isFavoriteToonLoading:true,
+            favoriteToonSuccess:null,
+            favoriteToonError:null
+        }
+    
+    case 'FAVORITE_TOON_SUCCESS':
+        return {
+            isFavoriteToonLoading:false,
+            favoriteToonSuccess:action.payload,
+            favoriteToonError:null
+        }
+    
+    case 'FAVORITE_TOON_FAILURE':
+        return {
+            isFavoriteToonLoading:false,
+            favoriteToonSuccess:null,
+            favoriteToonError:action.payload
+        }
+
+    case 'RESET_FAVORITE_TOON':
+        return {
+            isFavoriteToonLoading:false,
+            favoriteToonSuccess:null,
+            favoriteToonError:null
         }
         
     default:

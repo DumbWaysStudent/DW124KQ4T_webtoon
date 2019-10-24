@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Content, Button, Icon, View, Header, Left, Title, Right, Body, Text } from 'native-base';
-import {  Image, FlatList, Dimensions, Share, StyleSheet } from 'react-native';
+import {  Image, FlatList, Dimensions, Share, StyleSheet, RefreshControl } from 'react-native';
 
 import {connect} from 'react-redux';
 import env from '../utils/Env';
@@ -16,13 +16,23 @@ class DetailEpisodeScreen extends React.Component {
         this.state = {
             countMount: 0,
             episode: null,
-            images: []
+            images: [],
+            isLoading: false
         }
     }
 
     async componentDidMount(){
         this.props.fetchDetailEpisode(1, this.props.navigation.getParam("id"), width);
 
+    }
+    onLoad = () => {
+        this.setState({
+            isLoading: true
+        });
+        this.props.fetchDetailEpisode(1, this.props.navigation.getParam("id"), width);
+        this.setState({
+            isLoading: false
+        });
     }
     handleSize = (images) =>{
         images.map((item,i)=>{
@@ -71,7 +81,10 @@ class DetailEpisodeScreen extends React.Component {
                     </Right>
                 </Header>
                 {(this.props.toon.imageEpisode)?<>{this.handleSize(this.props.toon.imageEpisode.images)}</>:<></>}
-                <Content>
+                <Content refreshControl={<RefreshControl
+                  onRefresh={this.onLoad}
+                  refreshing = {this.state.isLoading} />
+              }>
                                 {!this.props.toon.isImageEpisodeLoading ?
                                     <FlatList
                                         data={(this.props.toon.imageEpisode)?this.state.images:[]}

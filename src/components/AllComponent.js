@@ -12,8 +12,6 @@ class BannerComponent extends React.Component {
         super(props);
     }
 
-    
-
   render() {
     return (
         <FlatList
@@ -36,7 +34,7 @@ class BannerComponent extends React.Component {
                                     <Text>Favorite</Text>
                                 </Button>    
                                 :
-                                <Button rounded style={styles.buttonFavorite} iconLeft small>
+                                <Button onPress={this.props.onFavorite.bind(this, item.id)} rounded style={styles.buttonFavorite} iconLeft small>
                                     <Icon type="FontAwesome" name="plus" />
                                     <Text>Favorite</Text>
                                 </Button>

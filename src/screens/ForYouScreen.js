@@ -59,11 +59,19 @@ class ForYouScreen extends React.Component {
   }
 
 
+    onFavorite = (id) => {
+        this.props.favoritingToon(this.props.auth.data.token, id);
+    }
+
+    successFavorite = () =>{
+        this.props.addToonToFavorite(this.props.mytoon.favoriteToonSuccess);
+    }
 
 
   render() {
       return (
           <Layout screen={"ForYouScreen"} navigation={this.props.navigation}>
+              {(this.props.mytoon.isFavoriteToonLoading===false && this.props.mytoon.favoriteToonSuccess)?<>{this.successFavorite()}</>:<></>}
               <Content refreshControl={
                   <RefreshControl
                   onRefresh={this.onLoad}
@@ -98,7 +106,7 @@ class ForYouScreen extends React.Component {
                                             {this.props.toon.favorites.length>0?
                                                 <>
                                                 <H3>Favorite</H3>
-                                                <FavoriteComponent items={this.props.toon.favorites} onDetailTitle={this.onDetailTitle} />
+                                                <FavoriteComponent onFavorite={this.onFavorite} items={this.props.toon.favorites} onDetailTitle={this.onDetailTitle} />
                                                 </>
                                                 :
                                                 <></>
@@ -112,7 +120,7 @@ class ForYouScreen extends React.Component {
                                 
                                 {(this.props.toon.isAllLoading)?<Text>Loading</Text>:<>
                                     <H3 style={styles.allTitle}>All</H3>
-                                    <AllComponent items={this.props.toon.all} onDetailTitle={this.onDetailTitle} />
+                                    <AllComponent onFavorite={this.onFavorite} items={this.props.toon.all} onDetailTitle={this.onDetailTitle} />
                                 </>}
                                 
 
@@ -136,7 +144,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         toon: state.toon,
-        auth: state.auth
+        auth: state.auth,
+        mytoon: state.mytoon
     }
 }
 
@@ -144,7 +153,9 @@ const mapDispatchToProps = {
     fetchAll: Toon.all,
     fetchBanner: Toon.banner,
     fetchFavorite: Toon.favorite,
-    fetchSearch: Toon.search
+    fetchSearch: Toon.search,
+    favoritingToon: Toon.favoritingToon,
+    addToonToFavorite: Toon.addToonToFavorite
   };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForYouScreen);

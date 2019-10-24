@@ -151,3 +151,10 @@ export const deleteImageFromEpisode = (data) => {
     payload: data
   }
 }
+
+export const addToonToFavorite = (data) => {
+  return {
+    type: 'ADD_TOON_TO_FAVORITE',
+    payload: data
+  }
+}

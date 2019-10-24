@@ -1,8 +1,7 @@
 import axios from "../utils/Api";
-import Auth from './Auth';
-import { getAllToonStarted, getAllToonSuccess, getAllToonFailure, getBannerToonStarted, getBannerToonSuccess, getBannerToonFailure, getFavoriteToonStarted, getFavoriteToonSuccess, getFavoriteToonFailure, getSearchStarted, getSearchSuccess, getDetailToonStarted, getDetailToonSuccess, getDetailToonFailure, getEpisodeToonStarted, getEpisodeToonSuccess, getEpisodeToonFailure,getImageEpisodeStarted, getImageEpisodeSuccess, getImageEpisodeFailure, addImageToEpisode, deleteImageFromEpisode } from '../_actions/toon';
+import { getAllToonStarted, getAllToonSuccess, getAllToonFailure, getBannerToonStarted, getBannerToonSuccess, getBannerToonFailure, getFavoriteToonStarted, getFavoriteToonSuccess, getFavoriteToonFailure, getSearchStarted, getSearchSuccess, getDetailToonStarted, getDetailToonSuccess, getDetailToonFailure, getEpisodeToonStarted, getEpisodeToonSuccess, getEpisodeToonFailure,getImageEpisodeStarted, getImageEpisodeSuccess, getImageEpisodeFailure, addImageToEpisode, deleteImageFromEpisode, addToonToFavorite } from '../_actions/toon';
 
-import { getMyToonStarted, getMyToonSuccess, getMyToonFailure, getUpdateToonStarted, getUpdateToonFailure, getUpdateToonSuccess, createToonStarted, createToonSuccess, createToonFailure, createEpisodeStarted, createEpisodeSuccess, resetCreateEpisode, createEpisodeFailure, resetToonTemp, deleteToonStarted, deleteToonSuccess, deleteToonFailure, uploadImageEpisodeSuccess, uploadImageEpisodeStarted, uploadImageEpisodeFailure, resetUploadImageEpisodeSuccess, updateEpisodeStarted, updateEpisodeSuccess, updateEpisodeFailure, deleteEpisodeStarted, deleteEpisodeSuccess, deleteEpisodeFailure, resetDeleteEpisodeSuccess, deleteEpisodeImageStarted, deleteEpisodeImageSuccess, deleteEpisodeImageFailure, resetDeleteEpisodeImageSuccess } from '../_actions/mytoon'
+import { getMyToonStarted, getMyToonSuccess, getMyToonFailure, getUpdateToonStarted, getUpdateToonFailure, getUpdateToonSuccess, createToonStarted, createToonSuccess, createToonFailure, createEpisodeStarted, createEpisodeSuccess, resetCreateEpisode, createEpisodeFailure, resetToonTemp, deleteToonStarted, deleteToonSuccess, deleteToonFailure, uploadImageEpisodeSuccess, uploadImageEpisodeStarted, uploadImageEpisodeFailure, resetUploadImageEpisodeSuccess, updateEpisodeStarted, updateEpisodeSuccess, updateEpisodeFailure, deleteEpisodeStarted, deleteEpisodeSuccess, deleteEpisodeFailure, resetDeleteEpisodeSuccess, deleteEpisodeImageStarted, deleteEpisodeImageSuccess, deleteEpisodeImageFailure, resetDeleteEpisodeImageSuccess, favoriteToonStarted, favoriteToonSuccess, favoriteToonFailure, resetFavoriteToon } from '../_actions/mytoon'
 
 
 class Toon{
@@ -417,8 +416,6 @@ class Toon{
             }).then(result=>{
                 dispatch(deleteEpisodeImageSuccess(id));
             }).catch(err=>{
-                console.log("====== errror delete");
-                console.log(err);
                 if(typeof err.response !== "undefined"){
                     dispatch(deleteEpisodeImageFailure(err.response));
                 }
@@ -432,6 +429,36 @@ class Toon{
         return dispatch=>{
             dispatch(deleteImageFromEpisode(data));
             dispatch(resetDeleteEpisodeImageSuccess());
+        }
+    }
+
+    favoritingToon = (token, toonId) => {
+        return dispatch=> {
+            dispatch(favoriteToonStarted());
+            axios({
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                },        
+                url: `/toon/favorite/${toonId}`
+            }).then(result=>{
+                dispatch(favoriteToonSuccess(result.data.data.data));
+            }).catch(err=>{
+                if(typeof err.response !== "undefined"){
+                    dispatch(favoriteToonFailure(err.response));
+                }
+                else{
+                    dispatch(favoriteToonFailure(err));
+                }
+            });
+        }
+    }
+
+    addToonToFavorite = (data) => {
+        return dispatch => {
+            dispatch(addToonToFavorite(data));
+            dispatch(resetFavoriteToon());
         }
     }
 }

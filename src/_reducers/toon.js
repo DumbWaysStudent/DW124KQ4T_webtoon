@@ -178,6 +178,15 @@ const toon = (state = initialState, action) => {
             ...state,
             imageEpisode
         }
+    case 'ADD_TOON_TO_FAVORITE':
+        let index = state.all.findIndex(item => item.id === action.payload.toon.id);
+        state.all[index].isFavorited=true;
+        state.favorites.unshift(action.payload);
+        return {
+            ...state,
+            favorites: state.favorites,
+            all: state.all
+        }
     default:
         return state;
     }
