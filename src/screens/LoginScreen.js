@@ -138,7 +138,7 @@ class LoginScreen extends React.Component {
                         <Body>
                             <View style={styles.form}>
                                 <H1 style={styles.title}>Log In</H1>
-                                <Text style={styles.subTitle}>Login with your account WEBTOON</Text>
+                                <Text style={styles.subTitle}>Login with your account PucuToon</Text>
                                 <Item>
                                     <Input placeholder="E-mail" value={this.state.inputEmail} onChangeText={this.handleInputEmail} />
                                 </Item>

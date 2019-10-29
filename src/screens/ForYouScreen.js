@@ -85,8 +85,11 @@ class ForYouScreen extends React.Component {
                                       <Icon style={styles.iconSearch} type="FontAwesome" name="search" />
                                   </Button>
                               </Item>
+                            {(this.props.toon.isBannerLoading && this.props.toon.isFavoriteLoading && this.props.toon.isAllLoading)?<Text>Loading ...</Text>:<></>}
                             </Body>
                         </CardItem>
+                        {(!(this.props.toon.isBannerLoading || this.props.toon.isFavoriteLoading || this.props.toon.isAllLoading))?
+                            <>
                               { (this.state.keyword!=="") ? (<SearchComponent onDetailTitle={this.onDetailTitle} items={this.props.toon.searchResult} />) : 
                               
                                 <>
@@ -129,6 +132,8 @@ class ForYouScreen extends React.Component {
                       </CardItem>
                                 </>
                               }
+                            </>
+                        :<></>}
               </Content>
           </Layout>
       );
