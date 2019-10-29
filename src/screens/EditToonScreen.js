@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, Container, Content, CardItem, Body, Button, Item, Input, Icon, Header, Title, Right, Left } from "native-base";
 import { FlatList, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { saveNewToon, saveToon, saveNewEpisode } from "../_actions/mytoon"
 
 import { connect } from "react-redux";
 import env from '../utils/Env';
 import Toon from '../services/Toon';
+import RBSheet from "react-native-raw-bottom-sheet";
 
 
 class EditToonScreen extends React.Component{
@@ -61,6 +61,7 @@ class EditToonScreen extends React.Component{
     }
 
     onDelete = () => {
+        this.RBSheet.close();
         this.props.deleteToon(this.props.auth.data.token, this.props.toon.detailToon.id);
         this.props.navigation.goBack();
     }
@@ -117,30 +118,25 @@ class EditToonScreen extends React.Component{
         }
     }
     addEpisodeToState = () =>{
-        let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
-        episodes.push(this.props.mytoon.createEpisodeSuccess);
         this.props.resetEpisode();
-        this.setState({
-            episodes: [...episodes]
-        });
+        this.onDetail(this.props.navigation.getParam("id"));
     }
     updateEpisodeState = () => {
-        let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
-        let updatedData = this.props.mytoon.updateEpisodeSuccess;
-        let index = episodes.findIndex(item => item.id === updatedData.id);
-        episodes[index]=updatedData;
         this.props.resetEpisode();
-        this.setState({
-            episodes: [...episodes]
-        });
+        this.onDetail(this.props.navigation.getParam("id"));
     }
     deleteEpisodeState = () => {
         let episodes = (this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon;
         episodes = episodes.filter((item)=>item.id!==this.props.mytoon.deleteEpisodeSuccess);
         this.props.resetDeleteEpisodeSuccess();
-        this.setState({
-            episodes: [...episodes]
-        });
+        this.onDetail(this.props.navigation.getParam("id"));
+
+    }
+    onConfirmDelete = () => {
+        this.RBSheet.open()
+    }
+    onDeleteCancel = () => {
+        this.RBSheet.close();
     }
     render(){
         return (
@@ -175,7 +171,7 @@ class EditToonScreen extends React.Component{
                                 </View>
                                 { (this.props.toon.episodeToon.length>0) ?
                                 <FlatList
-                                    data={(this.state.episodes.length>0)?this.state.episodes:this.props.toon.episodeToon}
+                                    data={this.props.toon.episodeToon}
                                     renderItem={({item}) => (
                                         <View style={styles.itemWrap}>
                                             <Image style={styles.itemImage} source={{uri:`${env.baseUrl}/${item.image}`}} />
@@ -211,11 +207,32 @@ class EditToonScreen extends React.Component{
                         <Text>Delete</Text>
                     </Button>
                     :
-                    <Button full danger onPress={this.onDelete}>
+                    <Button full danger onPress={this.onConfirmDelete}>
                         <Text>Delete</Text>
                     </Button>
                 }
-                
+                <RBSheet
+                    ref={ref => {
+                        this.RBSheet = ref;
+                    }}
+                    height={130}
+                    duration={250}
+                    >
+                        <View style={{padding: 10}}>
+
+                            <View>
+                                <Text>Are You Sure?</Text>
+                            </View>
+                            <View style={{flex:1, flexDirection:"row",marginTop:20}}>
+                                <Button onPress={this.onDeleteCancel} danger style={{flex:1, justifyContent: "center"}}>
+                                    <Text>Cancel</Text>
+                                </Button>
+                                <Button onPress={this.onDelete} style={{flex:1, justifyContent: "center", backgroundColor:"#2980b9"}}>
+                                    <Text>Yes, I'm Sure!</Text>
+                                </Button>
+                            </View>
+                        </View>
+                </RBSheet>
                 
             </Container>
         );

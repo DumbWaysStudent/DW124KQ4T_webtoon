@@ -93,7 +93,6 @@ class Auth {
 
     login = (data) => {
         return dispatch => {
-            console.log("--------------loading")
             dispatch(loginStarted());
             axios({
                 method: 'POST',
@@ -101,10 +100,8 @@ class Auth {
                 data: data,          
                 url: `/auth/authenticate`
             }).then(result=>{
-                console.log("--------------ntap")
                 dispatch(loginSuccess(result.data.data));
             }).catch(err=>{
-                console.log("--------------error")
                 if(typeof err.response !== "undefined"){
                     dispatch(loginFailure(err.response));
                 }

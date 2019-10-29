@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import Toon from '../services/Toon';
 import env from '../utils/Env';
+import RBSheet from "react-native-raw-bottom-sheet";
 
 
 const options = {
@@ -30,7 +31,8 @@ class EditEpisodeScreen extends React.Component {
             isChanged: true,
             isReady: true,
             errors: [],
-            id: (edit)?edit.id:null
+            id: (edit)?edit.id:null,
+            deleteImageId:null
         }
     }
     
@@ -107,10 +109,19 @@ class EditEpisodeScreen extends React.Component {
     }
 
     onDeleteImage = (id) => {
-        this.props.deleteEpisodeImage(this.props.auth.data.token, 1, id);
+        this.setState({
+            deleteImageId: id
+        });
+        this[RBSheet+1].open();
+    }
+
+    onDeleteImageConfirm = () => {
+        this.props.deleteEpisodeImage(this.props.auth.data.token, 1, this.state.deleteImageId);
+        this[RBSheet+1].close();
     }
 
     onDeleteEps = ()=>{
+        this.RBSheet.close();
         this.props.deleteEpisode(this.props.auth.data.token, 1, this.state.id);
         this.props.navigation.goBack();
     }
@@ -128,6 +139,14 @@ class EditEpisodeScreen extends React.Component {
 
     successDeleteImage = () => {
         this.props.deleteImageFromEpisode(this.props.mytoon.deleteEpisodeImageSuccess);
+    }
+
+    onConfirmDeleteEps = () => {
+        this.RBSheet.open();
+    }
+
+    onCancelDeleteEps = () => {
+        this.RBSheet.close();
     }
 
     render(){
@@ -196,9 +215,53 @@ class EditEpisodeScreen extends React.Component {
                 <Button full style={styles.buttonAddImage} onPress={this.onAddImage}>
                     <Text>Add Image</Text>
                 </Button>
-                <Button full danger onPress={this.onDeleteEps}>
+                <Button full danger onPress={this.onConfirmDeleteEps}>
                     <Text>Delete</Text>
                 </Button>
+                <RBSheet
+                    ref={ref => {
+                        this.RBSheet = ref;
+                    }}
+                    height={130}
+                    duration={250}
+                    >
+                        <View style={{padding: 10}}>
+
+                            <View>
+                                <Text>Are You Sure?</Text>
+                            </View>
+                            <View style={{flex:1, flexDirection:"row",marginTop:20}}>
+                                <Button onPress={this.onCancelDeleteEps} danger style={{flex:1, justifyContent: "center"}}>
+                                    <Text>Cancel</Text>
+                                </Button>
+                                <Button onPress={this.onDeleteEps} style={{flex:1, justifyContent: "center", backgroundColor:"#2980b9"}}>
+                                    <Text>Yes, I'm Sure!</Text>
+                                </Button>
+                            </View>
+                        </View>
+                </RBSheet>
+                <RBSheet
+                    ref={ref => {
+                        this[RBSheet+1] = ref;
+                    }}
+                    height={130}
+                    duration={250}
+                    >
+                        <View style={{padding: 10}}>
+
+                            <View>
+                                <Text>Are You Sure?</Text>
+                            </View>
+                            <View style={{flex:1, flexDirection:"row",marginTop:20}}>
+                                <Button onPress={()=>this[RBSheet+1].close()} danger style={{flex:1, justifyContent: "center"}}>
+                                    <Text>Cancel</Text>
+                                </Button>
+                                <Button onPress={this.onDeleteImageConfirm} style={{flex:1, justifyContent: "center", backgroundColor:"#2980b9"}}>
+                                    <Text>Yes, I'm Sure!</Text>
+                                </Button>
+                            </View>
+                        </View>
+                </RBSheet>
             </Container>
         )
     }

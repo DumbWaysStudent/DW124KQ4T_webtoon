@@ -203,7 +203,6 @@ class Toon{
                 data: data,          
                 url: `/toon/${id}/edit`
             }).then(result=>{
-                console.log(result.data.data);
                 dispatch(getUpdateToonSuccess(result.data.data.data));
             }).catch(err=>{
                 if(typeof err.response !== "undefined"){
