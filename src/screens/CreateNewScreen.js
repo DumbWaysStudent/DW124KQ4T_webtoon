@@ -137,7 +137,7 @@ class CreateNewScreen extends React.Component{
                         </Button>
                     </Left>
                     <Body>
-                        <Title style={{color:"#000"}}>Create Webtoon</Title>
+                        <Title style={{color:"#000"}}>Create Toon</Title>
                     </Body>
                     <Right>
                         <Button transparent
