@@ -48,50 +48,44 @@ This App is a something App. We can help you by not helping you.
 * Out of the box app of the year!
 * It's React Native, so it support android & iOS by default!
 * Simple Code, so you can easily contribute on it.
-* Meteor is one of the most starred javascript framework, and it is very easy to use
 
 ## Tech Stack
 * React Native for the Mobile Frontend
-* MeteorJs as the Backend
+* ExpressJS as the Backend
 
 ## Prerequisites
 * Make sure You had been install NodeJs in your system https://nodejs.org/
 * Then install React Native https://facebook.github.io/react-native/
-* Don’t forget Meteor Js as the backend https://www.meteor.com/
 
 ## Installation & Configuration
 Follow these step to install
 
 **Frontend:**
 ```
-$ git clone https://github.com/DumbWaysDotId/course-repo-example
-$ cd course-repo-example/frontend
-$ npm install
-$ react-native run-ios #for ios
+$ git clone https://github.com/ybasori/DW124KQ4T_webtoon
+$ cd DW124KQ4T_webtoon
+$ yarn install
 $ react-native run-android #for android
-```
-Open “app/Config.js”, and set the meteorUri variable as your Meteor server run at
-```javascript
-export const meteorUri = ‘ws://localhost:3000/websocket’;
+$ react-native start
 ```
 
 **Back-end:**
 ```
-$ cd course-repo-example/backend
-$ meteor npm install
-$ meteor #run your meteor on http://localhost:3000
+$ cd DW124KQ4T_webtoon/api
+$ yarn install
+$ node index.js
 ```
 
 ## Support Me :)
 * Star this repository :star:
-* Hire Me https://www.linkedin.com/in/yusuf-b-a0479710b/
+* Hire Me https://www.linkedin.com/in/ybasori/
 
 ## Contact 
-* WA/TELEGRAM: +62 345 178 910 1
+* WA/TELEGRAM: +62 8778 5291 477
 * email: ybasori@gmail.com
 
 ## Download App (Demo usage only)
-[![Iyat Download](https://i1.wp.com/apkmodsios.com/wp-content/uploads/2018/12/Download-Infinite-Design-3.4.10-Apk.png)](https://linktodownload.com/course-repo-example.apk)
+[![Iyat Download](https://i1.wp.com/apkmodsios.com/wp-content/uploads/2018/12/Download-Infinite-Design-3.4.10-Apk.png)](https://github.com/DumbWaysStudent/DW124KQ4T_webtoon/raw/master/Pucu%20Toon.apk)
 
 
 ----
