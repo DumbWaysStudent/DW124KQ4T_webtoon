@@ -10,36 +10,6 @@ This project is still on very early development stage. If you want to use for pr
 ## Pucu Toon
 This App is a something App. We can help you by not helping you.  
 
-
-## Screenshots
-
-<p float="left">
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_1.png" width="200" alt="Login/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_2.png" width="200" alt="For You"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_3.png" width="200" alt="Detail webtoon"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_4.png" width="200" alt="Detail Episode"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_5.png" width="200" alt="Favourite"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_6.png" width="200" alt="Profile"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_7.png" width="200" alt="Edit Profile"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_8.png" width="200" alt="My Webtoon"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_9.png" width="200" alt="Create Webtoon"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_10.png" width="200" alt="Create Episode"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_11.png" width="200" alt="Edit Webtoon"/>
-
-  <img src="https://raw.githubusercontent.com/DumbWaysStudent/DW124KQ4T_webtoon/master/assets/images/ss_12.png" width="200" alt="Edit Episode"/>
-</p>
-
-
 ## Features
 * Create Toon
 * Create Episode
