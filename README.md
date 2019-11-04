@@ -85,7 +85,7 @@ $ node index.js
 * email: ybasori@gmail.com
 
 ## Download App (Demo usage only)
-[![Iyat Download](https://i1.wp.com/apkmodsios.com/wp-content/uploads/2018/12/Download-Infinite-Design-3.4.10-Apk.png)](https://github.com/DumbWaysStudent/DW124KQ4T_webtoon/raw/master/Pucu%20Toon.apk)
+[![Iyat Download](https://i1.wp.com/apkmodsios.com/wp-content/uploads/2018/12/Download-Infinite-Design-3.4.10-Apk.png)](https://github.com/ybasori/DW124KQ4T_webtoon/raw/master/Pucu%20Toon.apk)
 
 
 ----
